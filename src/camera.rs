@@ -1,5 +1,5 @@
 use minifb::{Key, Window};
-use nalgebra_glm::Vec3;
+use nalgebra_glm::{cross, normalize, Vec3};
 
 const MIN_PITCH: f32 = -1.35;
 const MAX_PITCH: f32 = 1.35;
@@ -32,6 +32,17 @@ impl Camera {
                 self.distance * self.pitch.sin(),
                 horizontal * self.yaw.cos(),
             )
+    }
+
+    pub fn ray_direction(&self, screen_x: f32, screen_y: f32, aspect: f32, fov: f32) -> Vec3 {
+        let eye = self.eye();
+        let forward = normalize(&(self.target - eye));
+        let world_up = Vec3::new(0.0, 1.0, 0.0);
+        let right = normalize(&cross(&forward, &world_up));
+        let up = normalize(&cross(&right, &forward));
+        let scale = (fov * 0.5).tan();
+
+        normalize(&(forward + right * (screen_x * aspect * scale) + up * (screen_y * scale)))
     }
 
     pub fn orbit(&mut self, delta_yaw: f32, delta_pitch: f32) {

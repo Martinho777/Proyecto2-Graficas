@@ -1,5 +1,6 @@
 mod camera;
 mod framebuffer;
+mod ray;
 mod renderer;
 
 use camera::Camera;
