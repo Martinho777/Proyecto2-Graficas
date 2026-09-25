@@ -1,3 +1,4 @@
+use minifb::{Key, Window};
 use nalgebra_glm::Vec3;
 
 const MIN_PITCH: f32 = -1.35;
@@ -46,5 +47,42 @@ impl Camera {
         self.yaw = 0.0;
         self.pitch = 0.35;
         self.distance = 7.0;
+    }
+
+    pub fn update_from_input(&mut self, window: &Window) -> bool {
+        let mut changed = false;
+        let orbit_speed = 0.035;
+        let zoom_speed = 0.12;
+
+        if window.is_key_down(Key::Left) || window.is_key_down(Key::A) {
+            self.orbit(-orbit_speed, 0.0);
+            changed = true;
+        }
+        if window.is_key_down(Key::Right) || window.is_key_down(Key::D) {
+            self.orbit(orbit_speed, 0.0);
+            changed = true;
+        }
+        if window.is_key_down(Key::Up) {
+            self.orbit(0.0, orbit_speed);
+            changed = true;
+        }
+        if window.is_key_down(Key::Down) {
+            self.orbit(0.0, -orbit_speed);
+            changed = true;
+        }
+        if window.is_key_down(Key::W) {
+            self.zoom(-zoom_speed);
+            changed = true;
+        }
+        if window.is_key_down(Key::S) {
+            self.zoom(zoom_speed);
+            changed = true;
+        }
+        if window.is_key_pressed(Key::R, minifb::KeyRepeat::No) {
+            self.reset();
+            changed = true;
+        }
+
+        changed
     }
 }
