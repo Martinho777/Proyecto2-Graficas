@@ -2,6 +2,7 @@ use crate::camera::Camera;
 use crate::framebuffer::Framebuffer;
 use crate::ray::Ray;
 use crate::scene::Scene;
+use nalgebra_glm::{dot, normalize, Vec3};
 
 pub fn render_raytraced_scene(framebuffer: &mut Framebuffer, camera: &Camera, scene: &Scene) {
     framebuffer.clear(0);
@@ -16,9 +17,29 @@ pub fn render_raytraced_scene(framebuffer: &mut Framebuffer, camera: &Camera, sc
             let ray = Ray::new(camera.eye(), direction);
 
             let color = if let Some(hit) = scene.intersect(&ray) {
-                let red = ((hit.normal.x * 0.5 + 0.5) * 255.0) as u32;
-                let green = ((hit.normal.y * 0.5 + 0.5) * 255.0) as u32;
-                let blue = ((hit.normal.z * 0.5 + 0.5) * 255.0) as u32;
+                let light_direction = normalize(&Vec3::new(-0.6, 1.0, 0.8));
+                let diffuse = dot(&hit.normal, &light_direction).max(0.0);
+                let half_vector = normalize(&(light_direction - ray.direction));
+                let specular = dot(&hit.normal, &half_vector)
+                    .max(0.0)
+                    .powf(hit.material.specular)
+                    * 0.35;
+                let texture = hit.material.texture.sample(hit.uv[0], hit.uv[1]);
+                let red = ((texture[0] * hit.material.albedo[0] * (0.18 + diffuse)
+                    + specular
+                    + hit.material.emission[0])
+                    .clamp(0.0, 1.0)
+                    * 255.0) as u32;
+                let green = ((texture[1] * hit.material.albedo[1] * (0.18 + diffuse)
+                    + specular
+                    + hit.material.emission[1])
+                    .clamp(0.0, 1.0)
+                    * 255.0) as u32;
+                let blue = ((texture[2] * hit.material.albedo[2] * (0.18 + diffuse)
+                    + specular
+                    + hit.material.emission[2])
+                    .clamp(0.0, 1.0)
+                    * 255.0) as u32;
                 (red << 16) | (green << 8) | blue
             } else {
                 let t = screen_y * 0.5 + 0.5;
