@@ -1,6 +1,7 @@
 mod camera;
 mod cube;
 mod framebuffer;
+mod material;
 mod primitive;
 mod ray;
 mod renderer;
@@ -19,26 +20,35 @@ const WINDOW_SCALE: usize = 3;
 fn main() {
     let mut framebuffer = Framebuffer::new(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
     let mut camera = Camera::new(Vec3::new(0.0, 0.0, 0.0), 7.0);
+    let stone = material::Material::from_texture(
+        texture::Texture::load_ppm("assets/textures/stone.ppm")
+            .expect("textura de piedra invalida"),
+    );
     let mut scene = scene::Scene::new();
     scene.add(Box::new(sphere::Sphere {
         center: Vec3::new(0.0, 0.0, 0.0),
         radius: 1.5,
+        material: stone.clone(),
     }));
     scene.add(Box::new(cube::Cube::from_center_size(
         Vec3::new(0.0, -1.75, 0.0),
         Vec3::new(5.0, 0.8, 4.0),
+        stone.clone(),
     )));
     scene.add(Box::new(cube::Cube::from_center_size(
         Vec3::new(-1.7, -0.2, 0.0),
         Vec3::new(0.75, 2.5, 0.75),
+        stone.clone(),
     )));
     scene.add(Box::new(cube::Cube::from_center_size(
         Vec3::new(1.7, -0.2, 0.0),
         Vec3::new(0.75, 2.5, 0.75),
+        stone.clone(),
     )));
     scene.add(Box::new(cube::Cube::from_center_size(
         Vec3::new(0.0, 1.0, -0.4),
         Vec3::new(2.7, 0.6, 1.7),
+        stone,
     )));
     let mut window = Window::new(
         "Proyecto 2 — Diorama con Raytracing",

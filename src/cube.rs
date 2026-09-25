@@ -1,19 +1,22 @@
 use nalgebra_glm::Vec3;
 
+use crate::material::Material;
 use crate::primitive::{Hit, Primitive};
 use crate::ray::Ray;
 
 pub struct Cube {
     pub min: Vec3,
     pub max: Vec3,
+    pub material: Material,
 }
 
 impl Cube {
-    pub fn from_center_size(center: Vec3, size: Vec3) -> Self {
+    pub fn from_center_size(center: Vec3, size: Vec3, material: Material) -> Self {
         let half = size * 0.5;
         Self {
             min: center - half,
             max: center + half,
+            material,
         }
     }
 
@@ -39,6 +42,26 @@ impl Cube {
             Vec3::new(0.0, 0.0, -1.0)
         } else {
             Vec3::new(0.0, 0.0, 1.0)
+        }
+    }
+
+    fn uv_at(&self, point: &Vec3, normal: &Vec3) -> [f32; 2] {
+        let size = self.max - self.min;
+        if normal.x.abs() > 0.5 {
+            [
+                ((point.z - self.min.z) / size.z),
+                ((point.y - self.min.y) / size.y),
+            ]
+        } else if normal.y.abs() > 0.5 {
+            [
+                ((point.x - self.min.x) / size.x),
+                ((point.z - self.min.z) / size.z),
+            ]
+        } else {
+            [
+                ((point.x - self.min.x) / size.x),
+                ((point.y - self.min.y) / size.y),
+            ]
         }
     }
 }
@@ -72,10 +95,13 @@ impl Primitive for Cube {
         }
 
         let point = ray.at(t_min);
+        let normal = self.normal_at(&point);
         Some(Hit {
             distance: t_min,
             point,
-            normal: self.normal_at(&point),
+            uv: self.uv_at(&point, &normal),
+            normal,
+            material: self.material.clone(),
         })
     }
 }

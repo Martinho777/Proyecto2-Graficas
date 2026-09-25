@@ -1,11 +1,13 @@
 use nalgebra_glm::{dot, normalize, Vec3};
 
+use crate::material::Material;
 use crate::primitive::{Hit, Primitive};
 use crate::ray::Ray;
 
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f32,
+    pub material: Material,
 }
 
 impl Primitive for Sphere {
@@ -33,11 +35,15 @@ impl Primitive for Sphere {
 
         let point = ray.at(distance);
         let normal = normalize(&(point - self.center));
+        let u = 0.5 + normal.z.atan2(normal.x) / (2.0 * std::f32::consts::PI);
+        let v = 0.5 - normal.y.asin() / std::f32::consts::PI;
 
         Some(Hit {
             distance,
             point,
             normal,
+            uv: [u, v],
+            material: self.material.clone(),
         })
     }
 }

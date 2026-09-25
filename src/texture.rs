@@ -1,6 +1,6 @@
 use std::fs;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Texture {
     pub width: usize,
     pub height: usize,
