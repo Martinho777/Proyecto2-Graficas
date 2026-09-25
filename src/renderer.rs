@@ -1,6 +1,5 @@
 use crate::camera::Camera;
 use crate::framebuffer::Framebuffer;
-use crate::primitive::Primitive;
 use crate::ray::Ray;
 use crate::scene::Scene;
 
