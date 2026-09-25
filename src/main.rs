@@ -1,4 +1,5 @@
 mod camera;
+mod cube;
 mod framebuffer;
 mod primitive;
 mod ray;
