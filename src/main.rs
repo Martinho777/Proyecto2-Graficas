@@ -1,7 +1,9 @@
 mod camera;
 mod framebuffer;
+mod primitive;
 mod ray;
 mod renderer;
+mod sphere;
 
 use camera::Camera;
 use framebuffer::Framebuffer;
