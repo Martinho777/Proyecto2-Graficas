@@ -25,7 +25,7 @@ fn main() {
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
         camera.update_from_input(&window);
-        renderer::render_preview(&mut framebuffer);
+        renderer::render_preview(&mut framebuffer, &camera);
 
         window
             .update_with_buffer(&framebuffer.buffer, framebuffer.width, framebuffer.height)
