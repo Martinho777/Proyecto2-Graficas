@@ -6,6 +6,7 @@ mod ray;
 mod renderer;
 mod scene;
 mod sphere;
+mod texture;
 
 use camera::Camera;
 use framebuffer::Framebuffer;
