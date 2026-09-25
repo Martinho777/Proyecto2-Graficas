@@ -2,9 +2,9 @@ use crate::camera::Camera;
 use crate::framebuffer::Framebuffer;
 use crate::primitive::Primitive;
 use crate::ray::Ray;
-use crate::sphere::Sphere;
+use crate::scene::Scene;
 
-pub fn render_raytraced_sphere(framebuffer: &mut Framebuffer, camera: &Camera, sphere: &Sphere) {
+pub fn render_raytraced_scene(framebuffer: &mut Framebuffer, camera: &Camera, scene: &Scene) {
     framebuffer.clear(0);
     let aspect = framebuffer.width as f32 / framebuffer.height as f32;
     let fov = std::f32::consts::FRAC_PI_3;
@@ -16,7 +16,7 @@ pub fn render_raytraced_sphere(framebuffer: &mut Framebuffer, camera: &Camera, s
             let direction = camera.ray_direction(screen_x, screen_y, aspect, fov);
             let ray = Ray::new(camera.eye(), direction);
 
-            let color = if let Some(hit) = sphere.intersect(&ray) {
+            let color = if let Some(hit) = scene.intersect(&ray) {
                 let red = ((hit.normal.x * 0.5 + 0.5) * 255.0) as u32;
                 let green = ((hit.normal.y * 0.5 + 0.5) * 255.0) as u32;
                 let blue = ((hit.normal.z * 0.5 + 0.5) * 255.0) as u32;
