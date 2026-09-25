@@ -16,6 +16,10 @@ const WINDOW_SCALE: usize = 3;
 fn main() {
     let mut framebuffer = Framebuffer::new(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
     let mut camera = Camera::new(Vec3::new(0.0, 0.0, 0.0), 7.0);
+    let sphere = sphere::Sphere {
+        center: Vec3::new(0.0, 0.0, 0.0),
+        radius: 1.5,
+    };
     let mut window = Window::new(
         "Proyecto 2 — Diorama con Raytracing",
         FRAMEBUFFER_WIDTH * WINDOW_SCALE,
@@ -28,7 +32,7 @@ fn main() {
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
         camera.update_from_input(&window);
-        renderer::render_preview(&mut framebuffer, &camera);
+        renderer::render_raytraced_sphere(&mut framebuffer, &camera, &sphere);
 
         window
             .update_with_buffer(&framebuffer.buffer, framebuffer.width, framebuffer.height)
