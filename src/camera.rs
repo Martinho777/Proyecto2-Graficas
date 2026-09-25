@@ -1,0 +1,50 @@
+use nalgebra_glm::Vec3;
+
+const MIN_PITCH: f32 = -1.35;
+const MAX_PITCH: f32 = 1.35;
+const MIN_DISTANCE: f32 = 2.0;
+const MAX_DISTANCE: f32 = 16.0;
+
+pub struct Camera {
+    pub target: Vec3,
+    pub yaw: f32,
+    pub pitch: f32,
+    pub distance: f32,
+}
+
+impl Camera {
+    pub fn new(target: Vec3, distance: f32) -> Self {
+        Self {
+            target,
+            yaw: 0.0,
+            pitch: 0.35,
+            distance: distance.clamp(MIN_DISTANCE, MAX_DISTANCE),
+        }
+    }
+
+    pub fn eye(&self) -> Vec3 {
+        let horizontal = self.distance * self.pitch.cos();
+
+        self.target
+            + Vec3::new(
+                horizontal * self.yaw.sin(),
+                self.distance * self.pitch.sin(),
+                horizontal * self.yaw.cos(),
+            )
+    }
+
+    pub fn orbit(&mut self, delta_yaw: f32, delta_pitch: f32) {
+        self.yaw += delta_yaw;
+        self.pitch = (self.pitch + delta_pitch).clamp(MIN_PITCH, MAX_PITCH);
+    }
+
+    pub fn zoom(&mut self, delta: f32) {
+        self.distance = (self.distance + delta).clamp(MIN_DISTANCE, MAX_DISTANCE);
+    }
+
+    pub fn reset(&mut self) {
+        self.yaw = 0.0;
+        self.pitch = 0.35;
+        self.distance = 7.0;
+    }
+}

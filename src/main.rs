@@ -1,14 +1,18 @@
+mod camera;
 mod framebuffer;
 mod renderer;
 
+use camera::Camera;
 use framebuffer::Framebuffer;
 use minifb::{Key, Window, WindowOptions};
+use nalgebra_glm::Vec3;
 
 const FRAMEBUFFER_WIDTH: usize = 320;
 const FRAMEBUFFER_HEIGHT: usize = 180;
 const WINDOW_SCALE: usize = 3;
 fn main() {
     let mut framebuffer = Framebuffer::new(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
+    let camera = Camera::new(Vec3::new(0.0, 0.0, 0.0), 7.0);
     let mut window = Window::new(
         "Proyecto 2 — Diorama con Raytracing",
         FRAMEBUFFER_WIDTH * WINDOW_SCALE,
