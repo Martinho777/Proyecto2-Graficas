@@ -94,3 +94,26 @@ pub fn build_shrine() -> Vec<Block> {
 
     blocks
 }
+
+pub fn build_pine_tree(base: Vec3, scale: f32) -> Vec<Block> {
+    let mut blocks = Vec::new();
+    let trunk_height = 2.0 * scale;
+
+    blocks.push(block(
+        base + Vec3::new(0.0, trunk_height * 0.5, 0.0),
+        Vec3::new(0.55 * scale, trunk_height, 0.55 * scale),
+        MaterialId::Wood,
+    ));
+
+    let foliage_layers = [(2.0, 2.7), (2.55, 2.1), (3.05, 1.5), (3.45, 0.8)];
+
+    for (height, width) in foliage_layers {
+        blocks.push(block(
+            base + Vec3::new(0.0, height * scale, 0.0),
+            Vec3::new(width * scale, 0.7 * scale, width * scale),
+            MaterialId::Leaves,
+        ));
+    }
+
+    blocks
+}
