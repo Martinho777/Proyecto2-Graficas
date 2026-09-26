@@ -1,5 +1,14 @@
 use crate::texture::Texture;
 
+#[derive(Clone, Copy, Debug)]
+pub enum MaterialId {
+    Stone,
+    Wood,
+    Leaves,
+    Crystal,
+    Lava,
+}
+
 #[derive(Clone, Debug)]
 pub struct Material {
     pub texture: Texture,
@@ -21,6 +30,56 @@ impl Material {
             reflectivity: 0.0,
             refractive_index: 1.0,
             emission: [0.0, 0.0, 0.0],
+        }
+    }
+}
+
+pub struct MaterialLibrary {
+    materials: [Material; 5],
+}
+
+impl MaterialLibrary {
+    pub fn load() -> Result<Self, String> {
+        let mut stone = Material::from_texture(Texture::load_ppm("assets/textures/stone.ppm")?);
+        stone.albedo = [0.85, 0.85, 0.85];
+
+        let mut wood = Material::from_texture(Texture::load_ppm("assets/textures/wood.ppm")?);
+        wood.albedo = [0.95, 0.75, 0.55];
+        wood.specular = 18.0;
+
+        let mut leaves = Material::from_texture(Texture::load_ppm("assets/textures/leaves.ppm")?);
+        leaves.albedo = [0.65, 0.9, 0.55];
+        leaves.specular = 12.0;
+
+        let mut crystal = Material::from_texture(Texture::load_ppm("assets/textures/crystal.ppm")?);
+        crystal.albedo = [0.55, 0.8, 1.0];
+        crystal.specular = 128.0;
+        crystal.transparency = 0.7;
+        crystal.refractive_index = 1.5;
+
+        let mut lava = Material::from_texture(Texture::load_ppm("assets/textures/lava.ppm")?);
+        lava.albedo = [1.0, 0.75, 0.35];
+        lava.specular = 24.0;
+        lava.emission = [0.55, 0.12, 0.0];
+
+        Ok(Self {
+            materials: [stone, wood, leaves, crystal, lava],
+        })
+    }
+
+    pub fn get(&self, id: MaterialId) -> Material {
+        self.materials[id.index()].clone()
+    }
+}
+
+impl MaterialId {
+    fn index(self) -> usize {
+        match self {
+            Self::Stone => 0,
+            Self::Wood => 1,
+            Self::Leaves => 2,
+            Self::Crystal => 3,
+            Self::Lava => 4,
         }
     }
 }
