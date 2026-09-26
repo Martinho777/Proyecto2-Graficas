@@ -1,5 +1,6 @@
 mod camera;
 mod cube;
+mod diorama;
 mod framebuffer;
 mod material;
 mod primitive;
