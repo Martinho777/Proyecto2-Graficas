@@ -117,3 +117,19 @@ pub fn build_pine_tree(base: Vec3, scale: f32) -> Vec<Block> {
 
     blocks
 }
+
+pub fn build_forest() -> Vec<Block> {
+    let mut blocks = Vec::new();
+    let trees = [
+        (Vec3::new(-1.65, -1.35, 1.45), 0.75),
+        (Vec3::new(1.65, -1.35, 1.45), 0.9),
+        (Vec3::new(-1.65, -1.35, -1.35), 0.65),
+        (Vec3::new(1.65, -1.35, -1.35), 0.7),
+    ];
+
+    for (base, scale) in trees {
+        blocks.extend(build_pine_tree(base, scale));
+    }
+
+    blocks
+}
