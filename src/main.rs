@@ -15,7 +15,6 @@ use framebuffer::Framebuffer;
 use material::{MaterialId, MaterialLibrary};
 use minifb::{Key, Window, WindowOptions};
 use nalgebra_glm::Vec3;
-use scene::Block;
 
 const FRAMEBUFFER_WIDTH: usize = 320;
 const FRAMEBUFFER_HEIGHT: usize = 180;
@@ -25,51 +24,22 @@ fn main() {
     let mut camera = Camera::new(Vec3::new(0.0, 0.0, 0.0), 7.0);
     let materials = MaterialLibrary::load().expect("no se pudieron cargar los materiales");
     let mut scene = scene::Scene::new();
+
+    for block in diorama::build_floating_island() {
+        scene.add_block(block, &materials);
+    }
+    for block in diorama::build_bridge() {
+        scene.add_block(block, &materials);
+    }
+    for block in diorama::build_shrine() {
+        scene.add_block(block, &materials);
+    }
+
     scene.add(Box::new(sphere::Sphere {
         center: Vec3::new(0.0, 0.0, 0.0),
         radius: 1.5,
         material: materials.get(MaterialId::Crystal),
     }));
-    scene.add_block(
-        Block {
-            center: Vec3::new(0.0, -1.75, 0.0),
-            size: Vec3::new(5.0, 0.8, 4.0),
-            material: MaterialId::Stone,
-        },
-        &materials,
-    );
-    scene.add_block(
-        Block {
-            center: Vec3::new(-1.7, -0.2, 0.0),
-            size: Vec3::new(0.75, 2.5, 0.75),
-            material: MaterialId::Wood,
-        },
-        &materials,
-    );
-    scene.add_block(
-        Block {
-            center: Vec3::new(1.7, -0.2, 0.0),
-            size: Vec3::new(0.75, 2.5, 0.75),
-            material: MaterialId::Wood,
-        },
-        &materials,
-    );
-    scene.add_block(
-        Block {
-            center: Vec3::new(0.0, 1.0, -0.4),
-            size: Vec3::new(2.7, 0.6, 1.7),
-            material: MaterialId::Leaves,
-        },
-        &materials,
-    );
-    scene.add_block(
-        Block {
-            center: Vec3::new(0.0, 1.65, -0.4),
-            size: Vec3::new(0.8, 0.35, 0.8),
-            material: MaterialId::Lava,
-        },
-        &materials,
-    );
     let mut window = Window::new(
         "Proyecto 2 — Diorama con Raytracing",
         FRAMEBUFFER_WIDTH * WINDOW_SCALE,
