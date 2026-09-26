@@ -42,3 +42,55 @@ pub fn build_floating_island() -> Vec<Block> {
 
     blocks
 }
+
+pub fn build_bridge() -> Vec<Block> {
+    let mut blocks = Vec::new();
+
+    for z in 3..=6 {
+        blocks.push(block(
+            Vec3::new(0.0, -1.05, z as f32),
+            Vec3::new(1.6, 0.35, 1.0),
+            MaterialId::Wood,
+        ));
+        blocks.push(block(
+            Vec3::new(-0.9, -0.55, z as f32),
+            Vec3::new(0.25, 0.8, 1.0),
+            MaterialId::Wood,
+        ));
+        blocks.push(block(
+            Vec3::new(0.9, -0.55, z as f32),
+            Vec3::new(0.25, 0.8, 1.0),
+            MaterialId::Wood,
+        ));
+    }
+
+    blocks
+}
+
+pub fn build_shrine() -> Vec<Block> {
+    let mut blocks = Vec::new();
+
+    blocks.push(block(
+        Vec3::new(0.0, -0.95, -0.25),
+        Vec3::new(3.8, 0.35, 3.0),
+        MaterialId::Stone,
+    ));
+
+    for x in [-1.5, 1.5] {
+        for z in [-1.15, 0.65] {
+            blocks.push(block(
+                Vec3::new(x, 0.15, z),
+                Vec3::new(0.45, 2.2, 0.45),
+                MaterialId::Wood,
+            ));
+        }
+    }
+
+    blocks.push(block(
+        Vec3::new(0.0, 1.35, -0.25),
+        Vec3::new(3.7, 0.4, 2.8),
+        MaterialId::Leaves,
+    ));
+
+    blocks
+}
