@@ -8,6 +8,7 @@ fn block(center: Vec3, size: Vec3, material: MaterialId) -> Block {
         center,
         size,
         material,
+        studs: true,
     }
 }
 
