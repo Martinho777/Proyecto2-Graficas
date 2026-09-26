@@ -28,6 +28,9 @@ fn main() {
     for block in diorama::build_floating_island() {
         scene.add_block(block, &materials);
     }
+    for block in diorama::build_forest() {
+        scene.add_block(block, &materials);
+    }
     for block in diorama::build_bridge() {
         scene.add_block(block, &materials);
     }
