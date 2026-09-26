@@ -45,8 +45,11 @@ impl Scene {
     }
 
     fn add_studs(&mut self, block: &Block, materials: &MaterialLibrary) {
-        let columns = ((block.size.x / 0.55).floor() as usize).clamp(1, 4);
-        let rows = ((block.size.z / 0.55).floor() as usize).clamp(1, 4);
+        // La densidad esta limitada para conservar el render en tiempo real.
+        // Los bloques grandes siguen teniendo studs visibles sin generar cientos
+        // de primitivas decorativas.
+        let columns = ((block.size.x / 0.75).ceil() as usize).clamp(1, 3);
+        let rows = ((block.size.z / 0.75).ceil() as usize).clamp(1, 3);
         let spacing = 0.45;
         let top_y = block.center.y + block.size.y * 0.5 + 0.08;
 
