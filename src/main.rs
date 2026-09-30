@@ -1,3 +1,4 @@
+mod app;
 mod camera;
 mod cube;
 mod cylinder;
@@ -11,6 +12,7 @@ mod scene;
 mod sphere;
 mod texture;
 
+use app::{AppState, Character};
 use camera::Camera;
 use framebuffer::Framebuffer;
 use material::{MaterialId, MaterialLibrary};
