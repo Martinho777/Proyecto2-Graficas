@@ -11,6 +11,7 @@ mod renderer;
 mod scene;
 mod sphere;
 mod texture;
+mod ui;
 
 use app::{AppState, Character};
 use camera::Camera;
