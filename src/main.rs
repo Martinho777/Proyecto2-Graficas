@@ -17,7 +17,7 @@ use app::{AppState, Character};
 use camera::Camera;
 use framebuffer::Framebuffer;
 use material::{MaterialId, MaterialLibrary};
-use minifb::{Key, Window, WindowOptions};
+use minifb::{Key, KeyRepeat, Window, WindowOptions};
 use nalgebra_glm::Vec3;
 
 const FRAMEBUFFER_WIDTH: usize = 320;
@@ -26,6 +26,8 @@ const WINDOW_SCALE: usize = 3;
 fn main() {
     let mut framebuffer = Framebuffer::new(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
     let mut camera = Camera::new(Vec3::new(0.0, 0.0, 0.0), 7.0);
+    let mut state = AppState::Title;
+    let mut selected = 0usize;
     let materials = MaterialLibrary::load().expect("no se pudieron cargar los materiales");
     let mut scene = scene::Scene::new();
 
@@ -57,9 +59,55 @@ fn main() {
 
     window.set_target_fps(60);
 
-    while window.is_open() && !window.is_key_down(Key::Escape) {
-        camera.update_from_input(&window);
-        renderer::render_raytraced_scene(&mut framebuffer, &camera, &scene);
+    while window.is_open() {
+        match state {
+            AppState::Title => {
+                if window.is_key_pressed(Key::Escape, KeyRepeat::No) {
+                    break;
+                }
+                if window.is_key_pressed(Key::Space, KeyRepeat::No) {
+                    state = AppState::CharacterSelect;
+                }
+                ui::render_state(&mut framebuffer, state, selected);
+            }
+            AppState::CharacterSelect => {
+                if window.is_key_pressed(Key::Left, KeyRepeat::No)
+                    || window.is_key_pressed(Key::A, KeyRepeat::No)
+                {
+                    selected = (selected + Character::ALL.len() - 1) % Character::ALL.len();
+                }
+                if window.is_key_pressed(Key::Right, KeyRepeat::No)
+                    || window.is_key_pressed(Key::D, KeyRepeat::No)
+                {
+                    selected = (selected + 1) % Character::ALL.len();
+                }
+                if window.is_key_pressed(Key::Up, KeyRepeat::No)
+                    || window.is_key_pressed(Key::W, KeyRepeat::No)
+                {
+                    selected = (selected + Character::ALL.len() - 4) % Character::ALL.len();
+                }
+                if window.is_key_pressed(Key::Down, KeyRepeat::No)
+                    || window.is_key_pressed(Key::S, KeyRepeat::No)
+                {
+                    selected = (selected + 4) % Character::ALL.len();
+                }
+                if window.is_key_pressed(Key::Enter, KeyRepeat::No) {
+                    camera.reset();
+                    state = AppState::Diorama(Character::ALL[selected]);
+                }
+                if window.is_key_pressed(Key::Escape, KeyRepeat::No) {
+                    state = AppState::Title;
+                }
+                ui::render_state(&mut framebuffer, state, selected);
+            }
+            AppState::Diorama(_) => {
+                camera.update_from_input(&window);
+                if window.is_key_pressed(Key::Escape, KeyRepeat::No) {
+                    state = AppState::CharacterSelect;
+                }
+                renderer::render_raytraced_scene(&mut framebuffer, &camera, &scene);
+            }
+        }
 
         window
             .update_with_buffer(&framebuffer.buffer, framebuffer.width, framebuffer.height)
