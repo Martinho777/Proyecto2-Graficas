@@ -1,7 +1,6 @@
 use nalgebra_glm::Vec3;
 
 use crate::cube::Cube;
-use crate::cylinder::Cylinder;
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::primitive::{Hit, Primitive};
 use crate::ray::Ray;
@@ -11,7 +10,6 @@ pub struct Block {
     pub center: Vec3,
     pub size: Vec3,
     pub material: MaterialId,
-    pub studs: bool,
 }
 
 pub struct Scene {
@@ -38,33 +36,7 @@ impl Scene {
             materials.get(block.material),
         )));
 
-        if block.studs {
-            self.add_studs(&block, materials);
-        }
         self.blocks.push(block);
-    }
-
-    fn add_studs(&mut self, block: &Block, materials: &MaterialLibrary) {
-        // La densidad esta limitada para conservar el render en tiempo real.
-        // Los bloques grandes siguen teniendo studs visibles sin generar cientos
-        // de primitivas decorativas.
-        let columns = ((block.size.x / 0.75).ceil() as usize).clamp(1, 3);
-        let rows = ((block.size.z / 0.75).ceil() as usize).clamp(1, 3);
-        let spacing = 0.45;
-        let top_y = block.center.y + block.size.y * 0.5 + 0.08;
-
-        for column in 0..columns {
-            for row in 0..rows {
-                let x = block.center.x + (column as f32 - (columns - 1) as f32 * 0.5) * spacing;
-                let z = block.center.z + (row as f32 - (rows - 1) as f32 * 0.5) * spacing;
-                self.objects.push(Box::new(Cylinder {
-                    center: Vec3::new(x, top_y, z),
-                    radius: 0.12,
-                    height: 0.16,
-                    material: materials.get(block.material),
-                }));
-            }
-        }
     }
 
     pub fn intersect(&self, ray: &Ray) -> Option<Hit> {
