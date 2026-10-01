@@ -270,7 +270,7 @@ fn add_dk_letter(scene: &mut Scene, materials: &MaterialLibrary, glyph: &[&str],
         for (column, pixel) in line.chars().enumerate() {
             if pixel == '#' {
                 scene.add_custom_block(
-                    Vec3::new(x + column as f32 * 0.14, 1.75 - row as f32 * 0.14, 0.52),
+                    Vec3::new(x + column as f32 * 0.14, 1.86 - row as f32 * 0.14, 0.52),
                     Vec3::new(0.12, 0.12, 0.05),
                     materials.banana(),
                 );
@@ -314,8 +314,8 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
         door.clone(),
     );
     scene.add_custom_block(
-        Vec3::new(0.0, 1.48, 0.42),
-        Vec3::new(2.4, 0.62, 0.14),
+        Vec3::new(0.0, 1.55, 0.42),
+        Vec3::new(2.4, 0.76, 0.14),
         door.clone(),
     );
     add_dk_letter(

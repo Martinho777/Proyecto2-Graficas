@@ -84,7 +84,12 @@ impl Texture {
                         } else {
                             0.52 + noise * 0.12
                         };
-                        [0.3 + band * 0.42, 0.14 + band * 0.28, 0.035 + band * 0.08]
+                        let joint = if y % 4 == 0 { 0.52 } else { 1.0 };
+                        [
+                            (0.3 + band * 0.42) * joint,
+                            (0.14 + band * 0.28) * joint,
+                            (0.035 + band * 0.08) * joint,
+                        ]
                     }
                     TextureKind::Thatch => {
                         let strand = if (x + y * 2) % 5 == 0 {
