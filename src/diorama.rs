@@ -309,7 +309,7 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
     }
 
     scene.add_custom_block(
-        Vec3::new(0.0, -0.02, 0.62),
+        Vec3::new(0.0, -0.02, 0.8),
         Vec3::new(0.9, 1.25, 0.14),
         door.clone(),
     );
