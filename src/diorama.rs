@@ -615,6 +615,18 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         );
     }
 
+    // Huevos alienígenas en parejas alrededor de la base.
+    let alien_egg = materials.alien_egg();
+    for (x, z) in [(-3.05, -1.35), (3.0, -0.95), (-2.85, 2.05), (2.75, 2.35)] {
+        for (offset_x, offset_z) in [(-0.18, -0.10), (0.18, 0.10)] {
+            scene.add(Box::new(Sphere {
+                center: Vec3::new(x + offset_x, -0.42, z + offset_z),
+                radius: 0.22,
+                material: alien_egg.clone(),
+            }));
+        }
+    }
+
     scene
 }
 

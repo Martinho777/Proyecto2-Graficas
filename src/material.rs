@@ -50,6 +50,7 @@ pub struct MaterialLibrary {
     navi: Material,
     energy_blue: Material,
     phosphor_green: Material,
+    alien_egg: Material,
     rupee: Material,
     face_mark: Material,
     deku_bark: Material,
@@ -149,6 +150,12 @@ impl MaterialLibrary {
         phosphor_green.specular = 96.0;
         phosphor_green.emission = [0.35, 2.2, 0.18];
 
+        let mut alien_egg = Material::from_texture(Texture::solid([0.62, 0.08, 0.92]));
+        alien_egg.albedo = [0.62, 0.08, 0.92];
+        alien_egg.specular = 112.0;
+        alien_egg.reflectivity = 0.16;
+        alien_egg.emission = [0.18, 0.02, 0.28];
+
         let mut rupee = Material::from_texture(Texture::procedural(TextureKind::Crystal));
         rupee.albedo = [0.08, 0.45, 1.0];
         rupee.specular = 128.0;
@@ -176,6 +183,7 @@ impl MaterialLibrary {
             navi,
             energy_blue,
             phosphor_green,
+            alien_egg,
             rupee,
             face_mark,
             deku_bark,
@@ -236,6 +244,10 @@ impl MaterialLibrary {
 
     pub fn phosphor_green(&self) -> Material {
         self.phosphor_green.clone()
+    }
+
+    pub fn alien_egg(&self) -> Material {
+        self.alien_egg.clone()
     }
 
     pub fn deku_bark(&self) -> Material {
