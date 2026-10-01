@@ -48,6 +48,7 @@ pub struct MaterialLibrary {
     bamboo: Material,
     metal: Material,
     navi: Material,
+    rupee: Material,
 }
 
 impl MaterialLibrary {
@@ -129,6 +130,14 @@ impl MaterialLibrary {
         navi.reflectivity = 0.12;
         navi.emission = [1.8, 2.4, 3.2];
 
+        let mut rupee = Material::from_texture(Texture::procedural(TextureKind::Crystal));
+        rupee.albedo = [0.08, 0.45, 1.0];
+        rupee.specular = 128.0;
+        rupee.reflectivity = 0.28;
+        rupee.transparency = 0.12;
+        rupee.refractive_index = 1.45;
+        rupee.emission = [0.02, 0.12, 0.35];
+
         Ok(Self {
             materials: [stone, wood, leaves, plain_crystal.clone(), lava],
             coin,
@@ -142,6 +151,7 @@ impl MaterialLibrary {
             bamboo,
             metal,
             navi,
+            rupee,
         })
     }
 
@@ -191,6 +201,10 @@ impl MaterialLibrary {
 
     pub fn navi(&self) -> Material {
         self.navi.clone()
+    }
+
+    pub fn rupee(&self) -> Material {
+        self.rupee.clone()
     }
 }
 

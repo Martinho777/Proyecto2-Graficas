@@ -513,17 +513,39 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
         );
     }
 
+    // Blue rupees placed around the path with a faceted silhouette.
+    let rupee = materials.rupee();
+    for (x, z) in [(-2.3, 1.9), (2.1, 1.75), (-2.9, 0.25), (2.8, -0.55)] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.4, z),
+            Vec3::new(0.2, 0.5, 0.12),
+            rupee.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x, -0.68, z),
+            Vec3::new(0.12, 0.12, 0.1),
+            rupee.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x, -0.12, z),
+            Vec3::new(0.12, 0.12, 0.1),
+            rupee.clone(),
+        );
+    }
+
     scene
 }
 
 fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let navi = materials.navi();
+    let center = Vec3::new(
+        (time * 0.7).cos() * 3.15,
+        1.15 + (time * 1.8).sin() * 0.18,
+        0.1 + (time * 0.7).sin() * 3.05,
+    );
+    scene.navi_light_position = Some(center);
     scene.add_dynamic(Box::new(Sphere {
-        center: Vec3::new(
-            0.72 + (time * 1.4).cos() * 0.32,
-            1.18 + (time * 2.0).sin() * 0.16,
-            1.02 + (time * 1.1).sin() * 0.18,
-        ),
+        center,
         radius: 0.24,
         material: navi,
     }));

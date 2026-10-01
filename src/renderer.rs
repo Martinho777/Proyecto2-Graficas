@@ -124,7 +124,10 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
         } else {
             0.8
         };
-    let navi_distance = (hit.point - Vec3::new(0.72, 1.18, 1.02)).magnitude();
+    let navi_distance = scene
+        .navi_light_position
+        .map(|position| (hit.point - position).magnitude())
+        .unwrap_or(99.0);
     let navi_light = if scene.background & 0xFFFFFF == 0x111B46 {
         (1.0 - navi_distance / 3.0).max(0.0) * 1.35
     } else {

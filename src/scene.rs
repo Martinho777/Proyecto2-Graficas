@@ -17,6 +17,7 @@ pub struct Scene {
     pub dynamic_objects: Vec<Box<dyn Primitive>>,
     pub blocks: Vec<Block>,
     pub background: u32,
+    pub navi_light_position: Option<Vec3>,
 }
 
 impl Scene {
@@ -26,6 +27,7 @@ impl Scene {
             dynamic_objects: Vec::new(),
             blocks: Vec::new(),
             background: 0x07111F,
+            navi_light_position: None,
         }
     }
 
@@ -35,6 +37,7 @@ impl Scene {
             dynamic_objects: Vec::new(),
             blocks: Vec::new(),
             background,
+            navi_light_position: None,
         }
     }
 
@@ -48,6 +51,7 @@ impl Scene {
 
     pub fn clear_dynamic(&mut self) {
         self.dynamic_objects.clear();
+        self.navi_light_position = None;
     }
 
     pub fn add_block(&mut self, block: Block, materials: &MaterialLibrary) {
