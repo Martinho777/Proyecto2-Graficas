@@ -1,5 +1,6 @@
 use crate::animation::bobbing_height;
 use crate::app::Character;
+use crate::cube::Cube;
 use crate::cylinder::{Cylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::scene::{Block, Scene};
@@ -216,6 +217,27 @@ fn update_mario_animation(scene: &mut Scene, materials: &MaterialLibrary, time: 
     }
 }
 
+fn update_dk_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+    let leaves = materials.get(MaterialId::Leaves);
+    for (palm_index, (x, z)) in [(-2.8, 1.35), (2.8, 1.35), (-2.9, -2.1), (2.9, -2.0)]
+        .into_iter()
+        .enumerate()
+    {
+        let sway = (time * 1.8 + palm_index as f32 * 0.9).sin() * 0.16;
+        for (dx, dz, dy, size) in [
+            (-0.55, 0.0, 0.0, 1.15),
+            (0.35, 0.28, 0.12, 1.0),
+            (0.25, -0.42, -0.06, 0.9),
+        ] {
+            scene.add_dynamic(Box::new(Cube::from_center_size(
+                Vec3::new(x + dx + sway, 1.28 + dy, z + dz),
+                Vec3::new(size, 0.16, 0.32),
+                leaves.clone(),
+            )));
+        }
+    }
+}
+
 fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x496A88);
     add_blocks(&mut scene, materials, build_floating_island());
@@ -318,17 +340,6 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
             height: 0.65,
             material: hut.clone(),
         }));
-        for (dx, dz, dy, size) in [
-            (-0.55, 0.0, 0.0, 1.15),
-            (0.35, 0.28, 0.12, 1.0),
-            (0.25, -0.42, -0.06, 0.9),
-        ] {
-            scene.add_custom_block(
-                Vec3::new(x + dx, 1.28 + dy, z + dz),
-                Vec3::new(size, 0.16, 0.32),
-                materials.get(MaterialId::Leaves),
-            );
-        }
     }
 
     let bush = materials.get(MaterialId::Leaves);
@@ -387,6 +398,8 @@ pub fn update_stage_animation(
 ) {
     if character == Character::Mario {
         update_mario_animation(scene, materials, time);
+    } else if character == Character::DonkeyKong {
+        update_dk_animation(scene, materials, time);
     }
 }
 
