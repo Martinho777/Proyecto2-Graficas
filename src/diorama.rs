@@ -571,6 +571,35 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         }
     }
 
+    // Barriles de acero con derrames fosforescentes sobre la tierra.
+    let phosphor = materials.navi();
+    for (x, z, spill_direction) in [(-2.55, 0.85, 1.0), (2.45, 1.55, -1.0)] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, -0.22, z),
+            radius: 0.34,
+            height: 0.58,
+            material: metal.clone(),
+        }));
+        for y in [-0.43, -0.02] {
+            scene.add_custom_block(
+                Vec3::new(x, y, z),
+                Vec3::new(0.72, 0.07, 0.72),
+                metal.clone(),
+            );
+        }
+        for (index, distance) in [0.22, 0.58, 0.94].into_iter().enumerate() {
+            scene.add_custom_block(
+                Vec3::new(
+                    x + spill_direction * distance,
+                    -0.51,
+                    z + 0.06 * index as f32,
+                ),
+                Vec3::new(0.42 - index as f32 * 0.08, 0.06, 0.26),
+                phosphor.clone(),
+            );
+        }
+    }
+
     // Solo tres energy towers, cada una con una punta azulada bien visible.
     for (x, z, height) in [(-1.45, -0.7, 1.7), (1.45, -0.7, 1.7), (0.0, -1.45, 2.15)] {
         scene.add(Box::new(VerticalCylinder {
