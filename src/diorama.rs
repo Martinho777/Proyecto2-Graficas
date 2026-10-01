@@ -800,7 +800,7 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
     scene.add(Box::new(Sphere {
         center: Vec3::new(2.65, 0.3, -0.72),
         radius: 0.09,
-        material: yellow,
+        material: yellow.clone(),
     }));
 
     // Vegetación adicional para cerrar los espacios abiertos de la isla.
@@ -815,6 +815,62 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
             Vec3::new(0.55 * scale, 0.3, 0.46 * scale),
             leaves.clone(),
         );
+    }
+
+    // Vegetación repartida por todo el perímetro, también detrás del nido.
+    for (x, z, scale) in [
+        (-3.45, -0.35, 0.62),
+        (3.4, -0.25, 0.68),
+        (-2.35, -2.45, 0.58),
+        (2.35, -2.55, 0.62),
+        (-1.2, 2.85, 0.55),
+        (1.35, 2.9, 0.58),
+    ] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.37, z),
+            Vec3::new(0.92 * scale, 0.5, 0.7 * scale),
+            leaves.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x + 0.1, 0.04, z - 0.04),
+            Vec3::new(0.58 * scale, 0.3, 0.48 * scale),
+            leaves.clone(),
+        );
+    }
+    for (index, (x, z)) in [
+        (-2.75, -0.65),
+        (2.85, -0.55),
+        (-1.55, -2.55),
+        (1.55, -2.6),
+        (-2.55, 2.55),
+        (2.55, 2.65),
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let petals = if index % 2 == 0 {
+            pink.clone()
+        } else {
+            yellow.clone()
+        };
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, -0.20, z),
+            radius: 0.05,
+            height: 0.9,
+            material: stem.clone(),
+        }));
+        for (petal_x, petal_z) in [(-0.14, 0.0), (0.14, 0.0), (0.0, -0.14), (0.0, 0.14)] {
+            scene.add(Box::new(Sphere {
+                center: Vec3::new(x + petal_x, 0.28, z + petal_z),
+                radius: 0.115,
+                material: petals.clone(),
+            }));
+        }
+        scene.add(Box::new(Sphere {
+            center: Vec3::new(x, 0.28, z),
+            radius: 0.075,
+            material: yellow.clone(),
+        }));
     }
 
     scene

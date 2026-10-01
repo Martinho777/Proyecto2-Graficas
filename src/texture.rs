@@ -121,6 +121,8 @@ impl Texture {
                             (4.0, 27.0),
                             (18.0, 16.0),
                             (29.0, 17.0),
+                            (6.0, 16.0),
+                            (21.0, 27.0),
                         ];
                         let spotted = spots.iter().any(|(spot_x, spot_y)| {
                             let dx = x as f32 - spot_x;
