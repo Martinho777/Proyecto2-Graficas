@@ -461,7 +461,7 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
         );
     }
 
-    // Cara minimalista: solamente dos ojos entrecerrados.
+    // Cara: ojos entrecerrados, cejas inclinadas y bigote diagonal.
     for x in [-0.38, 0.38] {
         scene.add_custom_block(
             Vec3::new(x, 1.45, -0.34),
@@ -469,6 +469,28 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
             materials.plain_crystal(),
         );
     }
+    let face_mark = materials.face_mark();
+    for (x, y, width) in [
+        (-0.62, 1.68, 0.28),
+        (-0.38, 1.61, 0.28),
+        (0.38, 1.61, 0.28),
+        (0.62, 1.68, 0.28),
+        (-0.52, 1.18, 0.3),
+        (-0.28, 1.1, 0.3),
+        (0.28, 1.1, 0.3),
+        (0.52, 1.18, 0.3),
+    ] {
+        scene.add_custom_block(
+            Vec3::new(x, y, -0.36),
+            Vec3::new(width, 0.1, 0.1),
+            face_mark.clone(),
+        );
+    }
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.3, -0.36),
+        Vec3::new(0.18, 0.2, 0.12),
+        bark.clone(),
+    );
 
     // Master Sword clavada frente al árbol.
     let metal = materials.metal();

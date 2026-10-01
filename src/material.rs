@@ -49,6 +49,7 @@ pub struct MaterialLibrary {
     metal: Material,
     navi: Material,
     rupee: Material,
+    face_mark: Material,
 }
 
 impl MaterialLibrary {
@@ -138,6 +139,10 @@ impl MaterialLibrary {
         rupee.refractive_index = 1.45;
         rupee.emission = [0.02, 0.12, 0.35];
 
+        let mut face_mark = Material::from_texture(Texture::solid([0.035, 0.025, 0.02]));
+        face_mark.albedo = [0.18, 0.12, 0.08];
+        face_mark.specular = 8.0;
+
         Ok(Self {
             materials: [stone, wood, leaves, plain_crystal.clone(), lava],
             coin,
@@ -152,6 +157,7 @@ impl MaterialLibrary {
             metal,
             navi,
             rupee,
+            face_mark,
         })
     }
 
@@ -205,6 +211,10 @@ impl MaterialLibrary {
 
     pub fn rupee(&self) -> Material {
         self.rupee.clone()
+    }
+
+    pub fn face_mark(&self) -> Material {
+        self.face_mark.clone()
     }
 }
 
