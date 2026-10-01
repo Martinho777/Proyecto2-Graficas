@@ -559,7 +559,7 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         metal.clone(),
     );
 
-    // Camino de tierra con balizas luminosas.
+    // Camino de tierra con balizas luminosas directamente sobre el piso.
     for (index, z) in [2.7, 2.1, 1.5, 0.9, 0.3].into_iter().enumerate() {
         scene.add_custom_block(
             Vec3::new(0.0, -0.37, z),
@@ -568,31 +568,19 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         );
         for x in [-0.7, 0.7] {
             scene.add_custom_block(
-                Vec3::new(x, 0.0, z),
-                Vec3::new(0.1, 0.65, 0.1),
+                Vec3::new(x, -0.22, z),
+                Vec3::new(0.28, 0.08, 0.28),
                 metal.clone(),
             );
             scene.add_custom_block(
-                Vec3::new(x, 0.38, z),
-                Vec3::new(0.18, 0.14, 0.18),
+                Vec3::new(x, -0.16, z),
+                Vec3::new(0.20, 0.05, 0.20),
                 energy.clone(),
             );
         }
     }
 
-    // Torres laterales y compuerta central.
-    for x in [-1.85, 1.85] {
-        scene.add_custom_block(
-            Vec3::new(x, 0.25, -0.8),
-            Vec3::new(0.55, 1.55, 0.8),
-            metal.clone(),
-        );
-        scene.add_custom_block(
-            Vec3::new(x, 1.08, -0.8),
-            Vec3::new(0.75, 0.14, 1.0),
-            lava.clone(),
-        );
-    }
+    // Compuerta central industrial al fondo.
     scene.add_custom_block(
         Vec3::new(0.0, 0.45, -1.0),
         Vec3::new(2.0, 1.8, 0.3),
@@ -625,7 +613,7 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         );
     }
 
-    // Energy towers alrededor de la compuerta.
+    // Solo tres energy towers, cada una con una punta azulada bien visible.
     for (x, z, height) in [(-1.45, -0.7, 1.7), (1.45, -0.7, 1.7), (0.0, -1.45, 2.15)] {
         scene.add(Box::new(VerticalCylinder {
             center: Vec3::new(x, height * 0.5 - 0.45, z),
