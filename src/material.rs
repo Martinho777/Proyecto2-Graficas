@@ -1,4 +1,5 @@
 use crate::texture::{Texture, TextureKind};
+use std::sync::Arc;
 
 #[derive(Clone, Copy, Debug)]
 pub enum MaterialId {
@@ -11,7 +12,7 @@ pub enum MaterialId {
 
 #[derive(Clone, Debug)]
 pub struct Material {
-    pub texture: Texture,
+    pub texture: Arc<Texture>,
     pub albedo: [f32; 3],
     pub specular: f32,
     pub transparency: f32,
@@ -23,7 +24,7 @@ pub struct Material {
 impl Material {
     pub fn from_texture(texture: Texture) -> Self {
         Self {
-            texture,
+            texture: Arc::new(texture),
             albedo: [0.8, 0.8, 0.8],
             specular: 32.0,
             transparency: 0.0,
