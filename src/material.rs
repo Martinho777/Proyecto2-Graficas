@@ -175,7 +175,7 @@ impl MaterialLibrary {
         water.transparency = 0.42;
         water.reflectivity = 0.48;
         water.refractive_index = 1.33;
-        water.emission = [0.02, 0.08, 0.18];
+        water.emission = [0.08, 0.24, 0.52];
 
         let mut ridley_eye = Material::from_texture(Texture::solid([1.0, 0.02, 0.01]));
         ridley_eye.albedo = [1.0, 0.02, 0.01];
