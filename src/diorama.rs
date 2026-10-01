@@ -538,6 +538,77 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::with_background(0x04071A);
+    let metal = materials.metal();
+    let stone = materials.get(MaterialId::Stone);
+    let lava = materials.get(MaterialId::Lava);
+
+    // Plataforma principal suspendida en el vacío.
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.1, 0.0),
+        Vec3::new(4.8, 0.3, 3.1),
+        metal.clone(),
+    );
+    for x in [-2.15, 2.15] {
+        scene.add_custom_block(
+            Vec3::new(x, 0.35, 0.0),
+            Vec3::new(0.22, 0.7, 2.8),
+            metal.clone(),
+        );
+    }
+    for z in [-1.3, 1.3] {
+        scene.add_custom_block(
+            Vec3::new(0.0, 0.3, z),
+            Vec3::new(4.4, 0.55, 0.18),
+            metal.clone(),
+        );
+    }
+
+    // Compuerta industrial en el fondo.
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.15, -1.15),
+        Vec3::new(2.2, 2.2, 0.22),
+        stone.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.15, -1.03),
+        Vec3::new(1.2, 1.65, 0.08),
+        metal.clone(),
+    );
+    for x in [-0.72, 0.72] {
+        scene.add_custom_block(
+            Vec3::new(x, 1.85, -0.88),
+            Vec3::new(0.18, 0.18, 0.08),
+            lava.clone(),
+        );
+    }
+
+    // Energy tanks azules a los lados de la plataforma.
+    for x in [-1.45, 1.45] {
+        scene.add_custom_block(
+            Vec3::new(x, 0.34, 0.15),
+            Vec3::new(0.28, 0.8, 0.22),
+            materials.rupee(),
+        );
+    }
+
+    // Lava claramente separada y muy por debajo de la plataforma.
+    for (x, z, width, depth) in [
+        (0.0, 0.0, 7.5, 5.0),
+        (-2.8, -1.4, 2.4, 1.3),
+        (2.7, 1.3, 2.6, 1.2),
+    ] {
+        scene.add_custom_block(
+            Vec3::new(x, -3.2, z),
+            Vec3::new(width, 0.35, depth),
+            lava.clone(),
+        );
+    }
+
+    scene
+}
+
 fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let navi = materials.navi();
     let center = Vec3::new(
@@ -572,6 +643,18 @@ fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f
     }
 }
 
+fn update_samus_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+    let lava = materials.get(MaterialId::Lava);
+    for (index, x) in [-2.4, -0.8, 0.8, 2.4].into_iter().enumerate() {
+        let pulse = (time * 1.6 + index as f32 * 0.7).sin() * 0.08;
+        scene.add_dynamic(Box::new(Cube::from_center_size(
+            Vec3::new(x, -2.98 + pulse, 0.4),
+            Vec3::new(0.7, 0.12, 0.28),
+            lava.clone(),
+        )));
+    }
+}
+
 /// Actualiza solamente la animación correspondiente al stage seleccionado.
 pub fn update_stage_animation(
     scene: &mut Scene,
@@ -585,6 +668,8 @@ pub fn update_stage_animation(
         update_dk_animation(scene, materials, time);
     } else if character == Character::Link {
         update_link_animation(scene, materials, time);
+    } else if character == Character::Samus {
+        update_samus_animation(scene, materials, time);
     }
 }
 
@@ -602,11 +687,10 @@ pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
         Character::Mario => build_mario_stage(materials),
         Character::DonkeyKong => build_dk_stage(materials),
         Character::Link => build_link_stage(materials),
-        Character::Samus
-        | Character::Yoshi
-        | Character::Kirby
-        | Character::Fox
-        | Character::Pikachu => build_placeholder_stage(character, materials),
+        Character::Samus => build_samus_stage(materials),
+        Character::Yoshi | Character::Kirby | Character::Fox | Character::Pikachu => {
+            build_placeholder_stage(character, materials)
+        }
     }
 }
 

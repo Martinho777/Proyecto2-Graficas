@@ -12,7 +12,10 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let fallback_blue = (background & 0xFF) as f32 / 255.0;
     let sunset = background & 0xFFFFFF == 0xD66B45;
     let night = background & 0xFFFFFF == 0x111B46;
-    let horizon = if night {
+    let space = background & 0xFFFFFF == 0x04071A;
+    let horizon = if space {
+        Vec3::new(0.008, 0.012, 0.035)
+    } else if night {
         Vec3::new(0.035, 0.06, 0.16)
     } else if sunset {
         Vec3::new(0.95, 0.42, 0.22)
@@ -23,7 +26,9 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
             fallback_blue * 0.9 + 0.22,
         )
     };
-    let zenith = if night {
+    let zenith = if space {
+        Vec3::new(0.001, 0.002, 0.012)
+    } else if night {
         Vec3::new(0.008, 0.015, 0.06)
     } else if sunset {
         Vec3::new(0.12, 0.16, 0.4)
@@ -34,7 +39,9 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let sky_factor = ((height + 0.15) / 1.15).powf(0.72);
     let mut sky = horizon * (1.0 - sky_factor) + zenith * sky_factor;
 
-    let sun_direction = if night {
+    let sun_direction = if space {
+        normalize(&Vec3::new(-0.3, 0.5, 0.15))
+    } else if night {
         normalize(&Vec3::new(-0.35, 0.58, 0.2))
     } else if sunset {
         normalize(&Vec3::new(-0.45, 0.42, 0.35))
@@ -50,7 +57,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
         Vec3::new(1.0, 0.72, 0.35)
     };
     sky += sky_light * (sun_glow + sun_disc);
-    if night {
+    if night || space {
         let star_wave =
             (direction.x * 91.0).sin() * (direction.y * 117.0).cos() * (direction.z * 73.0).sin();
         if star_wave > 0.94 {
@@ -61,7 +68,8 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let cloud_wave = (direction.x * 11.0 + direction.z * 7.0).sin()
         * (direction.x * 4.0 - direction.z * 9.0).cos();
     let cloud_band = (cloud_wave * 0.5 + 0.5) * (1.0 - (direction.y - 0.2).abs() * 2.8);
-    let cloud_amount = cloud_band.clamp(0.0, 1.0).powf(5.0) * if night { 0.035 } else { 0.16 };
+    let cloud_amount =
+        cloud_band.clamp(0.0, 1.0).powf(5.0) * if night || space { 0.0 } else { 0.16 };
     sky * (1.0 - cloud_amount) + Vec3::new(0.62, 0.72, 0.92) * cloud_amount
 }
 
