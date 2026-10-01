@@ -50,7 +50,6 @@ pub struct MaterialLibrary {
     navi: Material,
     rupee: Material,
     face_mark: Material,
-    triforce: Material,
 }
 
 impl MaterialLibrary {
@@ -144,12 +143,6 @@ impl MaterialLibrary {
         face_mark.albedo = [0.18, 0.12, 0.08];
         face_mark.specular = 8.0;
 
-        let mut triforce = Material::from_texture(Texture::solid([1.0, 0.68, 0.04]));
-        triforce.albedo = [1.0, 0.72, 0.05];
-        triforce.specular = 128.0;
-        triforce.reflectivity = 0.22;
-        triforce.emission = [0.22, 0.12, 0.015];
-
         Ok(Self {
             materials: [stone, wood, leaves, plain_crystal.clone(), lava],
             coin,
@@ -165,7 +158,6 @@ impl MaterialLibrary {
             navi,
             rupee,
             face_mark,
-            triforce,
         })
     }
 
@@ -223,10 +215,6 @@ impl MaterialLibrary {
 
     pub fn face_mark(&self) -> Material {
         self.face_mark.clone()
-    }
-
-    pub fn triforce(&self) -> Material {
-        self.triforce.clone()
     }
 }
 

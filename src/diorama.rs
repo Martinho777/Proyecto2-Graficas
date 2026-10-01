@@ -555,16 +555,6 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
         );
     }
 
-    // Trifuerza luminosa suspendida sobre la Master Sword.
-    let triforce = materials.triforce();
-    for (x, y) in [(-0.28, 2.05), (0.28, 2.05), (0.0, 1.78)] {
-        scene.add_custom_block(
-            Vec3::new(x, y, 2.0),
-            Vec3::new(0.22, 0.22, 0.1),
-            triforce.clone(),
-        );
-    }
-
     scene
 }
 
