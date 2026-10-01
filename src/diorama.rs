@@ -241,6 +241,33 @@ pub fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
         );
     }
 
+    add_blocks(
+        &mut scene,
+        vec![
+            block(
+                Vec3::new(0.0, 0.35, -2.8),
+                Vec3::new(2.8, 1.6, 0.6),
+                MaterialId::Stone,
+            ),
+            block(
+                Vec3::new(0.0, 1.3, -2.8),
+                Vec3::new(1.4, 0.35, 0.8),
+                MaterialId::Lava,
+            ),
+            block(
+                Vec3::new(-2.5, 3.0, -1.0),
+                Vec3::new(2.0, 0.45, 0.7),
+                MaterialId::Leaves,
+            ),
+            block(
+                Vec3::new(2.4, 3.35, 0.2),
+                Vec3::new(1.6, 0.45, 0.7),
+                MaterialId::Leaves,
+            ),
+        ],
+        materials,
+    );
+
     scene
 }
 
