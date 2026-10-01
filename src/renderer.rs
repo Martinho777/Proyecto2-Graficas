@@ -12,7 +12,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let fallback_blue = (background & 0xFF) as f32 / 255.0;
     let sunset = background & 0xFFFFFF == 0xD66B45;
     let horizon = if sunset {
-        Vec3::new(0.95, 0.32, 0.16)
+        Vec3::new(0.95, 0.42, 0.22)
     } else {
         Vec3::new(
             fallback_red * 0.9 + 0.12,
@@ -21,7 +21,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
         )
     };
     let zenith = if sunset {
-        Vec3::new(0.16, 0.08, 0.22)
+        Vec3::new(0.12, 0.16, 0.4)
     } else {
         Vec3::new(0.08, 0.32, 0.72)
     };
@@ -30,7 +30,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let mut sky = horizon * (1.0 - sky_factor) + zenith * sky_factor;
 
     let sun_direction = if sunset {
-        normalize(&Vec3::new(-0.45, 0.28, 0.35))
+        normalize(&Vec3::new(-0.45, 0.42, 0.35))
     } else {
         normalize(&Vec3::new(-0.45, 0.78, 0.35))
     };

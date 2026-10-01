@@ -264,6 +264,20 @@ fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn add_dk_letter(scene: &mut Scene, materials: &MaterialLibrary, glyph: &[&str], x: f32) {
+    for (row, line) in glyph.iter().enumerate() {
+        for (column, pixel) in line.chars().enumerate() {
+            if pixel == '#' {
+                scene.add_custom_block(
+                    Vec3::new(x + column as f32 * 0.14, 1.63 - row as f32 * 0.14, 0.52),
+                    Vec3::new(0.12, 0.12, 0.05),
+                    materials.banana(),
+                );
+            }
+        }
+    }
+}
+
 fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0xD66B45);
     add_blocks(&mut scene, materials, build_floating_island());
@@ -300,7 +314,19 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
     scene.add_custom_block(
         Vec3::new(0.0, 1.48, 0.42),
         Vec3::new(2.4, 0.62, 0.14),
-        materials.kong_sign(),
+        hut.clone(),
+    );
+    add_dk_letter(
+        &mut scene,
+        materials,
+        &["####.", "#...#", "#...#", "#...#", "####."],
+        -0.48,
+    );
+    add_dk_letter(
+        &mut scene,
+        materials,
+        &["#...#", "#..#.", "###..", "#..#.", "#...#"],
+        0.22,
     );
 
     for (x, z) in [(-2.8, 1.35), (2.8, 1.35), (-2.9, -2.1), (2.9, -2.0)] {
