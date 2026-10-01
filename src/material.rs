@@ -62,13 +62,16 @@ impl MaterialLibrary {
         )?);
         stained_glass.albedo = [0.75, 0.9, 1.0];
         stained_glass.specular = 128.0;
-        stained_glass.transparency = 0.7;
+        stained_glass.transparency = 0.58;
+        stained_glass.reflectivity = 0.16;
         stained_glass.refractive_index = 1.5;
+        stained_glass.emission = [0.035, 0.025, 0.02];
 
         let mut plain_crystal = Material::from_texture(Texture::procedural(TextureKind::Crystal));
         plain_crystal.albedo = [0.55, 0.8, 1.0];
         plain_crystal.specular = 128.0;
-        plain_crystal.transparency = 0.7;
+        plain_crystal.transparency = 0.42;
+        plain_crystal.reflectivity = 0.12;
         plain_crystal.refractive_index = 1.5;
 
         let mut lava = Material::from_texture(Texture::procedural(TextureKind::Roof));
