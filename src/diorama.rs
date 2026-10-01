@@ -559,12 +559,12 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         );
         for x in [-0.7, 0.7] {
             scene.add_custom_block(
-                Vec3::new(x, -0.27, z),
+                Vec3::new(x, -0.635, z),
                 Vec3::new(0.28, 0.08, 0.28),
                 metal.clone(),
             );
             scene.add_custom_block(
-                Vec3::new(x, -0.21, z),
+                Vec3::new(x, -0.575, z),
                 Vec3::new(0.20, 0.05, 0.20),
                 energy.clone(),
             );
@@ -674,15 +674,15 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     }
 
     // Patas delgadas y pies apoyados detrás de la isla.
-    for x in [-0.48, 0.48] {
+    for x in [-0.34, 0.34] {
         scene.add(Box::new(VerticalCylinder {
-            center: Vec3::new(x, 0.05, -3.65),
+            center: Vec3::new(x, 0.12, -3.65),
             radius: 0.22,
-            height: 1.45,
+            height: 1.55,
             material: ridley.clone(),
         }));
         scene.add_custom_block(
-            Vec3::new(x, -0.585, -3.42),
+            Vec3::new(x, -0.585, -3.65),
             Vec3::new(0.48, 0.18, 0.78),
             ridley.clone(),
         );
