@@ -92,7 +92,7 @@ fn main() {
                     state = AppState::CharacterSelect;
                 }
                 scene.clear_dynamic();
-                diorama::update_stage_animation(&mut scene, &materials, clock.seconds());
+                diorama::update_stage_animation(&mut scene, &materials, character, clock.seconds());
                 renderer::render_raytraced_scene(&mut framebuffer, &camera, &scene);
             }
         }
