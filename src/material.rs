@@ -40,6 +40,8 @@ pub struct MaterialLibrary {
     question: Material,
     pipe: Material,
     question_mark: Material,
+    plain_crystal: Material,
+    stained_glass: Material,
 }
 
 impl MaterialLibrary {
@@ -55,13 +57,19 @@ impl MaterialLibrary {
         leaves.albedo = [0.3, 0.86, 0.22];
         leaves.specular = 12.0;
 
-        let mut crystal = Material::from_texture(Texture::load_ppm(
+        let mut stained_glass = Material::from_texture(Texture::load_ppm(
             "assets/textures/peach_stained_glass.ppm",
         )?);
-        crystal.albedo = [0.55, 0.8, 1.0];
-        crystal.specular = 128.0;
-        crystal.transparency = 0.7;
-        crystal.refractive_index = 1.5;
+        stained_glass.albedo = [0.75, 0.9, 1.0];
+        stained_glass.specular = 128.0;
+        stained_glass.transparency = 0.7;
+        stained_glass.refractive_index = 1.5;
+
+        let mut plain_crystal = Material::from_texture(Texture::procedural(TextureKind::Crystal));
+        plain_crystal.albedo = [0.55, 0.8, 1.0];
+        plain_crystal.specular = 128.0;
+        plain_crystal.transparency = 0.7;
+        plain_crystal.refractive_index = 1.5;
 
         let mut lava = Material::from_texture(Texture::procedural(TextureKind::Roof));
         lava.albedo = [1.0, 0.35, 0.22];
@@ -88,11 +96,13 @@ impl MaterialLibrary {
         question_mark.specular = 24.0;
 
         Ok(Self {
-            materials: [stone, wood, leaves, crystal, lava],
+            materials: [stone, wood, leaves, plain_crystal.clone(), lava],
             coin,
             question,
             pipe,
             question_mark,
+            plain_crystal,
+            stained_glass,
         })
     }
 
@@ -114,6 +124,14 @@ impl MaterialLibrary {
 
     pub fn question_mark(&self) -> Material {
         self.question_mark.clone()
+    }
+
+    pub fn plain_crystal(&self) -> Material {
+        self.plain_crystal.clone()
+    }
+
+    pub fn stained_glass(&self) -> Material {
+        self.stained_glass.clone()
     }
 }
 

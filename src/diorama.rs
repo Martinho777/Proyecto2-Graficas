@@ -87,18 +87,6 @@ fn build_castle() -> Vec<Block> {
         Vec3::new(0.65, 0.9, 0.12),
         MaterialId::Wood,
     ));
-    for x in [-1.65, 0.0, 1.65] {
-        blocks.push(block(
-            Vec3::new(x, 0.55, 1.15),
-            Vec3::new(0.28, 0.65, 0.08),
-            MaterialId::Crystal,
-        ));
-    }
-    blocks.push(block(
-        Vec3::new(0.0, 2.55, 1.15),
-        Vec3::new(0.55, 0.85, 0.08),
-        MaterialId::Crystal,
-    ));
 
     for castle_block in &mut blocks {
         castle_block.center.x *= 1.2;
@@ -218,6 +206,18 @@ fn build_island_stage(materials: &MaterialLibrary, time: f32) -> Scene {
     let mut scene = Scene::with_background(0x496A88);
     add_blocks(&mut scene, materials, build_floating_island());
     add_blocks(&mut scene, materials, build_castle());
+    for x in [-1.98, 1.98] {
+        scene.add_custom_block(
+            Vec3::new(x, 0.66, -1.05),
+            Vec3::new(0.28, 0.65, 0.08),
+            materials.plain_crystal(),
+        );
+    }
+    scene.add_custom_block(
+        Vec3::new(0.0, 3.06, -1.05),
+        Vec3::new(0.66, 1.02, 0.08),
+        materials.stained_glass(),
+    );
     add_blocks(&mut scene, materials, build_path());
     add_blocks(&mut scene, materials, build_bushes());
     let pipe = materials.pipe();
