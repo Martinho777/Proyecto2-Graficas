@@ -961,30 +961,6 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
         material: crystal,
     }));
 
-    // Cascadas transparentes cayendo por el borde frontal.
-    for (x, z) in [(-2.35, 3.84), (0.0, 4.5), (2.35, 3.84)] {
-        scene.add(Box::new(VerticalCylinder {
-            center: Vec3::new(x, -1.4, z),
-            radius: 0.32,
-            height: 2.5,
-            material: materials.water(),
-        }));
-        scene.add(Box::new(VerticalCylinder {
-            center: Vec3::new(x, -2.9, z),
-            radius: 0.22,
-            height: 0.65,
-            material: materials.water(),
-        }));
-        let foam = materials.foam();
-        for offset in [-0.18, 0.0, 0.18] {
-            scene.add(Box::new(Sphere {
-                center: Vec3::new(x + offset, -3.27, z),
-                radius: 0.15,
-                material: foam.clone(),
-            }));
-        }
-    }
-
     // Anillos luminosos sobre las cuatro torres exteriores.
     let ring = materials.navi();
     for (x, z, height, radius) in [
@@ -1021,6 +997,64 @@ fn update_kirby_animation(scene: &mut Scene, materials: &MaterialLibrary, time: 
         depth: 0.22,
         material: materials.kirby_star(),
     }));
+
+    // Cascadas animadas: flujo con ancho variable, gotas descendentes y salpicaduras ascendentes.
+    for (cascade_index, (x, z)) in [(-2.35, 3.84), (0.0, 4.5), (2.35, 3.84)]
+        .into_iter()
+        .enumerate()
+    {
+        let pulse = 0.88 + 0.12 * (time * 2.0 + cascade_index as f32).sin();
+        scene.add_dynamic(Box::new(VerticalCylinder {
+            center: Vec3::new(x, -1.4, z),
+            radius: 0.32 * pulse,
+            height: 2.5,
+            material: materials.water(),
+        }));
+        scene.add_dynamic(Box::new(VerticalCylinder {
+            center: Vec3::new(x, -2.9, z),
+            radius: 0.22 * pulse,
+            height: 0.65,
+            material: materials.water(),
+        }));
+
+        let fall_phase = (time * 0.9 + cascade_index as f32 * 0.37).rem_euclid(1.0);
+        for drop_index in 0..3 {
+            let phase = (fall_phase + drop_index as f32 * 0.31).rem_euclid(1.0);
+            scene.add_dynamic(Box::new(Sphere {
+                center: Vec3::new(
+                    x + (drop_index as f32 - 1.0) * 0.12,
+                    0.0 - phase * 2.65,
+                    z + 0.2,
+                ),
+                radius: 0.07,
+                material: materials.water(),
+            }));
+        }
+
+        let foam = materials.foam();
+        for offset in [-0.18, 0.0, 0.18] {
+            scene.add_dynamic(Box::new(Sphere {
+                center: Vec3::new(x + offset, -3.27, z),
+                radius: 0.15,
+                material: foam.clone(),
+            }));
+        }
+        for splash_index in 0..2 {
+            let splash_phase =
+                (time * 1.2 + cascade_index as f32 * 0.4 + splash_index as f32 * 0.5)
+                    .rem_euclid(1.0);
+            scene.add_dynamic(Box::new(Sphere {
+                center: Vec3::new(
+                    x + (splash_index as f32 - 0.5) * 0.25,
+                    -3.2 + splash_phase * 0.72,
+                    z - 0.22,
+                ),
+                radius: 0.065,
+                material: materials.water(),
+            }));
+        }
+    }
+
     let wave = (time * 1.4).sin() * 0.16;
     for radius in [0.9 + wave, 1.55 - wave * 0.6] {
         scene.add_dynamic(Box::new(VerticalCylinder {
