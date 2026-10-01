@@ -720,7 +720,7 @@ fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f
 }
 
 fn update_samus_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
-    let pulse = 0.82 + 0.18 * (time * 2.4).sin();
+    let pulse = 0.28 + 0.72 * (0.5 + 0.5 * (time * 2.4).sin());
     let mut energy = materials.energy_blue();
     energy.emission = [0.08 * pulse, 0.45 * pulse, 1.4 * pulse];
     for (x, z, height) in [(-1.45, -0.7, 0.95), (1.45, -0.7, 0.95), (0.0, -1.45, 1.15)] {
@@ -732,7 +732,7 @@ fn update_samus_animation(scene: &mut Scene, materials: &MaterialLibrary, time: 
     }
 
     let mut phosphor = materials.phosphor_green();
-    let green_pulse = 0.78 + 0.22 * (time * 3.0).sin().abs();
+    let green_pulse = 0.22 + 0.78 * (0.5 + 0.5 * (time * 3.0).sin());
     phosphor.emission = [0.35 * green_pulse, 2.2 * green_pulse, 0.18 * green_pulse];
     for (x, z, spill_direction) in [(-2.55, 0.85, 1.0), (2.45, 1.55, -1.0)] {
         for (index, distance) in [0.22, 0.58, 0.94].into_iter().enumerate() {
@@ -748,7 +748,7 @@ fn update_samus_animation(scene: &mut Scene, materials: &MaterialLibrary, time: 
         }
     }
 
-    let wing_lift = (time * 1.2).sin() * 0.08;
+    let wing_lift = (time * 1.2).sin() * 0.24;
     let ridley = materials.alien_egg();
     for (x, z, size) in [
         (-1.45, -3.7, Vec3::new(2.4, 0.18, 1.35)),
