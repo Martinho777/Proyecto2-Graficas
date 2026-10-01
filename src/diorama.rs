@@ -199,7 +199,7 @@ fn build_static_props(scene: &mut Scene, materials: &MaterialLibrary) {
     }
 }
 
-pub fn update_stage_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+fn update_mario_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let coin = materials.coin();
     for (x, y, z, phase) in [
         (-1.35, -0.15, 1.2, 0.0),
@@ -216,7 +216,7 @@ pub fn update_stage_animation(scene: &mut Scene, materials: &MaterialLibrary, ti
     }
 }
 
-fn build_island_stage(materials: &MaterialLibrary) -> Scene {
+fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x496A88);
     add_blocks(&mut scene, materials, build_floating_island());
     add_blocks(&mut scene, materials, build_castle());
@@ -242,14 +242,43 @@ fn build_island_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
-/// Empty visual scaffold. The new diorama will be designed here from scratch.
-pub fn build_stage(_character: Character, _materials: &MaterialLibrary) -> Scene {
-    build_island_stage(_materials)
+/// Actualiza solamente la animación correspondiente al stage seleccionado.
+pub fn update_stage_animation(
+    scene: &mut Scene,
+    materials: &MaterialLibrary,
+    character: Character,
+    time: f32,
+) {
+    if character == Character::Mario {
+        update_mario_animation(scene, materials, time);
+    }
+}
+
+/// Stage provisional para personajes que todavía no tienen su mapa propio.
+/// Mantiene la infraestructura visible mientras se construye cada diorama.
+fn build_placeholder_stage(character: Character, materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::with_background(character.accent());
+    add_blocks(&mut scene, materials, build_floating_island());
+    scene
+}
+
+/// Selecciona el builder visual correspondiente al personaje.
+pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
+    match character {
+        Character::Mario => build_mario_stage(materials),
+        Character::DonkeyKong
+        | Character::Link
+        | Character::Samus
+        | Character::Yoshi
+        | Character::Kirby
+        | Character::Fox
+        | Character::Pikachu => build_placeholder_stage(character, materials),
+    }
 }
 
 /// Stable animated entry point for the app state machine.
 pub fn build_stage_at(character: Character, materials: &MaterialLibrary, time: f32) -> Scene {
     let mut scene = build_stage(character, materials);
-    update_stage_animation(&mut scene, materials, time);
+    update_stage_animation(&mut scene, materials, character, time);
     scene
 }
