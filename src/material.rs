@@ -128,8 +128,8 @@ impl MaterialLibrary {
         metal.specular = 128.0;
         metal.reflectivity = 0.28;
 
-        let mut ship_orange = Material::from_texture(Texture::solid([0.82, 0.12, 0.025]));
-        ship_orange.albedo = [1.0, 0.48, 0.08];
+        let mut ship_orange = Material::from_texture(Texture::solid([0.95, 0.28, 0.025]));
+        ship_orange.albedo = [1.0, 0.72, 0.16];
         ship_orange.specular = 72.0;
         ship_orange.reflectivity = 0.18;
 

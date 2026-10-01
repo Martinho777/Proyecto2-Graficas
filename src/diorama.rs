@@ -566,6 +566,21 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         Vec3::new(2.2, 0.28, 0.7),
         orange.clone(),
     );
+    scene.add_custom_block(
+        Vec3::new(0.0, 0.78, -0.25),
+        Vec3::new(4.0, 0.38, 2.15),
+        orange.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.02, -0.28),
+        Vec3::new(3.05, 0.28, 1.65),
+        orange.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.2, -0.28),
+        Vec3::new(1.85, 0.2, 1.1),
+        metal.clone(),
+    );
 
     // Alas laterales y paneles oscuros.
     for x in [-2.55, 2.55] {
