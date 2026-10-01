@@ -461,16 +461,11 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
         );
     }
 
-    // Entrada del árbol y ojos simples para que la silueta sea reconocible.
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.0, -0.32),
-        Vec3::new(0.9, 1.25, 0.14),
-        bark.clone(),
-    );
+    // Cara minimalista: solamente dos ojos entrecerrados.
     for x in [-0.38, 0.38] {
         scene.add_custom_block(
             Vec3::new(x, 1.45, -0.34),
-            Vec3::new(0.22, 0.3, 0.12),
+            Vec3::new(0.36, 0.08, 0.12),
             materials.plain_crystal(),
         );
     }
