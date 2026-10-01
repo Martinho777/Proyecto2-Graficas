@@ -4,6 +4,7 @@ use crate::cube::Cube;
 use crate::cylinder::{Cylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::scene::{Block, Scene};
+use crate::sphere::Sphere;
 use nalgebra_glm::Vec3;
 
 fn block(center: Vec3, size: Vec3, material: MaterialId) -> Block {
@@ -406,7 +407,7 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
 }
 
 fn build_link_stage(materials: &MaterialLibrary) -> Scene {
-    let mut scene = Scene::with_background(0x335B8A);
+    let mut scene = Scene::with_background(0x111B46);
     add_blocks(&mut scene, materials, build_floating_island());
 
     let bark = materials.get(MaterialId::Wood);
@@ -473,17 +474,17 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
     // Master Sword clavada frente al árbol.
     let metal = materials.metal();
     scene.add_custom_block(
-        Vec3::new(0.0, 0.25, 0.85),
+        Vec3::new(0.0, 0.25, 1.35),
         Vec3::new(0.16, 1.45, 0.12),
         metal,
     );
     scene.add_custom_block(
-        Vec3::new(0.0, -0.43, 0.85),
+        Vec3::new(0.0, -0.43, 1.35),
         Vec3::new(0.72, 0.14, 0.2),
         materials.banana(),
     );
     scene.add_custom_block(
-        Vec3::new(0.0, -0.68, 0.85),
+        Vec3::new(0.0, -0.68, 1.35),
         Vec3::new(0.18, 0.38, 0.18),
         bark,
     );
@@ -501,6 +502,19 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+    let navi = materials.navi();
+    scene.add_dynamic(Box::new(Sphere {
+        center: Vec3::new(
+            0.72 + (time * 1.4).cos() * 0.32,
+            1.18 + (time * 2.0).sin() * 0.16,
+            1.02 + (time * 1.1).sin() * 0.18,
+        ),
+        radius: 0.14,
+        material: navi,
+    }));
+}
+
 /// Actualiza solamente la animación correspondiente al stage seleccionado.
 pub fn update_stage_animation(
     scene: &mut Scene,
@@ -512,6 +526,8 @@ pub fn update_stage_animation(
         update_mario_animation(scene, materials, time);
     } else if character == Character::DonkeyKong {
         update_dk_animation(scene, materials, time);
+    } else if character == Character::Link {
+        update_link_animation(scene, materials, time);
     }
 }
 

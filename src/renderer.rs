@@ -11,7 +11,10 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let fallback_green = ((background >> 8) & 0xFF) as f32 / 255.0;
     let fallback_blue = (background & 0xFF) as f32 / 255.0;
     let sunset = background & 0xFFFFFF == 0xD66B45;
-    let horizon = if sunset {
+    let night = background & 0xFFFFFF == 0x111B46;
+    let horizon = if night {
+        Vec3::new(0.035, 0.06, 0.16)
+    } else if sunset {
         Vec3::new(0.95, 0.42, 0.22)
     } else {
         Vec3::new(
@@ -20,7 +23,9 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
             fallback_blue * 0.9 + 0.22,
         )
     };
-    let zenith = if sunset {
+    let zenith = if night {
+        Vec3::new(0.008, 0.015, 0.06)
+    } else if sunset {
         Vec3::new(0.12, 0.16, 0.4)
     } else {
         Vec3::new(0.08, 0.32, 0.72)
@@ -29,7 +34,9 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let sky_factor = ((height + 0.15) / 1.15).powf(0.72);
     let mut sky = horizon * (1.0 - sky_factor) + zenith * sky_factor;
 
-    let sun_direction = if sunset {
+    let sun_direction = if night {
+        normalize(&Vec3::new(-0.35, 0.58, 0.2))
+    } else if sunset {
         normalize(&Vec3::new(-0.45, 0.42, 0.35))
     } else {
         normalize(&Vec3::new(-0.45, 0.78, 0.35))
@@ -37,13 +44,18 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let sun_dot = dot(&direction, &sun_direction).max(0.0);
     let sun_glow = sun_dot.powf(32.0) * 0.18;
     let sun_disc = sun_dot.powf(520.0) * 1.2;
-    sky += Vec3::new(1.0, 0.72, 0.35) * (sun_glow + sun_disc);
+    let sky_light = if night {
+        Vec3::new(0.45, 0.68, 1.0)
+    } else {
+        Vec3::new(1.0, 0.72, 0.35)
+    };
+    sky += sky_light * (sun_glow + sun_disc);
 
     let cloud_wave = (direction.x * 11.0 + direction.z * 7.0).sin()
         * (direction.x * 4.0 - direction.z * 9.0).cos();
     let cloud_band = (cloud_wave * 0.5 + 0.5) * (1.0 - (direction.y - 0.2).abs() * 2.8);
-    let cloud_amount = cloud_band.clamp(0.0, 1.0).powf(5.0) * 0.16;
-    sky * (1.0 - cloud_amount) + Vec3::new(0.94, 0.96, 1.0) * cloud_amount
+    let cloud_amount = cloud_band.clamp(0.0, 1.0).powf(5.0) * if night { 0.035 } else { 0.16 };
+    sky * (1.0 - cloud_amount) + Vec3::new(0.62, 0.72, 0.92) * cloud_amount
 }
 
 fn reflect(direction: Vec3, normal: Vec3) -> Vec3 {
@@ -73,7 +85,9 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
         return background;
     };
 
-    let light_direction = if scene.background & 0xFFFFFF == 0xD66B45 {
+    let light_direction = if scene.background & 0xFFFFFF == 0x111B46 {
+        normalize(&Vec3::new(-0.5, 0.82, 0.35))
+    } else if scene.background & 0xFFFFFF == 0xD66B45 {
         normalize(&Vec3::new(-0.72, 0.58, 0.48))
     } else {
         normalize(&Vec3::new(-0.6, 1.0, 0.8))
@@ -96,22 +110,39 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
         * visible_lights;
 
     let texture = hit.material.texture.sample(hit.uv[0], hit.uv[1]);
-    let ambient = if scene.background & 0xFFFFFF == 0xD66B45 {
+    let ambient = if scene.background & 0xFFFFFF == 0x111B46 {
+        0.16
+    } else if scene.background & 0xFFFFFF == 0xD66B45 {
         0.2
     } else {
         0.24
     };
-    let direct = diffuse * visible_lights * 0.8;
+    let direct = diffuse
+        * visible_lights
+        * if scene.background & 0xFFFFFF == 0x111B46 {
+            0.62
+        } else {
+            0.8
+        };
+    let navi_distance = (hit.point - Vec3::new(0.72, 1.18, 1.02)).magnitude();
+    let navi_light = if scene.background & 0xFFFFFF == 0x111B46 {
+        (1.0 - navi_distance / 2.2).max(0.0) * 0.34
+    } else {
+        0.0
+    };
     let local = Vec3::new(
         texture[0] * hit.material.albedo[0] * (ambient + direct)
             + specular
-            + hit.material.emission[0],
+            + hit.material.emission[0]
+            + navi_light * 0.18,
         texture[1] * hit.material.albedo[1] * (ambient + direct) * 0.9
             + specular * 0.84
-            + hit.material.emission[1],
+            + hit.material.emission[1]
+            + navi_light * 0.28,
         texture[2] * hit.material.albedo[2] * (ambient + direct) * 0.72
             + specular * 0.65
-            + hit.material.emission[2],
+            + hit.material.emission[2]
+            + navi_light * 0.4,
     );
 
     if depth >= MAX_BOUNCES {

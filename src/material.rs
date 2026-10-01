@@ -47,6 +47,7 @@ pub struct MaterialLibrary {
     banana: Material,
     bamboo: Material,
     metal: Material,
+    navi: Material,
 }
 
 impl MaterialLibrary {
@@ -122,6 +123,12 @@ impl MaterialLibrary {
         metal.specular = 128.0;
         metal.reflectivity = 0.28;
 
+        let mut navi = Material::from_texture(Texture::solid([0.2, 0.85, 1.0]));
+        navi.albedo = [0.25, 0.9, 1.0];
+        navi.specular = 96.0;
+        navi.reflectivity = 0.12;
+        navi.emission = [0.45, 0.8, 1.0];
+
         Ok(Self {
             materials: [stone, wood, leaves, plain_crystal.clone(), lava],
             coin,
@@ -134,6 +141,7 @@ impl MaterialLibrary {
             banana,
             bamboo,
             metal,
+            navi,
         })
     }
 
@@ -179,6 +187,10 @@ impl MaterialLibrary {
 
     pub fn metal(&self) -> Material {
         self.metal.clone()
+    }
+
+    pub fn navi(&self) -> Material {
+        self.navi.clone()
     }
 }
 
