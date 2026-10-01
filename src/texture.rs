@@ -8,6 +8,14 @@ pub struct Texture {
 }
 
 impl Texture {
+    pub fn solid(color: [f32; 3]) -> Self {
+        Self {
+            width: 1,
+            height: 1,
+            pixels: vec![color],
+        }
+    }
+
     pub fn load_ppm(path: &str) -> Result<Self, String> {
         let bytes = fs::read(path).map_err(|error| format!("{path}: {error}"))?;
         let text = String::from_utf8(bytes).map_err(|error| format!("{path}: {error}"))?;
