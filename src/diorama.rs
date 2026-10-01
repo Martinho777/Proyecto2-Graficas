@@ -257,7 +257,7 @@ fn add_kong_letter(scene: &mut Scene, materials: &MaterialLibrary, letter: &[&st
 }
 
 fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
-    let mut scene = Scene::with_background(0x63C9E8);
+    let mut scene = Scene::with_background(0xD66B45);
     add_blocks(&mut scene, materials, build_floating_island());
 
     let hut = materials.get(MaterialId::Wood);
@@ -298,16 +298,26 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
         add_kong_letter(&mut scene, materials, glyph, -0.8 + index as f32 * 0.52);
     }
 
-    for x in [-3.0, 3.0] {
+    for (x, z) in [(-2.8, 1.35), (2.8, 1.35), (-2.9, -2.1), (2.9, -2.0)] {
         scene.add(Box::new(VerticalCylinder {
-            center: Vec3::new(x, 0.35, -0.1),
+            center: Vec3::new(x, 0.18, z),
             radius: 0.16,
-            height: 1.9,
+            height: 1.5,
             material: hut.clone(),
         }));
-        for (dx, dz, size) in [(-0.55, 0.0, 1.15), (0.35, 0.28, 1.0), (0.25, -0.42, 0.9)] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x + if x < 0.0 { -0.08 } else { 0.08 }, 0.92, z),
+            radius: 0.12,
+            height: 0.65,
+            material: hut.clone(),
+        }));
+        for (dx, dz, dy, size) in [
+            (-0.55, 0.0, 0.0, 1.15),
+            (0.35, 0.28, 0.12, 1.0),
+            (0.25, -0.42, -0.06, 0.9),
+        ] {
             scene.add_custom_block(
-                Vec3::new(x + dx, 1.28, -0.1 + dz),
+                Vec3::new(x + dx, 1.28 + dy, z + dz),
                 Vec3::new(size, 0.16, 0.32),
                 materials.get(MaterialId::Leaves),
             );
@@ -316,16 +326,17 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
 
     let banana = materials.banana();
     for (x, z) in [(-2.0, 1.15), (-1.45, 1.75), (1.8, 1.2), (2.35, 0.55)] {
-        scene.add_custom_block(
-            Vec3::new(x, -0.58, z),
-            Vec3::new(0.42, 0.12, 0.16),
-            banana.clone(),
-        );
-        scene.add_custom_block(
-            Vec3::new(x + 0.16, -0.48, z + 0.06),
-            Vec3::new(0.12, 0.12, 0.28),
-            banana.clone(),
-        );
+        for (dx, dy, dz, sx, sz) in [
+            (-0.18, 0.0, 0.0, 0.28, 0.12),
+            (0.0, 0.06, 0.06, 0.28, 0.14),
+            (0.18, 0.1, 0.0, 0.2, 0.12),
+        ] {
+            scene.add_custom_block(
+                Vec3::new(x + dx, -0.58 + dy, z + dz),
+                Vec3::new(sx, 0.12, sz),
+                banana.clone(),
+            );
+        }
     }
 
     scene

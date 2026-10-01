@@ -10,17 +10,30 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let fallback_red = ((background >> 16) & 0xFF) as f32 / 255.0;
     let fallback_green = ((background >> 8) & 0xFF) as f32 / 255.0;
     let fallback_blue = (background & 0xFF) as f32 / 255.0;
-    let horizon = Vec3::new(
-        fallback_red * 0.9 + 0.12,
-        fallback_green * 0.9 + 0.18,
-        fallback_blue * 0.9 + 0.22,
-    );
-    let zenith = Vec3::new(0.08, 0.32, 0.72);
+    let sunset = background & 0xFFFFFF == 0xD66B45;
+    let horizon = if sunset {
+        Vec3::new(0.95, 0.32, 0.16)
+    } else {
+        Vec3::new(
+            fallback_red * 0.9 + 0.12,
+            fallback_green * 0.9 + 0.18,
+            fallback_blue * 0.9 + 0.22,
+        )
+    };
+    let zenith = if sunset {
+        Vec3::new(0.16, 0.08, 0.22)
+    } else {
+        Vec3::new(0.08, 0.32, 0.72)
+    };
     let height = direction.y.clamp(-0.15, 1.0);
     let sky_factor = ((height + 0.15) / 1.15).powf(0.72);
     let mut sky = horizon * (1.0 - sky_factor) + zenith * sky_factor;
 
-    let sun_direction = normalize(&Vec3::new(-0.45, 0.78, 0.35));
+    let sun_direction = if sunset {
+        normalize(&Vec3::new(-0.45, 0.28, 0.35))
+    } else {
+        normalize(&Vec3::new(-0.45, 0.78, 0.35))
+    };
     let sun_dot = dot(&direction, &sun_direction).max(0.0);
     let sun_glow = sun_dot.powf(32.0) * 0.18;
     let sun_disc = sun_dot.powf(520.0) * 1.2;
