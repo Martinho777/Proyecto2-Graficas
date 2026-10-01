@@ -540,10 +540,17 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
 
 fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x04071A);
-    add_blocks(&mut scene, materials, build_floating_island());
+    let mut industrial_island = build_floating_island();
+    for block in &mut industrial_island {
+        if matches!(block.material, MaterialId::Leaves) {
+            block.material = MaterialId::Wood;
+        }
+    }
+    add_blocks(&mut scene, materials, industrial_island);
     let metal = materials.metal();
     let lava = materials.get(MaterialId::Lava);
     let stone = materials.get(MaterialId::Stone);
+    let energy = materials.navi();
 
     // Plataforma industrial del mismo tamaño que el resto de los stages.
     scene.add_custom_block(
@@ -551,6 +558,27 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         Vec3::new(4.8, 0.24, 3.2),
         metal.clone(),
     );
+
+    // Camino de tierra con balizas luminosas.
+    for (index, z) in [2.7, 2.1, 1.5, 0.9, 0.3].into_iter().enumerate() {
+        scene.add_custom_block(
+            Vec3::new(0.0, -0.37, z),
+            Vec3::new(0.8 + index as f32 * 0.08, 0.12, 0.48),
+            materials.get(MaterialId::Wood),
+        );
+        for x in [-0.7, 0.7] {
+            scene.add_custom_block(
+                Vec3::new(x, 0.0, z),
+                Vec3::new(0.1, 0.65, 0.1),
+                metal.clone(),
+            );
+            scene.add_custom_block(
+                Vec3::new(x, 0.38, z),
+                Vec3::new(0.18, 0.14, 0.18),
+                energy.clone(),
+            );
+        }
+    }
 
     // Torres laterales y compuerta central.
     for x in [-1.85, 1.85] {
@@ -594,6 +622,26 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
             Vec3::new(x, 0.64, 0.65),
             Vec3::new(0.55, 0.16, 0.55),
             metal.clone(),
+        );
+    }
+
+    // Energy towers alrededor de la compuerta.
+    for (x, z, height) in [(-1.45, -0.7, 1.7), (1.45, -0.7, 1.7), (0.0, -1.45, 2.15)] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, height * 0.5 - 0.45, z),
+            radius: 0.28,
+            height,
+            material: metal.clone(),
+        }));
+        scene.add_custom_block(
+            Vec3::new(x, height - 0.28, z),
+            Vec3::new(0.58, 0.16, 0.58),
+            energy.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x, 0.18, z),
+            Vec3::new(0.42, 0.12, 0.42),
+            lava.clone(),
         );
     }
 
