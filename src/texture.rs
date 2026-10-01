@@ -123,7 +123,7 @@ impl Texture {
                         let spotted = spots.iter().any(|(spot_x, spot_y)| {
                             let dx = x as f32 - spot_x;
                             let dy = y as f32 - spot_y;
-                            dx * dx + dy * dy < 22.0
+                            dx * dx + dy * dy < 15.0
                         });
                         if spotted {
                             [0.10, 0.66 + noise * 0.12, 0.08]
