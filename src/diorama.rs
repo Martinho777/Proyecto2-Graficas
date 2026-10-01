@@ -627,6 +627,52 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         }
     }
 
+    // Ridley gigante al fondo, construido como una silueta compacta y reconocible.
+    let ridley = materials.ridley_skin();
+    let eye = materials.ridley_eye();
+    scene.add(Box::new(Sphere {
+        center: Vec3::new(0.0, 1.75, -3.8),
+        radius: 1.25,
+        material: ridley.clone(),
+    }));
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, 2.65, -3.65),
+        radius: 0.62,
+        height: 1.45,
+        material: ridley.clone(),
+    }));
+    scene.add(Box::new(Sphere {
+        center: Vec3::new(0.0, 3.45, -3.5),
+        radius: 1.02,
+        material: ridley.clone(),
+    }));
+    scene.add_custom_block(
+        Vec3::new(0.0, 3.18, -2.75),
+        Vec3::new(1.2, 0.55, 1.0),
+        ridley.clone(),
+    );
+    for x in [-0.42, 0.42] {
+        scene.add(Box::new(Sphere {
+            center: Vec3::new(x, 3.58, -2.62),
+            radius: 0.13,
+            material: eye.clone(),
+        }));
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, 4.35, -3.55),
+            radius: 0.16,
+            height: 1.05,
+            material: ridley.clone(),
+        }));
+    }
+    for (x, z, size) in [
+        (-1.45, -3.7, Vec3::new(2.4, 0.18, 1.35)),
+        (1.45, -3.7, Vec3::new(2.4, 0.18, 1.35)),
+        (-2.35, -3.45, Vec3::new(1.2, 0.16, 0.9)),
+        (2.35, -3.45, Vec3::new(1.2, 0.16, 0.9)),
+    ] {
+        scene.add_custom_block(Vec3::new(x, 2.15, z), size, ridley.clone());
+    }
+
     scene
 }
 

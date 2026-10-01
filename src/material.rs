@@ -51,6 +51,8 @@ pub struct MaterialLibrary {
     energy_blue: Material,
     phosphor_green: Material,
     alien_egg: Material,
+    ridley_skin: Material,
+    ridley_eye: Material,
     rupee: Material,
     face_mark: Material,
     deku_bark: Material,
@@ -156,6 +158,16 @@ impl MaterialLibrary {
         alien_egg.reflectivity = 0.16;
         alien_egg.emission = [0.18, 0.02, 0.28];
 
+        let mut ridley_skin = Material::from_texture(Texture::solid([0.22, 0.07, 0.18]));
+        ridley_skin.albedo = [0.3, 0.08, 0.18];
+        ridley_skin.specular = 32.0;
+        ridley_skin.reflectivity = 0.08;
+
+        let mut ridley_eye = Material::from_texture(Texture::solid([1.0, 0.02, 0.01]));
+        ridley_eye.albedo = [1.0, 0.02, 0.01];
+        ridley_eye.specular = 96.0;
+        ridley_eye.emission = [2.4, 0.02, 0.01];
+
         let mut rupee = Material::from_texture(Texture::procedural(TextureKind::Crystal));
         rupee.albedo = [0.08, 0.45, 1.0];
         rupee.specular = 128.0;
@@ -184,6 +196,8 @@ impl MaterialLibrary {
             energy_blue,
             phosphor_green,
             alien_egg,
+            ridley_skin,
+            ridley_eye,
             rupee,
             face_mark,
             deku_bark,
@@ -248,6 +262,14 @@ impl MaterialLibrary {
 
     pub fn alien_egg(&self) -> Material {
         self.alien_egg.clone()
+    }
+
+    pub fn ridley_skin(&self) -> Material {
+        self.ridley_skin.clone()
+    }
+
+    pub fn ridley_eye(&self) -> Material {
+        self.ridley_eye.clone()
     }
 
     pub fn deku_bark(&self) -> Material {
