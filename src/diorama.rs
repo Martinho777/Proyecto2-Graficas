@@ -21,10 +21,10 @@ fn build_floating_island() -> Vec<Block> {
     let mut blocks = Vec::new();
 
     for layer in 0..4 {
-        let radius = 4.15 - layer as f32 * 0.75;
+        let radius = 4.45 - layer as f32 * 0.78;
         let y = -1.0 - layer as f32 * 0.65;
-        for x in -4..=4 {
-            for z in -4..=4 {
+        for x in -5..=5 {
+            for z in -5..=5 {
                 if (x as f32).hypot(z as f32) <= radius {
                     blocks.push(block(
                         Vec3::new(x as f32, y, z as f32),
@@ -94,6 +94,9 @@ fn build_castle() -> Vec<Block> {
     }
 
     for castle_block in &mut blocks {
+        castle_block.center.x *= 1.2;
+        castle_block.center.y *= 1.2;
+        castle_block.size *= 1.2;
         castle_block.center.z -= 2.2;
     }
 
@@ -166,7 +169,7 @@ fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary) {
     ] {
         scene.add_custom_block(
             Vec3::new(x, y, z),
-            Vec3::new(0.7, 0.7, 0.7),
+            Vec3::new(0.62, 0.62, 0.62),
             question.clone(),
         );
     }
@@ -176,7 +179,7 @@ fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary) {
         (1.35, 0.05, 1.35),
         (-2.2, -0.1, 2.45),
     ] {
-        scene.add_custom_block(Vec3::new(x, y, z), Vec3::new(0.36, 0.7, 0.12), coin.clone());
+        scene.add_custom_block(Vec3::new(x, y, z), Vec3::new(0.3, 0.58, 0.1), coin.clone());
     }
 }
 
