@@ -449,6 +449,10 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
         (-0.8, 3.75, -1.7, 2.1),
         (0.85, 3.8, -1.7, 2.0),
         (0.0, 4.3, -1.7, 1.45),
+        (-1.15, 3.2, -0.7, 1.5),
+        (1.15, 3.25, -2.75, 1.55),
+        (-0.8, 4.05, -2.7, 1.35),
+        (0.8, 4.1, -0.72, 1.3),
     ] {
         scene.add_custom_block(
             Vec3::new(x, y, z),
@@ -474,17 +478,27 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
     // Master Sword clavada frente al árbol.
     let metal = materials.metal();
     scene.add_custom_block(
-        Vec3::new(0.0, 0.25, 1.35),
-        Vec3::new(0.16, 1.45, 0.12),
+        Vec3::new(0.0, -0.54, 1.35),
+        Vec3::new(1.1, 0.25, 0.9),
+        stone.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.38, 1.35),
+        Vec3::new(0.78, 0.16, 0.68),
+        stone.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, 0.68, 1.35),
+        Vec3::new(0.16, 1.4, 0.12),
         metal,
     );
     scene.add_custom_block(
-        Vec3::new(0.0, -0.43, 1.35),
+        Vec3::new(0.0, 0.0, 1.35),
         Vec3::new(0.72, 0.14, 0.2),
         materials.banana(),
     );
     scene.add_custom_block(
-        Vec3::new(0.0, -0.68, 1.35),
+        Vec3::new(0.0, -0.2, 1.35),
         Vec3::new(0.18, 0.38, 0.18),
         bark,
     );
@@ -510,7 +524,7 @@ fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f
             1.18 + (time * 2.0).sin() * 0.16,
             1.02 + (time * 1.1).sin() * 0.18,
         ),
-        radius: 0.14,
+        radius: 0.19,
         material: navi,
     }));
 }
