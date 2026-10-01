@@ -717,11 +717,7 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
     );
 
     // Huevo de Yoshi protagonista, con manchas verdes visibles al frente.
-    scene.add(Box::new(Ellipsoid {
-        center: Vec3::new(0.0, 0.55, 0.0),
-        radii: Vec3::new(0.68, 0.92, 0.68),
-        material: egg,
-    }));
+    let _ = egg;
     // Arbustos suaves para enmarcar el nido.
     for (x, z, scale) in [
         (-3.0, 1.5, 1.0),
@@ -876,6 +872,16 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn update_yoshi_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+    let sway = (time * 1.35).sin();
+    let center = Vec3::new(sway * 0.07, 0.55 + sway.abs() * 0.025, sway * 0.025);
+    scene.add_dynamic(Box::new(Ellipsoid {
+        center,
+        radii: Vec3::new(0.68, 0.92, 0.68),
+        material: materials.yoshi_egg(),
+    }));
+}
+
 fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let navi = materials.navi();
     let center = Vec3::new(
@@ -970,6 +976,8 @@ pub fn update_stage_animation(
         update_link_animation(scene, materials, time);
     } else if character == Character::Samus {
         update_samus_animation(scene, materials, time);
+    } else if character == Character::Yoshi {
+        update_yoshi_animation(scene, materials, time);
     }
 }
 

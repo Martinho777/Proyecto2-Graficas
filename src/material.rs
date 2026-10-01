@@ -161,8 +161,8 @@ impl MaterialLibrary {
 
         let mut yoshi_egg = Material::from_texture(Texture::procedural(TextureKind::YoshiEgg));
         yoshi_egg.albedo = [1.0, 1.0, 1.0];
-        yoshi_egg.specular = 72.0;
-        yoshi_egg.reflectivity = 0.08;
+        yoshi_egg.specular = 96.0;
+        yoshi_egg.reflectivity = 0.12;
 
         let mut flower_pink = Material::from_texture(Texture::solid([1.0, 0.22, 0.56]));
         flower_pink.albedo = [1.0, 0.22, 0.56];
