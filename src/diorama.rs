@@ -547,46 +547,46 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
 
     // Fuselaje grande de la nave, construido por capas low-poly.
     scene.add_custom_block(
-        Vec3::new(0.0, 0.0, 0.0),
+        Vec3::new(0.0, -0.34, 0.0),
+        Vec3::new(4.1, 0.32, 2.45),
+        orange.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.03, 0.15),
+        Vec3::new(5.2, 0.38, 3.05),
+        orange.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, 0.32, 0.25),
         Vec3::new(5.8, 0.42, 3.5),
-        orange.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.32, 0.35),
-        Vec3::new(4.9, 0.42, 2.8),
-        orange.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.48, 1.25),
-        Vec3::new(3.4, 0.34, 1.25),
         lava.clone(),
     );
     scene.add_custom_block(
-        Vec3::new(0.0, 0.58, 1.55),
-        Vec3::new(2.2, 0.28, 0.7),
+        Vec3::new(0.0, 0.64, 0.05),
+        Vec3::new(5.0, 0.38, 3.0),
         orange.clone(),
     );
     scene.add_custom_block(
-        Vec3::new(0.0, 0.78, -0.25),
-        Vec3::new(4.0, 0.38, 2.15),
+        Vec3::new(0.0, 0.92, -0.18),
+        Vec3::new(3.8, 0.34, 2.25),
         orange.clone(),
     );
     scene.add_custom_block(
-        Vec3::new(0.0, 1.02, -0.28),
-        Vec3::new(3.05, 0.28, 1.65),
+        Vec3::new(0.0, 1.16, -0.2),
+        Vec3::new(2.55, 0.26, 1.55),
         orange.clone(),
     );
     scene.add_custom_block(
-        Vec3::new(0.0, 1.2, -0.28),
-        Vec3::new(1.85, 0.2, 1.1),
+        Vec3::new(0.0, 1.32, -0.2),
+        Vec3::new(1.45, 0.2, 0.9),
         metal.clone(),
     );
 
     // Alas laterales y paneles oscuros.
-    for x in [-2.55, 2.55] {
+    for x in [-2.3, 2.3] {
         scene.add_custom_block(
             Vec3::new(x, 0.22, -0.15),
-            Vec3::new(2.0, 0.28, 2.45),
+            Vec3::new(1.45, 0.28, 2.25),
             orange.clone(),
         );
         scene.add_custom_block(
