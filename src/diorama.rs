@@ -1,6 +1,6 @@
 use crate::animation::bobbing_height;
 use crate::app::Character;
-use crate::cylinder::Cylinder;
+use crate::cylinder::{Cylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::scene::{Block, Scene};
 use nalgebra_glm::Vec3;
@@ -242,6 +242,95 @@ fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn add_kong_letter(scene: &mut Scene, materials: &MaterialLibrary, letter: &[&str], x: f32) {
+    for (row, line) in letter.iter().enumerate() {
+        for (column, pixel) in line.chars().enumerate() {
+            if pixel == '#' {
+                scene.add_custom_block(
+                    Vec3::new(x + column as f32 * 0.12, 1.62 - row as f32 * 0.12, 0.52),
+                    Vec3::new(0.1, 0.1, 0.05),
+                    materials.banana(),
+                );
+            }
+        }
+    }
+}
+
+fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::with_background(0x63C9E8);
+    add_blocks(&mut scene, materials, build_floating_island());
+
+    let hut = materials.get(MaterialId::Wood);
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, 0.18, -0.85),
+        radius: 1.55,
+        height: 1.8,
+        material: hut.clone(),
+    }));
+
+    let roof = materials.thatch();
+    for (y, width, depth) in [(1.12, 3.5, 3.1), (1.34, 3.0, 2.7), (1.56, 2.45, 2.3)] {
+        scene.add_custom_block(
+            Vec3::new(0.0, y, -0.85),
+            Vec3::new(width, 0.25, depth),
+            roof.clone(),
+        );
+    }
+
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.02, 0.62),
+        Vec3::new(0.9, 1.25, 0.14),
+        hut.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.48, 0.42),
+        Vec3::new(2.4, 0.62, 0.14),
+        hut.clone(),
+    );
+
+    let glyphs: [&[&str]; 4] = [
+        &["##.", "#.#", "##.", "#.#", "#.#"],
+        &["###", "#.#", "#.#", "#.#", "###"],
+        &["##.", "#.#", "##.", "#.#", "#.#"],
+        &[".##", "#..", "#..", "#..", ".##"],
+    ];
+    for (index, glyph) in glyphs.iter().enumerate() {
+        add_kong_letter(&mut scene, materials, glyph, -0.8 + index as f32 * 0.52);
+    }
+
+    for x in [-3.0, 3.0] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, 0.35, -0.1),
+            radius: 0.16,
+            height: 1.9,
+            material: hut.clone(),
+        }));
+        for (dx, dz, size) in [(-0.55, 0.0, 1.15), (0.35, 0.28, 1.0), (0.25, -0.42, 0.9)] {
+            scene.add_custom_block(
+                Vec3::new(x + dx, 1.28, -0.1 + dz),
+                Vec3::new(size, 0.16, 0.32),
+                materials.get(MaterialId::Leaves),
+            );
+        }
+    }
+
+    let banana = materials.banana();
+    for (x, z) in [(-2.0, 1.15), (-1.45, 1.75), (1.8, 1.2), (2.35, 0.55)] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.58, z),
+            Vec3::new(0.42, 0.12, 0.16),
+            banana.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x + 0.16, -0.48, z + 0.06),
+            Vec3::new(0.12, 0.12, 0.28),
+            banana.clone(),
+        );
+    }
+
+    scene
+}
+
 /// Actualiza solamente la animación correspondiente al stage seleccionado.
 pub fn update_stage_animation(
     scene: &mut Scene,
@@ -266,8 +355,8 @@ fn build_placeholder_stage(character: Character, materials: &MaterialLibrary) ->
 pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
     match character {
         Character::Mario => build_mario_stage(materials),
-        Character::DonkeyKong
-        | Character::Link
+        Character::DonkeyKong => build_dk_stage(materials),
+        Character::Link
         | Character::Samus
         | Character::Yoshi
         | Character::Kirby
