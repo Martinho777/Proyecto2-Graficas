@@ -495,30 +495,26 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
     // Master Sword clavada frente al árbol.
     let metal = materials.metal();
     scene.add_custom_block(
-        Vec3::new(0.0, -0.5, 1.35),
+        Vec3::new(0.0, -0.5, 2.0),
         Vec3::new(1.9, 0.35, 1.55),
         stone.clone(),
     );
     scene.add_custom_block(
-        Vec3::new(0.0, -0.27, 1.35),
+        Vec3::new(0.0, -0.27, 2.0),
         Vec3::new(1.45, 0.22, 1.15),
         stone.clone(),
     );
     scene.add_custom_block(
-        Vec3::new(0.0, 0.42, 1.35),
+        Vec3::new(0.0, 0.42, 2.0),
         Vec3::new(0.16, 1.35, 0.12),
         metal,
     );
     scene.add_custom_block(
-        Vec3::new(0.0, 1.15, 1.35),
+        Vec3::new(0.0, 1.15, 2.0),
         Vec3::new(0.72, 0.14, 0.2),
         materials.banana(),
     );
-    scene.add_custom_block(
-        Vec3::new(0.0, 1.42, 1.35),
-        Vec3::new(0.18, 0.38, 0.18),
-        bark,
-    );
+    scene.add_custom_block(Vec3::new(0.0, 1.42, 2.0), Vec3::new(0.18, 0.38, 0.18), bark);
 
     // Triforce dorada sobre la entrada.
     let gold = materials.banana();
