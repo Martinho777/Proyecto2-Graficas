@@ -14,6 +14,7 @@ pub struct Block {
 
 pub struct Scene {
     pub objects: Vec<Box<dyn Primitive>>,
+    pub dynamic_objects: Vec<Box<dyn Primitive>>,
     pub blocks: Vec<Block>,
     pub background: u32,
 }
@@ -22,6 +23,7 @@ impl Scene {
     pub fn new() -> Self {
         Self {
             objects: Vec::new(),
+            dynamic_objects: Vec::new(),
             blocks: Vec::new(),
             background: 0x07111F,
         }
@@ -30,6 +32,7 @@ impl Scene {
     pub fn with_background(background: u32) -> Self {
         Self {
             objects: Vec::new(),
+            dynamic_objects: Vec::new(),
             blocks: Vec::new(),
             background,
         }
@@ -37,6 +40,14 @@ impl Scene {
 
     pub fn add(&mut self, object: Box<dyn Primitive>) {
         self.objects.push(object);
+    }
+
+    pub fn add_dynamic(&mut self, object: Box<dyn Primitive>) {
+        self.dynamic_objects.push(object);
+    }
+
+    pub fn clear_dynamic(&mut self) {
+        self.dynamic_objects.clear();
     }
 
     pub fn add_block(&mut self, block: Block, materials: &MaterialLibrary) {
@@ -58,6 +69,7 @@ impl Scene {
     pub fn intersect(&self, ray: &Ray) -> Option<Hit> {
         self.objects
             .iter()
+            .chain(self.dynamic_objects.iter())
             .filter_map(|object| object.intersect(ray))
             .min_by(|left, right| left.distance.total_cmp(&right.distance))
     }

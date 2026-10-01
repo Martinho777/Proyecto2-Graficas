@@ -91,7 +91,8 @@ fn main() {
                 if window.is_key_pressed(Key::Escape, KeyRepeat::No) {
                     state = AppState::CharacterSelect;
                 }
-                scene = diorama::build_stage_at(character, &materials, clock.seconds());
+                scene.clear_dynamic();
+                diorama::update_stage_animation(&mut scene, &materials, clock.seconds());
                 renderer::render_raytraced_scene(&mut framebuffer, &camera, &scene);
             }
         }

@@ -153,10 +153,9 @@ fn build_pipes() -> Vec<Block> {
     ]
 }
 
-fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+fn build_static_props(scene: &mut Scene, materials: &MaterialLibrary) {
     let question = materials.question();
     let question_mark = materials.question_mark();
-    let coin = materials.coin();
     for (x, y, z) in [
         (-2.0, 0.18, 0.5),
         (1.8, 0.95, 1.0),
@@ -187,13 +186,17 @@ fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary, time: f3
             question_mark.clone(),
         );
     }
+}
+
+pub fn update_stage_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+    let coin = materials.coin();
     for (x, y, z, phase) in [
         (-1.35, -0.15, 1.2, 0.0),
         (1.8, -0.05, 1.05, 1.1),
         (1.35, 0.05, 1.35, 2.2),
         (-2.2, -0.1, 2.45, 3.3),
     ] {
-        scene.add(Box::new(Cylinder {
+        scene.add_dynamic(Box::new(Cylinder {
             center: Vec3::new(x, y + bobbing_height(time, phase, 0.08, 1.8), z),
             radius: 0.32,
             height: 0.12,
@@ -202,7 +205,7 @@ fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary, time: f3
     }
 }
 
-fn build_island_stage(materials: &MaterialLibrary, time: f32) -> Scene {
+fn build_island_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x496A88);
     add_blocks(&mut scene, materials, build_floating_island());
     add_blocks(&mut scene, materials, build_castle());
@@ -224,17 +227,18 @@ fn build_island_stage(materials: &MaterialLibrary, time: f32) -> Scene {
     for pipe_block in build_pipes() {
         scene.add_custom_block(pipe_block.center, pipe_block.size, pipe.clone());
     }
-    build_floating_props(&mut scene, materials, time);
+    build_static_props(&mut scene, materials);
     scene
 }
 
 /// Empty visual scaffold. The new diorama will be designed here from scratch.
 pub fn build_stage(_character: Character, _materials: &MaterialLibrary) -> Scene {
-    build_island_stage(_materials, 0.0)
+    build_island_stage(_materials)
 }
 
 /// Stable animated entry point for the app state machine.
-pub fn build_stage_at(character: Character, materials: &MaterialLibrary, _time: f32) -> Scene {
-    let _ = character;
-    build_island_stage(materials, _time)
+pub fn build_stage_at(character: Character, materials: &MaterialLibrary, time: f32) -> Scene {
+    let mut scene = build_stage(character, materials);
+    update_stage_animation(&mut scene, materials, time);
+    scene
 }
