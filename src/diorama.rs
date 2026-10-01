@@ -234,6 +234,21 @@ fn build_mario_castle() -> Vec<Block> {
         Vec3::new(1.25, 0.25, 0.85),
         MaterialId::Lava,
     ));
+    blocks.push(block(
+        Vec3::new(0.0, 2.95, -2.8),
+        Vec3::new(0.12, 1.2, 0.12),
+        MaterialId::Wood,
+    ));
+    blocks.push(block(
+        Vec3::new(0.38, 3.18, -2.8),
+        Vec3::new(0.65, 0.35, 0.12),
+        MaterialId::Lava,
+    ));
+    blocks.push(block(
+        Vec3::new(0.0, 0.62, -2.43),
+        Vec3::new(0.42, 0.62, 0.08),
+        MaterialId::Crystal,
+    ));
     blocks
 }
 
@@ -302,37 +317,6 @@ pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
             materials,
         );
     }
-
-    for x in [-2.5, 2.5] {
-        for y in [-0.25, 0.55, 1.35] {
-            add_blocks(
-                &mut scene,
-                vec![block(
-                    Vec3::new(x, y, -1.3),
-                    Vec3::new(0.8, 0.75, 0.8),
-                    MaterialId::Leaves,
-                )],
-                materials,
-            );
-        }
-    }
-
-    add_blocks(
-        &mut scene,
-        vec![
-            block(
-                Vec3::new(-2.5, 0.95, -1.3),
-                Vec3::new(1.0, 0.25, 1.0),
-                MaterialId::Lava,
-            ),
-            block(
-                Vec3::new(2.5, 0.95, -1.3),
-                Vec3::new(1.0, 0.25, 1.0),
-                MaterialId::Lava,
-            ),
-        ],
-        materials,
-    );
 
     for x in -1..=1 {
         add_blocks(
