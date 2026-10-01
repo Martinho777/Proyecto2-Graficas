@@ -1,5 +1,6 @@
 use nalgebra_glm::Vec3;
 
+use crate::animation::bobbing_height;
 use crate::app::Character;
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::scene::{Block, Scene};
@@ -157,6 +158,10 @@ pub fn build_forest_stage(materials: &MaterialLibrary) -> Scene {
 }
 
 pub fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
+    build_mario_stage_at(materials, 0.0)
+}
+
+pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
     let mut scene = Scene::new();
 
     for x in -3..=3 {
@@ -268,12 +273,32 @@ pub fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
         materials,
     );
 
+    for (x, y, z, phase) in [
+        (-1.6, 1.0, 0.5, 0.0),
+        (0.0, 2.65, -1.5, 1.4),
+        (1.65, 1.9, -0.5, 2.8),
+    ] {
+        add_blocks(
+            &mut scene,
+            vec![block(
+                Vec3::new(x, y + bobbing_height(time, phase, 0.28, 2.4), z),
+                Vec3::new(0.42, 0.6, 0.18),
+                MaterialId::Lava,
+            )],
+            materials,
+        );
+    }
+
     scene
 }
 
 pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
+    build_stage_at(character, materials, 0.0)
+}
+
+pub fn build_stage_at(character: Character, materials: &MaterialLibrary, time: f32) -> Scene {
     match character {
-        Character::Mario => build_mario_stage(materials),
+        Character::Mario => build_mario_stage_at(materials, time),
         _ => build_forest_stage(materials),
     }
 }
