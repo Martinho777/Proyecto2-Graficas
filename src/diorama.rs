@@ -4,7 +4,7 @@ use crate::cube::Cube;
 use crate::cylinder::{Cylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::scene::{Block, Scene};
-use crate::sphere::Sphere;
+use crate::sphere::{Ellipsoid, Sphere};
 use nalgebra_glm::Vec3;
 
 fn block(center: Vec3, size: Vec3, material: MaterialId) -> Block {
@@ -718,9 +718,9 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
     );
 
     // Huevo de Yoshi protagonista, con manchas verdes visibles al frente.
-    scene.add(Box::new(Sphere {
+    scene.add(Box::new(Ellipsoid {
         center: Vec3::new(0.0, 0.55, 0.0),
-        radius: 0.82,
+        radii: Vec3::new(0.68, 0.92, 0.68),
         material: egg,
     }));
     for (x, y, radius) in [
@@ -730,7 +730,7 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
         (-0.18, 0.08, 0.10),
     ] {
         scene.add(Box::new(Sphere {
-            center: Vec3::new(x, y, 1.32),
+            center: Vec3::new(x, y, 0.63),
             radius,
             material: spot.clone(),
         }));
