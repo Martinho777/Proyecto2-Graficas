@@ -54,6 +54,7 @@ pub struct MaterialLibrary {
     yoshi_egg: Material,
     flower_pink: Material,
     water: Material,
+    water_glow: Material,
     ridley_eye: Material,
     rupee: Material,
     face_mark: Material,
@@ -177,6 +178,12 @@ impl MaterialLibrary {
         water.refractive_index = 1.33;
         water.emission = [0.08, 0.24, 0.52];
 
+        let mut water_glow = Material::from_texture(Texture::procedural(TextureKind::Water));
+        water_glow.albedo = [0.08, 0.65, 1.0];
+        water_glow.specular = 128.0;
+        water_glow.reflectivity = 0.12;
+        water_glow.emission = [0.12, 0.5, 1.2];
+
         let mut ridley_eye = Material::from_texture(Texture::solid([1.0, 0.02, 0.01]));
         ridley_eye.albedo = [1.0, 0.02, 0.01];
         ridley_eye.specular = 96.0;
@@ -213,6 +220,7 @@ impl MaterialLibrary {
             yoshi_egg,
             flower_pink,
             water,
+            water_glow,
             ridley_eye,
             rupee,
             face_mark,
@@ -290,6 +298,10 @@ impl MaterialLibrary {
 
     pub fn water(&self) -> Material {
         self.water.clone()
+    }
+
+    pub fn water_glow(&self) -> Material {
+        self.water_glow.clone()
     }
 
     pub fn ridley_eye(&self) -> Material {

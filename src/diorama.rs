@@ -925,6 +925,12 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
         height: 0.07,
         material: water,
     }));
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, -0.155, 0.0),
+        radius: 3.82,
+        height: 0.018,
+        material: materials.water_glow(),
+    }));
 
     // Cristales verticales para enmarcar el agua sin saturar la escena.
     for (x, z, height, radius) in [
@@ -957,7 +963,7 @@ fn update_kirby_animation(scene: &mut Scene, materials: &MaterialLibrary, time: 
             center: Vec3::new(0.0, -0.145, 0.0),
             radius,
             height: 0.018,
-            material: materials.water(),
+            material: materials.water_glow(),
         }));
     }
 }
