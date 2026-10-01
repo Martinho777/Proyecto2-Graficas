@@ -41,14 +41,14 @@ pub struct MaterialLibrary {
 impl MaterialLibrary {
     pub fn load() -> Result<Self, String> {
         let mut stone = Material::from_texture(Texture::load_ppm("assets/textures/stone.ppm")?);
-        stone.albedo = [0.85, 0.85, 0.85];
+        stone.albedo = [0.95, 0.9, 0.78];
 
         let mut wood = Material::from_texture(Texture::load_ppm("assets/textures/wood.ppm")?);
-        wood.albedo = [0.95, 0.75, 0.55];
+        wood.albedo = [0.78, 0.38, 0.16];
         wood.specular = 18.0;
 
         let mut leaves = Material::from_texture(Texture::load_ppm("assets/textures/leaves.ppm")?);
-        leaves.albedo = [0.65, 0.9, 0.55];
+        leaves.albedo = [0.3, 0.86, 0.22];
         leaves.specular = 12.0;
 
         let mut crystal = Material::from_texture(Texture::load_ppm("assets/textures/crystal.ppm")?);
@@ -58,7 +58,7 @@ impl MaterialLibrary {
         crystal.refractive_index = 1.5;
 
         let mut lava = Material::from_texture(Texture::load_ppm("assets/textures/lava.ppm")?);
-        lava.albedo = [1.0, 0.75, 0.35];
+        lava.albedo = [1.0, 0.72, 0.08];
         lava.specular = 24.0;
         lava.emission = [0.55, 0.12, 0.0];
 
