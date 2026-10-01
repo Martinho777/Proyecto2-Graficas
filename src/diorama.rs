@@ -229,29 +229,29 @@ fn build_mario_castle() -> Vec<Block> {
     let mut blocks = Vec::new();
     blocks.push(block(
         Vec3::new(0.0, 0.9, -2.8),
-        Vec3::new(4.8, 2.4, 0.8),
+        Vec3::new(4.8, 2.4, 1.9),
         MaterialId::Stone,
     ));
     for x in [-1.8, 1.8] {
         blocks.push(block(
             Vec3::new(x, 1.9, -2.8),
-            Vec3::new(1.05, 3.2, 0.85),
+            Vec3::new(1.05, 3.2, 1.8),
             MaterialId::Stone,
         ));
         blocks.push(block(
             Vec3::new(x, 3.65, -2.8),
-            Vec3::new(1.35, 0.35, 1.1),
+            Vec3::new(1.35, 0.35, 2.15),
             MaterialId::Wood,
         ));
     }
     blocks.push(block(
         Vec3::new(0.0, 2.35, -2.8),
-        Vec3::new(1.6, 3.8, 0.9),
+        Vec3::new(1.6, 3.8, 1.8),
         MaterialId::Stone,
     ));
     blocks.push(block(
         Vec3::new(0.0, 4.45, -2.8),
-        Vec3::new(1.95, 0.4, 1.15),
+        Vec3::new(1.95, 0.4, 2.15),
         MaterialId::Wood,
     ));
     blocks.push(block(
@@ -265,15 +265,27 @@ fn build_mario_castle() -> Vec<Block> {
         MaterialId::Wood,
     ));
     blocks.push(block(
-        Vec3::new(0.0, 0.4, -2.35),
-        Vec3::new(0.65, 1.0, 0.08),
+        Vec3::new(0.0, 0.4, -1.82),
+        Vec3::new(0.65, 1.0, 0.12),
         MaterialId::Crystal,
     ));
     for x in [-1.8, 1.8] {
         blocks.push(block(
-            Vec3::new(x, 1.8, -2.35),
-            Vec3::new(0.32, 0.65, 0.08),
+            Vec3::new(x, 1.8, -1.82),
+            Vec3::new(0.32, 0.65, 0.12),
             MaterialId::Crystal,
+        ));
+    }
+    blocks
+}
+
+fn build_mario_path() -> Vec<Block> {
+    let mut blocks = Vec::new();
+    for z in [-1.25, -0.5, 0.25, 1.0] {
+        blocks.push(block(
+            Vec3::new(0.0, -0.32, z),
+            Vec3::new(1.15, 0.18, 0.55),
+            MaterialId::Wood,
         ));
     }
     blocks
@@ -318,8 +330,8 @@ pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
         }
     }
 
-    for x in -3..=3 {
-        for z in -2..=2 {
+    for x in -4..=4 {
+        for z in -3..=3 {
             add_blocks(
                 &mut scene,
                 vec![block(
@@ -340,6 +352,8 @@ pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
             );
         }
     }
+
+    add_blocks(&mut scene, build_mario_path(), materials);
 
     for (x, y, z, width) in [
         (-2.0, 0.25, 0.5, 2.0),
