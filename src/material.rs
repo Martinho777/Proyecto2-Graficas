@@ -71,7 +71,7 @@ impl MaterialLibrary {
         coin.reflectivity = 0.35;
 
         let mut question = Material::from_texture(Texture::procedural(TextureKind::Question));
-        question.albedo = [1.0, 0.88, 0.18];
+        question.albedo = [1.0, 1.0, 1.0];
         question.specular = 48.0;
 
         let mut pipe = Material::from_texture(Texture::procedural(TextureKind::Pipe));
