@@ -7,15 +7,30 @@ use nalgebra_glm::{dot, normalize, Vec3};
 const MAX_BOUNCES: u32 = 2;
 
 fn background_color(background: u32, direction: Vec3) -> Vec3 {
-    let t = direction.y * 0.5 + 0.5;
-    let red = ((background >> 16) & 0xFF) as f32 / 255.0;
-    let green = ((background >> 8) & 0xFF) as f32 / 255.0;
-    let blue = (background & 0xFF) as f32 / 255.0;
-    Vec3::new(
-        red * (0.75 + 0.25 * t),
-        green * (0.75 + 0.25 * t),
-        blue * (0.75 + 0.25 * t),
-    )
+    let fallback_red = ((background >> 16) & 0xFF) as f32 / 255.0;
+    let fallback_green = ((background >> 8) & 0xFF) as f32 / 255.0;
+    let fallback_blue = (background & 0xFF) as f32 / 255.0;
+    let horizon = Vec3::new(
+        fallback_red * 0.9 + 0.12,
+        fallback_green * 0.9 + 0.18,
+        fallback_blue * 0.9 + 0.22,
+    );
+    let zenith = Vec3::new(0.08, 0.32, 0.72);
+    let height = direction.y.clamp(-0.15, 1.0);
+    let sky_factor = ((height + 0.15) / 1.15).powf(0.72);
+    let mut sky = horizon * (1.0 - sky_factor) + zenith * sky_factor;
+
+    let sun_direction = normalize(&Vec3::new(-0.45, 0.78, 0.35));
+    let sun_dot = dot(&direction, &sun_direction).max(0.0);
+    let sun_glow = sun_dot.powf(32.0) * 0.18;
+    let sun_disc = sun_dot.powf(520.0) * 1.2;
+    sky += Vec3::new(1.0, 0.72, 0.35) * (sun_glow + sun_disc);
+
+    let cloud_wave = (direction.x * 11.0 + direction.z * 7.0).sin()
+        * (direction.x * 4.0 - direction.z * 9.0).cos();
+    let cloud_band = (cloud_wave * 0.5 + 0.5) * (1.0 - (direction.y - 0.2).abs() * 2.8);
+    let cloud_amount = cloud_band.clamp(0.0, 1.0).powf(5.0) * 0.16;
+    sky * (1.0 - cloud_amount) + Vec3::new(0.94, 0.96, 1.0) * cloud_amount
 }
 
 fn reflect(direction: Vec3, normal: Vec3) -> Vec3 {
