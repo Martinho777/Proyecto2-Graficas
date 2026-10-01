@@ -559,12 +559,12 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         );
         for x in [-0.7, 0.7] {
             scene.add_custom_block(
-                Vec3::new(x, -0.22, z),
+                Vec3::new(x, -0.27, z),
                 Vec3::new(0.28, 0.08, 0.28),
                 metal.clone(),
             );
             scene.add_custom_block(
-                Vec3::new(x, -0.16, z),
+                Vec3::new(x, -0.21, z),
                 Vec3::new(0.20, 0.05, 0.20),
                 energy.clone(),
             );
