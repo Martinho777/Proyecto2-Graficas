@@ -79,8 +79,9 @@ impl MaterialLibrary {
         let mut coin =
             Material::from_texture(Texture::load_ppm("assets/textures/coin_reference.ppm")?);
         coin.albedo = [1.0, 0.82, 0.12];
-        coin.specular = 96.0;
-        coin.reflectivity = 0.35;
+        coin.specular = 64.0;
+        coin.reflectivity = 0.12;
+        coin.transparency = 0.0;
 
         let mut question = Material::from_texture(Texture::procedural(TextureKind::Question));
         question.albedo = [1.0, 1.0, 1.0];
@@ -88,8 +89,9 @@ impl MaterialLibrary {
 
         let mut pipe = Material::from_texture(Texture::procedural(TextureKind::Pipe));
         pipe.albedo = [0.12, 0.5, 0.08];
-        pipe.specular = 96.0;
-        pipe.reflectivity = 0.4;
+        pipe.specular = 52.0;
+        pipe.reflectivity = 0.12;
+        pipe.transparency = 0.0;
 
         let mut question_mark = Material::from_texture(Texture::solid([1.0, 1.0, 1.0]));
         question_mark.albedo = [1.0, 1.0, 1.0];

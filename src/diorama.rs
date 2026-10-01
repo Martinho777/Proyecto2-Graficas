@@ -208,13 +208,13 @@ fn build_island_stage(materials: &MaterialLibrary, time: f32) -> Scene {
     add_blocks(&mut scene, materials, build_castle());
     for x in [-1.98, 1.98] {
         scene.add_custom_block(
-            Vec3::new(x, 0.66, -1.05),
+            Vec3::new(x, 0.66, -1.25),
             Vec3::new(0.28, 0.65, 0.08),
             materials.plain_crystal(),
         );
     }
     scene.add_custom_block(
-        Vec3::new(0.0, 3.06, -1.05),
+        Vec3::new(0.0, 3.06, -1.25),
         Vec3::new(0.66, 1.02, 0.08),
         materials.stained_glass(),
     );
