@@ -45,6 +45,7 @@ pub struct MaterialLibrary {
     stained_glass: Material,
     thatch: Material,
     banana: Material,
+    kong_sign: Material,
 }
 
 impl MaterialLibrary {
@@ -111,6 +112,11 @@ impl MaterialLibrary {
         banana.albedo = [1.0, 0.82, 0.06];
         banana.specular = 20.0;
 
+        let mut kong_sign =
+            Material::from_texture(Texture::load_ppm("assets/textures/kong_sign.ppm")?);
+        kong_sign.albedo = [1.0, 0.9, 0.45];
+        kong_sign.specular = 18.0;
+
         Ok(Self {
             materials: [stone, wood, leaves, plain_crystal.clone(), lava],
             coin,
@@ -121,6 +127,7 @@ impl MaterialLibrary {
             stained_glass,
             thatch,
             banana,
+            kong_sign,
         })
     }
 
@@ -158,6 +165,10 @@ impl MaterialLibrary {
 
     pub fn banana(&self) -> Material {
         self.banana.clone()
+    }
+
+    pub fn kong_sign(&self) -> Material {
+        self.kong_sign.clone()
     }
 }
 

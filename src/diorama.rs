@@ -264,20 +264,6 @@ fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
-fn add_kong_letter(scene: &mut Scene, materials: &MaterialLibrary, letter: &[&str], x: f32) {
-    for (row, line) in letter.iter().enumerate() {
-        for (column, pixel) in line.chars().enumerate() {
-            if pixel == '#' {
-                scene.add_custom_block(
-                    Vec3::new(x + column as f32 * 0.12, 1.62 - row as f32 * 0.12, 0.52),
-                    Vec3::new(0.1, 0.1, 0.05),
-                    materials.banana(),
-                );
-            }
-        }
-    }
-}
-
 fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0xD66B45);
     add_blocks(&mut scene, materials, build_floating_island());
@@ -314,18 +300,8 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
     scene.add_custom_block(
         Vec3::new(0.0, 1.48, 0.42),
         Vec3::new(2.4, 0.62, 0.14),
-        hut.clone(),
+        materials.kong_sign(),
     );
-
-    let glyphs: [&[&str]; 4] = [
-        &["##.", "#.#", "##.", "#.#", "#.#"],
-        &["###", "#.#", "#.#", "#.#", "###"],
-        &["##.", "#.#", "##.", "#.#", "#.#"],
-        &[".##", "#..", "#..", "#..", ".##"],
-    ];
-    for (index, glyph) in glyphs.iter().enumerate() {
-        add_kong_letter(&mut scene, materials, glyph, -0.8 + index as f32 * 0.52);
-    }
 
     for (x, z) in [(-2.8, 1.35), (2.8, 1.35), (-2.9, -2.1), (2.9, -2.0)] {
         scene.add(Box::new(VerticalCylinder {
@@ -372,6 +348,10 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
         (-3.0, 0.65),
         (2.85, 1.9),
         (-2.55, -0.35),
+        (-0.95, 0.95),
+        (-0.45, 1.35),
+        (0.55, 1.25),
+        (1.05, 0.9),
     ] {
         for (dx, dy, dz, sx, sz) in [
             (-0.18, 0.0, 0.0, 0.28, 0.12),
