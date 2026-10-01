@@ -112,7 +112,14 @@ impl Texture {
                         [0.24 * groove * grain, 0.1 * groove * grain, 0.035 * groove]
                     }
                     TextureKind::YoshiEgg => {
-                        let spots = [(7.0, 8.0), (23.0, 10.0), (12.0, 23.0), (27.0, 25.0)];
+                        let spots = [
+                            (7.0, 8.0),
+                            (23.0, 10.0),
+                            (12.0, 23.0),
+                            (27.0, 25.0),
+                            (16.0, 4.0),
+                            (4.0, 27.0),
+                        ];
                         let spotted = spots.iter().any(|(spot_x, spot_y)| {
                             let dx = x as f32 - spot_x;
                             let dy = y as f32 - spot_y;
