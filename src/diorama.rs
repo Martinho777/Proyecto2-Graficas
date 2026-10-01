@@ -545,90 +545,71 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     let orange = materials.ship_orange();
     let cockpit = materials.cockpit();
 
-    // Fuselaje grande de la nave, construido por capas low-poly.
+    // Fuselaje esférico grande para que la nave tenga volumen real.
+    scene.add(Box::new(Sphere {
+        center: Vec3::new(0.0, 0.15, 0.0),
+        radius: 2.65,
+        material: orange.clone(),
+    }));
     scene.add_custom_block(
-        Vec3::new(0.0, -0.34, 0.0),
-        Vec3::new(4.1, 0.32, 2.45),
-        orange.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, -0.03, 0.15),
-        Vec3::new(5.2, 0.38, 3.05),
-        orange.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.32, 0.25),
-        Vec3::new(5.8, 0.42, 3.5),
-        lava.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.64, 0.05),
-        Vec3::new(5.0, 0.38, 3.0),
-        orange.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.92, -0.18),
-        Vec3::new(3.8, 0.34, 2.25),
-        orange.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, 1.16, -0.2),
-        Vec3::new(2.55, 0.26, 1.55),
-        orange.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, 1.32, -0.2),
-        Vec3::new(1.45, 0.2, 0.9),
+        Vec3::new(0.0, -1.65, -0.05),
+        Vec3::new(2.8, 0.28, 1.8),
         metal.clone(),
     );
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.95, -0.25),
+        Vec3::new(1.9, 0.28, 1.3),
+        orange.clone(),
+    );
 
-    // Alas laterales y paneles oscuros.
-    for x in [-2.3, 2.3] {
+    // Alas laterales y paneles oscuros abrazando el cuerpo.
+    for x in [-2.35, 2.35] {
         scene.add_custom_block(
-            Vec3::new(x, 0.22, -0.15),
-            Vec3::new(1.45, 0.28, 2.25),
+            Vec3::new(x, 0.05, -0.2),
+            Vec3::new(1.65, 0.28, 2.2),
             orange.clone(),
         );
         scene.add_custom_block(
-            Vec3::new(x, 0.48, -0.35),
-            Vec3::new(1.35, 0.12, 1.6),
+            Vec3::new(x, 0.3, -0.35),
+            Vec3::new(1.2, 0.12, 1.55),
             metal.clone(),
         );
     }
 
-    // Cockpit verde reflectivo al frente.
+    // Cockpit verde reflectivo al frente de la esfera.
     scene.add_custom_block(
-        Vec3::new(0.0, 0.85, 1.55),
-        Vec3::new(1.7, 0.22, 0.72),
+        Vec3::new(0.0, 0.8, 2.28),
+        Vec3::new(1.8, 0.55, 0.38),
         cockpit,
     );
-    for x in [-1.0, 1.0] {
+    for x in [-1.05, 1.05] {
         scene.add_custom_block(
-            Vec3::new(x, 0.45, -1.25),
-            Vec3::new(0.5, 0.5, 0.7),
+            Vec3::new(x, 0.45, 2.0),
+            Vec3::new(0.42, 0.5, 0.6),
             metal.clone(),
         );
     }
 
-    // Paneles, luces verdes y cuatro propulsores traseros.
-    for x in [-1.65, -0.55, 0.55, 1.65] {
+    // Paneles, aletas superiores y cuatro propulsores traseros.
+    for x in [-1.7, -0.55, 0.55, 1.7] {
         scene.add_custom_block(
-            Vec3::new(x, 0.42, -1.65),
+            Vec3::new(x, 0.55, -2.25),
             Vec3::new(0.36, 0.18, 0.12),
             lava.clone(),
         );
     }
     scene.add_custom_block(
-        Vec3::new(0.0, 0.68, -1.45),
-        Vec3::new(2.3, 0.12, 0.18),
+        Vec3::new(0.0, 1.35, -1.2),
+        Vec3::new(2.5, 0.16, 0.22),
         metal.clone(),
     );
-    for x in [-1.7, 1.7] {
-        scene.add_custom_block(
-            Vec3::new(x, 0.78, 0.45),
-            Vec3::new(0.12, 0.28, 0.12),
-            materials.cockpit(),
-        );
+    for x in [-1.65, -0.55, 0.55, 1.65] {
+        scene.add(Box::new(Cylinder {
+            center: Vec3::new(x, -0.25, -2.15),
+            radius: 0.3,
+            height: 0.8,
+            material: metal.clone(),
+        }));
     }
 
     scene
