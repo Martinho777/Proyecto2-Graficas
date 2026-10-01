@@ -4,7 +4,7 @@ use crate::ray::Ray;
 use crate::scene::Scene;
 use nalgebra_glm::{dot, normalize, Vec3};
 
-const MAX_BOUNCES: u32 = 3;
+const MAX_BOUNCES: u32 = 2;
 
 fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let t = direction.y * 0.5 + 0.5;
@@ -45,22 +45,16 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
         return background;
     };
 
-    let light_directions = [
-        normalize(&Vec3::new(-0.6, 1.0, 0.8)),
-        normalize(&Vec3::new(-0.52, 0.98, 0.76)),
-        normalize(&Vec3::new(-0.68, 1.02, 0.86)),
-    ];
+    let light_direction = normalize(&Vec3::new(-0.6, 1.0, 0.8));
     let shadow_origin = hit.point + hit.normal * 0.012;
-    let visible_lights = light_directions
-        .iter()
-        .filter(|direction| {
-            scene
-                .intersect(&Ray::new(shadow_origin, **direction))
-                .is_none()
-        })
-        .count() as f32
-        / light_directions.len() as f32;
-    let light_direction = light_directions[0];
+    let visible_lights = if scene
+        .intersect(&Ray::new(shadow_origin, light_direction))
+        .is_none()
+    {
+        1.0
+    } else {
+        0.0
+    };
     let diffuse = dot(&hit.normal, &light_direction).max(0.0);
     let half_vector = normalize(&(light_direction - ray.direction));
     let specular = dot(&hit.normal, &half_vector)
