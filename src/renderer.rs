@@ -26,19 +26,27 @@ pub fn render_raytraced_scene(framebuffer: &mut Framebuffer, camera: &Camera, sc
                     .powf(hit.material.specular)
                     * 0.35;
                 let texture = hit.material.texture.sample(hit.uv[0], hit.uv[1]);
-                let red = ((texture[0] * hit.material.albedo[0] * (0.18 + diffuse)
+                let reflection = hit.material.reflectivity;
+                let background_red = ((background >> 16) & 0xFF) as f32 / 255.0;
+                let background_green = ((background >> 8) & 0xFF) as f32 / 255.0;
+                let background_blue = (background & 0xFF) as f32 / 255.0;
+                let red_lit = texture[0] * hit.material.albedo[0] * (0.18 + diffuse)
                     + specular
-                    + hit.material.emission[0])
+                    + hit.material.emission[0];
+                let green_lit = texture[1] * hit.material.albedo[1] * (0.18 + diffuse)
+                    + specular
+                    + hit.material.emission[1];
+                let blue_lit = texture[2] * hit.material.albedo[2] * (0.18 + diffuse)
+                    + specular
+                    + hit.material.emission[2];
+                let red = ((red_lit * (1.0 - reflection) + background_red * reflection * 0.45)
                     .clamp(0.0, 1.0)
                     * 255.0) as u32;
-                let green = ((texture[1] * hit.material.albedo[1] * (0.18 + diffuse)
-                    + specular
-                    + hit.material.emission[1])
+                let green = ((green_lit * (1.0 - reflection)
+                    + background_green * reflection * 0.45)
                     .clamp(0.0, 1.0)
                     * 255.0) as u32;
-                let blue = ((texture[2] * hit.material.albedo[2] * (0.18 + diffuse)
-                    + specular
-                    + hit.material.emission[2])
+                let blue = ((blue_lit * (1.0 - reflection) + background_blue * reflection * 0.45)
                     .clamp(0.0, 1.0)
                     * 255.0) as u32;
                 (red << 16) | (green << 8) | blue

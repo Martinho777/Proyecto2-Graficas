@@ -36,6 +36,8 @@ impl Material {
 
 pub struct MaterialLibrary {
     materials: [Material; 5],
+    coin: Material,
+    question: Material,
 }
 
 impl MaterialLibrary {
@@ -62,13 +64,33 @@ impl MaterialLibrary {
         lava.specular = 24.0;
         lava.emission = [0.55, 0.12, 0.0];
 
+        let mut coin = Material::from_texture(Texture::load_ppm("assets/textures/coin.ppm")?);
+        coin.albedo = [1.0, 0.82, 0.12];
+        coin.specular = 96.0;
+        coin.reflectivity = 0.35;
+
+        let mut question =
+            Material::from_texture(Texture::load_ppm("assets/textures/question.ppm")?);
+        question.albedo = [1.0, 0.88, 0.18];
+        question.specular = 48.0;
+
         Ok(Self {
             materials: [stone, wood, leaves, crystal, lava],
+            coin,
+            question,
         })
     }
 
     pub fn get(&self, id: MaterialId) -> Material {
         self.materials[id.index()].clone()
+    }
+
+    pub fn coin(&self) -> Material {
+        self.coin.clone()
+    }
+
+    pub fn question(&self) -> Material {
+        self.question.clone()
     }
 }
 

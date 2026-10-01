@@ -2,6 +2,7 @@ use nalgebra_glm::Vec3;
 
 use crate::animation::bobbing_height;
 use crate::app::Character;
+use crate::cylinder::Cylinder;
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::scene::{Block, Scene};
 use crate::sphere::Sphere;
@@ -159,13 +160,32 @@ fn add_mario_block(
 }
 
 fn add_mario_gold_block(scene: &mut Scene, materials: &MaterialLibrary, center: Vec3, size: Vec3) {
-    let mut gold = materials.get(MaterialId::Lava);
-    gold.emission = [0.0, 0.0, 0.0];
-    gold.albedo = [1.0, 0.9, 0.25];
-    gold.specular = 48.0;
-    add_mario_block(scene, materials, center, size, MaterialId::Lava);
-    scene.objects.pop();
-    scene.add_custom_block(center, size, gold);
+    scene.add_custom_block(center, size, materials.question());
+}
+
+fn add_mario_pipe_blocks(scene: &mut Scene, materials: &MaterialLibrary, blocks: Vec<Block>) {
+    let mut pipe = materials.get(MaterialId::Leaves);
+    pipe.albedo = [0.08, 0.42, 0.08];
+    pipe.specular = 96.0;
+    pipe.reflectivity = 0.45;
+    for block in blocks {
+        scene.add_custom_block(block.center, block.size, pipe.clone());
+    }
+}
+
+fn add_mario_coin(
+    scene: &mut Scene,
+    materials: &MaterialLibrary,
+    center: Vec3,
+    time: f32,
+    phase: f32,
+) {
+    scene.add(Box::new(Cylinder {
+        center: center + Vec3::new(0.0, bobbing_height(time, phase, 0.28, 2.4), 0.0),
+        radius: 0.36,
+        height: 0.12,
+        material: materials.coin(),
+    }));
 }
 
 pub fn build_forest_stage(materials: &MaterialLibrary) -> Scene {
@@ -357,8 +377,8 @@ pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
     let mut scene = Scene::with_background(0x6BC7F2);
 
     add_blocks(&mut scene, build_mario_hills(), materials);
-    add_blocks(&mut scene, build_mario_pipe(-2.6, -0.4, 2), materials);
-    add_blocks(&mut scene, build_mario_pipe(2.6, 0.0, 1), materials);
+    add_mario_pipe_blocks(&mut scene, materials, build_mario_pipe(-2.6, -0.4, 2));
+    add_mario_pipe_blocks(&mut scene, materials, build_mario_pipe(2.6, 0.0, 1));
     for block in build_mario_blocks() {
         if matches!(block.material, MaterialId::Lava) {
             add_mario_gold_block(&mut scene, materials, block.center, block.size);
@@ -428,15 +448,7 @@ pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
         (0.0, 2.65, -1.5, 1.4),
         (1.65, 1.9, -0.5, 2.8),
     ] {
-        add_blocks(
-            &mut scene,
-            vec![block(
-                Vec3::new(x, y + bobbing_height(time, phase, 0.28, 2.4), z),
-                Vec3::new(0.42, 0.6, 0.18),
-                MaterialId::Lava,
-            )],
-            materials,
-        );
+        add_mario_coin(&mut scene, materials, Vec3::new(x, y, z), time, phase);
     }
 
     scene
