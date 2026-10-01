@@ -237,12 +237,32 @@ fn build_mario_castle() -> Vec<Block> {
     blocks
 }
 
+fn build_mario_blocks() -> Vec<Block> {
+    let mut blocks = Vec::new();
+    for x in [-1.8, 0.0, 1.8] {
+        blocks.push(block(
+            Vec3::new(x, 1.55, 0.25),
+            Vec3::new(0.72, 0.72, 0.72),
+            MaterialId::Lava,
+        ));
+    }
+    for x in [-2.7, -1.8, -0.9, 0.9, 1.8, 2.7] {
+        blocks.push(block(
+            Vec3::new(x, 2.4, 0.35),
+            Vec3::new(0.78, 0.45, 0.78),
+            MaterialId::Wood,
+        ));
+    }
+    blocks
+}
+
 pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
     let mut scene = Scene::with_background(0x6BC7F2);
 
     add_blocks(&mut scene, build_mario_hills(), materials);
     add_blocks(&mut scene, build_mario_pipe(-2.6, -0.4, 2), materials);
     add_blocks(&mut scene, build_mario_pipe(2.6, 0.0, 1), materials);
+    add_blocks(&mut scene, build_mario_blocks(), materials);
 
     for x in -3..=3 {
         for z in -2..=2 {
