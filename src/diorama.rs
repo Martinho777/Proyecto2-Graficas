@@ -8,10 +8,15 @@ use crate::sphere::Sphere;
 
 fn block(center: Vec3, size: Vec3, material: MaterialId) -> Block {
     Block {
-        center: center * 2.0,
-        size: size * 2.0,
+        center,
+        size,
         material,
     }
+}
+
+fn island_block(center: Vec3, size: Vec3, material: MaterialId) -> Block {
+    let scale = 1.7;
+    block(center * scale, size * scale, material)
 }
 
 pub fn build_floating_island() -> Vec<Block> {
@@ -305,7 +310,7 @@ fn build_mario_island() -> Vec<Block> {
         for x in -5..=5 {
             for z in -5..=5 {
                 if (x as f32).hypot(z as f32) <= radius {
-                    blocks.push(block(
+                    blocks.push(island_block(
                         Vec3::new(x as f32, y, z as f32),
                         Vec3::new(0.92, 0.72, 0.92),
                         material,
@@ -318,7 +323,7 @@ fn build_mario_island() -> Vec<Block> {
     for x in -4..=4 {
         for z in -4..=4 {
             if (x as f32).hypot(z as f32) <= 4.35 {
-                blocks.push(block(
+                blocks.push(island_block(
                     Vec3::new(x as f32, -0.72, z as f32),
                     Vec3::new(0.94, 0.18, 0.94),
                     MaterialId::Leaves,
