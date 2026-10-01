@@ -20,6 +20,7 @@ pub enum TextureKind {
     Lava,
     Bamboo,
     Thatch,
+    Bark,
 }
 
 impl Texture {
@@ -98,6 +99,11 @@ impl Texture {
                             0.72 + noise * 0.18
                         };
                         [strand, strand * 0.62, strand * 0.2]
+                    }
+                    TextureKind::Bark => {
+                        let groove = if x % 4 == 0 { 0.46 } else { 1.0 };
+                        let grain = 0.7 + noise * 0.25;
+                        [0.24 * groove * grain, 0.1 * groove * grain, 0.035 * groove]
                     }
                 };
                 pixels.push(color);

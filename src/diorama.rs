@@ -410,7 +410,7 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x111B46);
     add_blocks(&mut scene, materials, build_floating_island());
 
-    let bark = materials.get(MaterialId::Wood);
+    let bark = materials.deku_bark();
     let leaves = materials.get(MaterialId::Leaves);
     let stone = materials.get(MaterialId::Stone);
 

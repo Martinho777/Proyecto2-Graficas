@@ -50,6 +50,13 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
         Vec3::new(1.0, 0.72, 0.35)
     };
     sky += sky_light * (sun_glow + sun_disc);
+    if night {
+        let star_wave =
+            (direction.x * 91.0).sin() * (direction.y * 117.0).cos() * (direction.z * 73.0).sin();
+        if star_wave > 0.94 {
+            sky += Vec3::new(0.24, 0.3, 0.5) * ((star_wave - 0.94) * 8.0).min(0.42);
+        }
+    }
 
     let cloud_wave = (direction.x * 11.0 + direction.z * 7.0).sin()
         * (direction.x * 4.0 - direction.z * 9.0).cos();

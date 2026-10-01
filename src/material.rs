@@ -50,6 +50,7 @@ pub struct MaterialLibrary {
     navi: Material,
     rupee: Material,
     face_mark: Material,
+    deku_bark: Material,
 }
 
 impl MaterialLibrary {
@@ -125,6 +126,10 @@ impl MaterialLibrary {
         metal.specular = 128.0;
         metal.reflectivity = 0.28;
 
+        let mut deku_bark = Material::from_texture(Texture::procedural(TextureKind::Bark));
+        deku_bark.albedo = [1.0, 0.72, 0.42];
+        deku_bark.specular = 14.0;
+
         let mut navi = Material::from_texture(Texture::solid([0.2, 0.85, 1.0]));
         navi.albedo = [0.25, 0.9, 1.0];
         navi.specular = 96.0;
@@ -158,6 +163,7 @@ impl MaterialLibrary {
             navi,
             rupee,
             face_mark,
+            deku_bark,
         })
     }
 
@@ -207,6 +213,10 @@ impl MaterialLibrary {
 
     pub fn navi(&self) -> Material {
         self.navi.clone()
+    }
+
+    pub fn deku_bark(&self) -> Material {
+        self.deku_bark.clone()
     }
 
     pub fn rupee(&self) -> Material {
