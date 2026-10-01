@@ -21,6 +21,7 @@ pub enum TextureKind {
     Bamboo,
     Thatch,
     Bark,
+    YoshiEgg,
 }
 
 impl Texture {
@@ -104,6 +105,23 @@ impl Texture {
                         let groove = if x % 4 == 0 { 0.46 } else { 1.0 };
                         let grain = 0.7 + noise * 0.25;
                         [0.24 * groove * grain, 0.1 * groove * grain, 0.035 * groove]
+                    }
+                    TextureKind::YoshiEgg => {
+                        let spots = [(3.0, 4.0), (11.0, 5.0), (6.0, 11.0), (13.0, 12.0)];
+                        let spotted = spots.iter().any(|(spot_x, spot_y)| {
+                            let dx = x as f32 - spot_x;
+                            let dy = y as f32 - spot_y;
+                            dx * dx + dy * dy < 4.8
+                        });
+                        if spotted {
+                            [0.16, 0.72 + noise * 0.12, 0.12]
+                        } else {
+                            [
+                                0.94 + noise * 0.04,
+                                0.84 + noise * 0.05,
+                                0.58 + noise * 0.05,
+                            ]
+                        }
                     }
                 };
                 pixels.push(color);
