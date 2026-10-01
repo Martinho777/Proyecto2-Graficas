@@ -548,7 +548,7 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     }
     add_blocks(&mut scene, materials, industrial_island);
     let metal = materials.metal();
-    let energy = materials.navi();
+    let energy = materials.energy_blue();
 
     // Camino de tierra con balizas luminosas directamente sobre el piso.
     for (index, z) in [2.7, 2.1, 1.5, 0.9, 0.3].into_iter().enumerate() {
@@ -572,7 +572,7 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     }
 
     // Barriles de acero con derrames fosforescentes sobre la tierra.
-    let phosphor = materials.navi();
+    let phosphor = materials.phosphor_green();
     for (x, z, spill_direction) in [(-2.55, 0.85, 1.0), (2.45, 1.55, -1.0)] {
         scene.add(Box::new(VerticalCylinder {
             center: Vec3::new(x, -0.22, z),
@@ -601,16 +601,16 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     }
 
     // Solo tres energy towers, cada una con una punta azulada bien visible.
-    for (x, z, height) in [(-1.45, -0.7, 1.7), (1.45, -0.7, 1.7), (0.0, -1.45, 2.15)] {
+    for (x, z, height) in [(-1.45, -0.7, 0.95), (1.45, -0.7, 0.95), (0.0, -1.45, 1.15)] {
         scene.add(Box::new(VerticalCylinder {
             center: Vec3::new(x, height * 0.5 - 0.45, z),
-            radius: 0.28,
+            radius: 0.40,
             height,
             material: metal.clone(),
         }));
         scene.add_custom_block(
-            Vec3::new(x, height - 0.28, z),
-            Vec3::new(0.58, 0.16, 0.58),
+            Vec3::new(x, height - 0.38, z),
+            Vec3::new(0.78, 0.16, 0.78),
             energy.clone(),
         );
     }

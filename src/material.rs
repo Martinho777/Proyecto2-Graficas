@@ -48,6 +48,8 @@ pub struct MaterialLibrary {
     bamboo: Material,
     metal: Material,
     navi: Material,
+    energy_blue: Material,
+    phosphor_green: Material,
     rupee: Material,
     face_mark: Material,
     deku_bark: Material,
@@ -136,6 +138,17 @@ impl MaterialLibrary {
         navi.reflectivity = 0.12;
         navi.emission = [1.8, 2.4, 3.2];
 
+        let mut energy_blue = Material::from_texture(Texture::solid([0.04, 0.28, 0.95]));
+        energy_blue.albedo = [0.04, 0.3, 1.0];
+        energy_blue.specular = 128.0;
+        energy_blue.reflectivity = 0.08;
+        energy_blue.emission = [0.08, 0.45, 1.4];
+
+        let mut phosphor_green = Material::from_texture(Texture::solid([0.08, 1.0, 0.12]));
+        phosphor_green.albedo = [0.08, 1.0, 0.12];
+        phosphor_green.specular = 96.0;
+        phosphor_green.emission = [0.35, 2.2, 0.18];
+
         let mut rupee = Material::from_texture(Texture::procedural(TextureKind::Crystal));
         rupee.albedo = [0.08, 0.45, 1.0];
         rupee.specular = 128.0;
@@ -161,6 +174,8 @@ impl MaterialLibrary {
             bamboo,
             metal,
             navi,
+            energy_blue,
+            phosphor_green,
             rupee,
             face_mark,
             deku_bark,
@@ -213,6 +228,14 @@ impl MaterialLibrary {
 
     pub fn navi(&self) -> Material {
         self.navi.clone()
+    }
+
+    pub fn energy_blue(&self) -> Material {
+        self.energy_blue.clone()
+    }
+
+    pub fn phosphor_green(&self) -> Material {
+        self.phosphor_green.clone()
     }
 
     pub fn deku_bark(&self) -> Material {
