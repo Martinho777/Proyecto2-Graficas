@@ -628,39 +628,39 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     }
 
     // Ridley gigante al fondo, construido como una silueta compacta y reconocible.
-    let ridley = materials.ridley_skin();
+    let ridley = materials.alien_egg();
     let eye = materials.ridley_eye();
     scene.add(Box::new(Sphere {
         center: Vec3::new(0.0, 1.75, -3.8),
-        radius: 1.25,
+        radius: 0.92,
         material: ridley.clone(),
     }));
     scene.add(Box::new(VerticalCylinder {
         center: Vec3::new(0.0, 2.65, -3.65),
-        radius: 0.62,
-        height: 1.45,
+        radius: 0.44,
+        height: 1.35,
         material: ridley.clone(),
     }));
     scene.add(Box::new(Sphere {
         center: Vec3::new(0.0, 3.45, -3.5),
-        radius: 1.02,
+        radius: 0.76,
         material: ridley.clone(),
     }));
     scene.add_custom_block(
         Vec3::new(0.0, 3.18, -2.75),
-        Vec3::new(1.2, 0.55, 1.0),
+        Vec3::new(0.9, 0.42, 0.78),
         ridley.clone(),
     );
     for x in [-0.42, 0.42] {
         scene.add(Box::new(Sphere {
             center: Vec3::new(x, 3.58, -2.62),
-            radius: 0.13,
+            radius: 0.10,
             material: eye.clone(),
         }));
         scene.add(Box::new(VerticalCylinder {
             center: Vec3::new(x, 4.35, -3.55),
-            radius: 0.16,
-            height: 1.05,
+            radius: 0.12,
+            height: 0.92,
             material: ridley.clone(),
         }));
     }
