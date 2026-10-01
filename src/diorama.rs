@@ -673,6 +673,39 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         scene.add_custom_block(Vec3::new(x, 2.15, z), size, ridley.clone());
     }
 
+    // Patas delgadas y pies apoyados detrás de la isla.
+    for x in [-0.48, 0.48] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, 0.38, -3.65),
+            radius: 0.22,
+            height: 0.95,
+            material: ridley.clone(),
+        }));
+        scene.add_custom_block(
+            Vec3::new(x, -0.08, -3.42),
+            Vec3::new(0.48, 0.18, 0.78),
+            ridley.clone(),
+        );
+    }
+
+    // Cola segmentada, curvada hacia la parte posterior de la criatura.
+    for (center, radius) in [
+        (Vec3::new(0.0, 1.25, -4.75), 0.38),
+        (Vec3::new(0.22, 1.02, -5.35), 0.28),
+        (Vec3::new(0.48, 0.82, -5.85), 0.18),
+    ] {
+        scene.add(Box::new(Sphere {
+            center,
+            radius,
+            material: ridley.clone(),
+        }));
+    }
+    scene.add_custom_block(
+        Vec3::new(0.64, 0.70, -6.15),
+        Vec3::new(0.16, 0.16, 0.55),
+        ridley.clone(),
+    );
+
     scene
 }
 
