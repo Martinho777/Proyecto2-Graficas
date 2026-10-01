@@ -52,14 +52,14 @@ fn build_castle() -> Vec<Block> {
 
     for x in [-1.65, 1.65] {
         blocks.push(block(
-            Vec3::new(x, 1.55, -0.7),
-            Vec3::new(1.0, 3.2, 1.25),
+            Vec3::new(x, 0.75, -0.7),
+            Vec3::new(1.0, 1.6, 1.25),
             MaterialId::Stone,
         ));
         for roof_layer in 0..3 {
             let shrink = roof_layer as f32 * 0.18;
             blocks.push(block(
-                Vec3::new(x, 3.35 + roof_layer as f32 * 0.24, -0.7),
+                Vec3::new(x, 1.75 + roof_layer as f32 * 0.24, -0.7),
                 Vec3::new(1.5 - shrink, 0.24, 1.75 - shrink),
                 MaterialId::Wood,
             ));
@@ -159,10 +159,10 @@ fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary) {
     let question = materials.question();
     let coin = materials.coin();
     for (x, y, z) in [
-        (-2.0, 2.0, 0.5),
-        (1.8, 2.55, 1.0),
-        (2.7, 1.85, -0.8),
-        (-2.7, 2.65, 2.1),
+        (-2.0, 0.18, 0.5),
+        (1.8, 0.95, 1.0),
+        (2.7, 0.35, -0.8),
+        (-2.7, 1.25, 2.1),
     ] {
         scene.add_custom_block(
             Vec3::new(x, y, z),
@@ -171,10 +171,10 @@ fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary) {
         );
     }
     for (x, y, z) in [
-        (-1.35, 1.65, 1.2),
-        (0.0, 2.6, 1.5),
-        (1.35, 1.8, 1.35),
-        (-2.2, 1.75, 2.45),
+        (-1.35, -0.15, 1.2),
+        (0.0, -0.05, 1.5),
+        (1.35, 0.05, 1.35),
+        (-2.2, -0.1, 2.45),
     ] {
         scene.add_custom_block(Vec3::new(x, y, z), Vec3::new(0.36, 0.7, 0.12), coin.clone());
     }
