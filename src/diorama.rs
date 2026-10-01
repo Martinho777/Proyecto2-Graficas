@@ -964,11 +964,24 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
     // Cascadas transparentes cayendo por el borde frontal.
     for (x, z) in [(-2.35, 3.84), (0.0, 4.5), (2.35, 3.84)] {
         scene.add(Box::new(VerticalCylinder {
-            center: Vec3::new(x, -1.05, z),
+            center: Vec3::new(x, -1.4, z),
             radius: 0.32,
-            height: 1.7,
+            height: 2.5,
             material: materials.water(),
         }));
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, -2.9, z),
+            radius: 0.22,
+            height: 0.65,
+            material: materials.water(),
+        }));
+        for offset in [-0.16, 0.16] {
+            scene.add(Box::new(Sphere {
+                center: Vec3::new(x + offset, -3.27, z),
+                radius: 0.16,
+                material: materials.water(),
+            }));
+        }
     }
 
     // Anillos luminosos sobre las cuatro torres exteriores.
