@@ -83,13 +83,13 @@ fn build_castle() -> Vec<Block> {
     }
 
     blocks.push(block(
-        Vec3::new(0.0, -0.05, 0.75),
+        Vec3::new(0.0, -0.05, 1.15),
         Vec3::new(0.65, 0.9, 0.12),
         MaterialId::Wood,
     ));
     for x in [-1.65, 0.0, 1.65] {
         blocks.push(block(
-            Vec3::new(x, 0.55, 0.73),
+            Vec3::new(x, 0.55, 1.15),
             Vec3::new(0.28, 0.65, 0.08),
             MaterialId::Crystal,
         ));
