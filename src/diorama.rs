@@ -692,7 +692,6 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
     let nest = materials.get(MaterialId::Wood);
     let leaves = materials.get(MaterialId::Leaves);
     let egg = materials.yoshi_egg();
-    let spot = materials.yoshi_spot();
 
     // Nido circular de ramas en el centro de la isla.
     for (x, z) in [
@@ -723,18 +722,6 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
         radii: Vec3::new(0.68, 0.92, 0.68),
         material: egg,
     }));
-    for (x, y, radius) in [
-        (-0.34, 0.48, 0.14),
-        (0.28, 0.76, 0.12),
-        (0.42, 0.22, 0.13),
-        (-0.18, 0.08, 0.10),
-    ] {
-        scene.add(Box::new(Sphere {
-            center: Vec3::new(x, y, 0.63),
-            radius,
-            material: spot.clone(),
-        }));
-    }
     // Arbustos suaves para enmarcar el nido.
     for (x, z, scale) in [
         (-3.0, 1.5, 1.0),
