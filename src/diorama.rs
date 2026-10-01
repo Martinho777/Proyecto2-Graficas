@@ -593,19 +593,6 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         );
     }
 
-    // Lava claramente separada y muy por debajo de la plataforma.
-    for (x, z, width, depth) in [
-        (0.0, 0.0, 7.5, 5.0),
-        (-2.8, -1.4, 2.4, 1.3),
-        (2.7, 1.3, 2.6, 1.2),
-    ] {
-        scene.add_custom_block(
-            Vec3::new(x, -3.2, z),
-            Vec3::new(width, 0.35, depth),
-            lava.clone(),
-        );
-    }
-
     scene
 }
 

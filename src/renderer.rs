@@ -64,6 +64,20 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
             sky += Vec3::new(0.24, 0.3, 0.5) * ((star_wave - 0.94) * 8.0).min(0.42);
         }
     }
+    if space {
+        let lava_factor = ((-direction.y - 0.04) / 0.52).clamp(0.0, 1.0);
+        if lava_factor > 0.0 {
+            let wave = (direction.x * 22.0 + direction.z * 11.0).sin()
+                * (direction.x * 8.0 - direction.z * 17.0).cos();
+            let pulse = wave * 0.5 + 0.5;
+            let lava = Vec3::new(
+                0.32 + pulse * 0.5,
+                0.015 + pulse * 0.07,
+                0.004 + pulse * 0.008,
+            );
+            sky = sky * (1.0 - lava_factor) + lava * lava_factor;
+        }
+    }
 
     let cloud_wave = (direction.x * 11.0 + direction.z * 7.0).sin()
         * (direction.x * 4.0 - direction.z * 9.0).cos();
