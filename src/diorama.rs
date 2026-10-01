@@ -903,7 +903,7 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
 fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x111B46);
     let stone = materials.get(MaterialId::Stone);
-    let crystal = materials.plain_crystal();
+    let crystal = materials.kirby_crystal();
     let water = materials.water();
 
     // Plataforma circular principal, inspirada en un escenario cósmico.
