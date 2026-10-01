@@ -169,12 +169,13 @@ impl MaterialLibrary {
         flower_pink.albedo = [1.0, 0.22, 0.56];
         flower_pink.specular = 48.0;
 
-        let mut water = Material::from_texture(Texture::solid([0.18, 0.72, 0.96]));
+        let mut water = Material::from_texture(Texture::procedural(TextureKind::Water));
         water.albedo = [0.16, 0.72, 0.98];
         water.specular = 128.0;
         water.transparency = 0.42;
-        water.reflectivity = 0.38;
+        water.reflectivity = 0.48;
         water.refractive_index = 1.33;
+        water.emission = [0.02, 0.08, 0.18];
 
         let mut ridley_eye = Material::from_texture(Texture::solid([1.0, 0.02, 0.01]));
         ridley_eye.albedo = [1.0, 0.02, 0.01];

@@ -22,6 +22,7 @@ pub enum TextureKind {
     Thatch,
     Bark,
     YoshiEgg,
+    Water,
 }
 
 impl Texture {
@@ -123,6 +124,13 @@ impl Texture {
                         } else {
                             [0.98, 0.98, 0.98]
                         }
+                    }
+                    TextureKind::Water => {
+                        let wave = ((x as f32 * 0.9 + y as f32 * 1.7).sin()
+                            + (x as f32 * 1.8 - y as f32 * 0.65).cos())
+                            * 0.5;
+                        let highlight = (wave * 0.5 + 0.5) * 0.22;
+                        [0.04 + highlight, 0.38 + highlight, 0.72 + highlight]
                     }
                 };
                 pixels.push(color);
