@@ -269,7 +269,7 @@ fn add_dk_letter(scene: &mut Scene, materials: &MaterialLibrary, glyph: &[&str],
         for (column, pixel) in line.chars().enumerate() {
             if pixel == '#' {
                 scene.add_custom_block(
-                    Vec3::new(x + column as f32 * 0.14, 1.63 - row as f32 * 0.14, 0.52),
+                    Vec3::new(x + column as f32 * 0.14, 1.75 - row as f32 * 0.14, 0.52),
                     Vec3::new(0.12, 0.12, 0.05),
                     materials.banana(),
                 );
@@ -374,10 +374,13 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
         (-3.0, 0.65),
         (2.85, 1.9),
         (-2.55, -0.35),
-        (-0.95, 0.95),
-        (-0.45, 1.35),
-        (0.55, 1.25),
-        (1.05, 0.9),
+        (-0.95, 2.25),
+        (-0.45, 2.75),
+        (0.55, 2.45),
+        (1.05, 2.95),
+        (-2.4, 2.55),
+        (1.9, 2.35),
+        (2.65, 2.8),
     ] {
         for (dx, dy, dz, sx, sz) in [
             (-0.18, 0.0, 0.0, 0.28, 0.12),
