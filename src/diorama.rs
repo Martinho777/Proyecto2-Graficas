@@ -93,6 +93,10 @@ fn build_castle() -> Vec<Block> {
         ));
     }
 
+    for castle_block in &mut blocks {
+        castle_block.center.z -= 2.2;
+    }
+
     blocks
 }
 
@@ -138,20 +142,40 @@ fn build_pipes() -> Vec<Block> {
             Vec3::new(1.05, 0.22, 1.05),
             MaterialId::Leaves,
         ),
+        block(
+            Vec3::new(2.65, 0.38, 1.45),
+            Vec3::new(0.7, 1.25, 0.7),
+            MaterialId::Leaves,
+        ),
+        block(
+            Vec3::new(2.65, 1.08, 1.45),
+            Vec3::new(0.92, 0.2, 0.92),
+            MaterialId::Leaves,
+        ),
     ]
 }
 
 fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary) {
     let question = materials.question();
     let coin = materials.coin();
-    for (x, y, z) in [(-2.0, 2.0, 0.5), (1.8, 2.55, 1.0), (2.7, 1.85, -0.8)] {
+    for (x, y, z) in [
+        (-2.0, 2.0, 0.5),
+        (1.8, 2.55, 1.0),
+        (2.7, 1.85, -0.8),
+        (-2.7, 2.65, 2.1),
+    ] {
         scene.add_custom_block(
             Vec3::new(x, y, z),
             Vec3::new(0.7, 0.7, 0.7),
             question.clone(),
         );
     }
-    for (x, y, z) in [(-1.35, 1.65, 1.2), (0.0, 2.6, 1.5), (1.35, 1.8, 1.35)] {
+    for (x, y, z) in [
+        (-1.35, 1.65, 1.2),
+        (0.0, 2.6, 1.5),
+        (1.35, 1.8, 1.35),
+        (-2.2, 1.75, 2.45),
+    ] {
         scene.add_custom_block(Vec3::new(x, y, z), Vec3::new(0.36, 0.7, 0.12), coin.clone());
     }
 }
