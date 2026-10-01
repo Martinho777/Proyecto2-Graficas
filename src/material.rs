@@ -178,13 +178,13 @@ impl MaterialLibrary {
         water.refractive_index = 1.33;
         water.emission = [0.08, 0.24, 0.52];
 
-        let mut kirby_crystal = Material::from_texture(Texture::solid([0.58, 0.16, 0.88]));
-        kirby_crystal.albedo = [0.58, 0.16, 0.88];
+        let mut kirby_crystal = Material::from_texture(Texture::solid([1.0, 0.28, 0.72]));
+        kirby_crystal.albedo = [1.0, 0.28, 0.72];
         kirby_crystal.specular = 128.0;
         kirby_crystal.transparency = 0.28;
         kirby_crystal.reflectivity = 0.24;
         kirby_crystal.refractive_index = 1.45;
-        kirby_crystal.emission = [0.08, 0.015, 0.18];
+        kirby_crystal.emission = [0.16, 0.025, 0.12];
 
         let mut ridley_eye = Material::from_texture(Texture::solid([1.0, 0.02, 0.01]));
         ridley_eye.albedo = [1.0, 0.02, 0.01];
