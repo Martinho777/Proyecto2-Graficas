@@ -57,6 +57,7 @@ pub struct MaterialLibrary {
     kirby_crystal: Material,
     kirby_base: Material,
     kirby_star: Material,
+    foam: Material,
     ridley_eye: Material,
     rupee: Material,
     face_mark: Material,
@@ -199,6 +200,11 @@ impl MaterialLibrary {
         kirby_star.reflectivity = 0.22;
         kirby_star.emission = [1.2, 0.72, 0.05];
 
+        let mut foam = Material::from_texture(Texture::solid([1.0, 1.0, 1.0]));
+        foam.albedo = [1.0, 1.0, 1.0];
+        foam.specular = 72.0;
+        foam.emission = [0.16, 0.16, 0.16];
+
         let mut ridley_eye = Material::from_texture(Texture::solid([1.0, 0.02, 0.01]));
         ridley_eye.albedo = [1.0, 0.02, 0.01];
         ridley_eye.specular = 96.0;
@@ -238,6 +244,7 @@ impl MaterialLibrary {
             kirby_crystal,
             kirby_base,
             kirby_star,
+            foam,
             ridley_eye,
             rupee,
             face_mark,
@@ -327,6 +334,10 @@ impl MaterialLibrary {
 
     pub fn kirby_star(&self) -> Material {
         self.kirby_star.clone()
+    }
+
+    pub fn foam(&self) -> Material {
+        self.foam.clone()
     }
 
     pub fn ridley_eye(&self) -> Material {

@@ -975,7 +975,7 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
             height: 0.65,
             material: materials.water(),
         }));
-        let foam = materials.question_mark();
+        let foam = materials.foam();
         for offset in [-0.18, 0.0, 0.18] {
             scene.add(Box::new(Sphere {
                 center: Vec3::new(x + offset, -3.27, z),
