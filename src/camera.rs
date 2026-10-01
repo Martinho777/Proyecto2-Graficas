@@ -57,7 +57,7 @@ impl Camera {
     pub fn reset(&mut self) {
         self.yaw = 0.0;
         self.pitch = 0.35;
-        self.distance = 8.5;
+        self.distance = 14.0;
     }
 
     pub fn update_from_input(&mut self, window: &Window) -> bool {

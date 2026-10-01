@@ -27,7 +27,7 @@ const FRAMEBUFFER_HEIGHT: usize = 180;
 const WINDOW_SCALE: usize = 3;
 fn main() {
     let mut framebuffer = Framebuffer::new(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
-    let mut camera = Camera::new(Vec3::new(0.0, 0.0, 0.0), 8.5);
+    let mut camera = Camera::new(Vec3::new(0.0, 0.0, 0.0), 14.0);
     let mut state = AppState::Title;
     let mut selected = 0usize;
     let clock = AnimationClock::new();

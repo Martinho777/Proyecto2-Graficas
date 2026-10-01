@@ -8,8 +8,8 @@ use crate::sphere::Sphere;
 
 fn block(center: Vec3, size: Vec3, material: MaterialId) -> Block {
     Block {
-        center,
-        size,
+        center: center * 2.0,
+        size: size * 2.0,
         material,
     }
 }
@@ -291,6 +291,44 @@ fn build_mario_path() -> Vec<Block> {
     blocks
 }
 
+fn build_mario_island() -> Vec<Block> {
+    let mut blocks = Vec::new();
+    for layer in 0..5 {
+        let radius = 4.6 - layer as f32 * 0.78;
+        let y = -1.2 - layer as f32 * 0.72;
+        let material = if layer == 0 {
+            MaterialId::Stone
+        } else {
+            MaterialId::Wood
+        };
+
+        for x in -5..=5 {
+            for z in -5..=5 {
+                if (x as f32).hypot(z as f32) <= radius {
+                    blocks.push(block(
+                        Vec3::new(x as f32, y, z as f32),
+                        Vec3::new(0.92, 0.72, 0.92),
+                        material,
+                    ));
+                }
+            }
+        }
+    }
+
+    for x in -4..=4 {
+        for z in -4..=4 {
+            if (x as f32).hypot(z as f32) <= 4.35 {
+                blocks.push(block(
+                    Vec3::new(x as f32, -0.72, z as f32),
+                    Vec3::new(0.94, 0.18, 0.94),
+                    MaterialId::Leaves,
+                ));
+            }
+        }
+    }
+    blocks
+}
+
 fn build_mario_blocks() -> Vec<Block> {
     let mut blocks = Vec::new();
     for x in [-1.8, 0.0, 1.8] {
@@ -330,28 +368,7 @@ pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
         }
     }
 
-    for x in -4..=4 {
-        for z in -3..=3 {
-            add_blocks(
-                &mut scene,
-                vec![block(
-                    Vec3::new(x as f32, -1.2, z as f32),
-                    Vec3::new(1.0, 0.8, 1.0),
-                    MaterialId::Stone,
-                )],
-                materials,
-            );
-            add_blocks(
-                &mut scene,
-                vec![block(
-                    Vec3::new(x as f32, -0.72, z as f32),
-                    Vec3::new(1.0, 0.18, 1.0),
-                    MaterialId::Leaves,
-                )],
-                materials,
-            );
-        }
-    }
+    add_blocks(&mut scene, build_mario_island(), materials);
 
     add_blocks(&mut scene, build_mario_path(), materials);
 
