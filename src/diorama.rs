@@ -925,13 +925,6 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
         height: 0.07,
         material: water,
     }));
-    scene.add(Box::new(VerticalCylinder {
-        center: Vec3::new(0.0, -0.155, 0.0),
-        radius: 3.82,
-        height: 0.018,
-        material: materials.water_glow(),
-    }));
-
     // Cristales verticales para enmarcar el agua sin saturar la escena.
     for (x, z, height, radius) in [
         (-2.8, -1.7, 1.8, 0.42),
@@ -945,6 +938,20 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
             height,
             material: crystal.clone(),
         }));
+        // Punta escalonada tipo castillo en cada torre de la orilla.
+        for layer in 0..3 {
+            let layer_height = 0.16;
+            scene.add(Box::new(VerticalCylinder {
+                center: Vec3::new(
+                    x,
+                    height - 0.18 + layer_height * 0.5 + layer as f32 * layer_height,
+                    z,
+                ),
+                radius: radius * (0.82 - layer as f32 * 0.22),
+                height: layer_height,
+                material: crystal.clone(),
+            }));
+        }
     }
     scene.add(Box::new(VerticalCylinder {
         center: Vec3::new(0.0, 0.18, 0.0),
@@ -963,7 +970,7 @@ fn update_kirby_animation(scene: &mut Scene, materials: &MaterialLibrary, time: 
             center: Vec3::new(0.0, -0.145, 0.0),
             radius,
             height: 0.018,
-            material: materials.water_glow(),
+            material: materials.water(),
         }));
     }
 }
