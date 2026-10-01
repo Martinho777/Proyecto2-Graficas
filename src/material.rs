@@ -51,6 +51,8 @@ pub struct MaterialLibrary {
     rupee: Material,
     face_mark: Material,
     deku_bark: Material,
+    ship_orange: Material,
+    cockpit: Material,
 }
 
 impl MaterialLibrary {
@@ -126,6 +128,19 @@ impl MaterialLibrary {
         metal.specular = 128.0;
         metal.reflectivity = 0.28;
 
+        let mut ship_orange = Material::from_texture(Texture::solid([0.82, 0.12, 0.025]));
+        ship_orange.albedo = [1.0, 0.48, 0.08];
+        ship_orange.specular = 72.0;
+        ship_orange.reflectivity = 0.18;
+
+        let mut cockpit = Material::from_texture(Texture::solid([0.08, 0.85, 0.25]));
+        cockpit.albedo = [0.1, 0.9, 0.28];
+        cockpit.specular = 128.0;
+        cockpit.reflectivity = 0.24;
+        cockpit.transparency = 0.28;
+        cockpit.refractive_index = 1.45;
+        cockpit.emission = [0.02, 0.12, 0.03];
+
         let mut deku_bark = Material::from_texture(Texture::procedural(TextureKind::Bark));
         deku_bark.albedo = [1.0, 0.72, 0.42];
         deku_bark.specular = 14.0;
@@ -164,6 +179,8 @@ impl MaterialLibrary {
             rupee,
             face_mark,
             deku_bark,
+            ship_orange,
+            cockpit,
         })
     }
 
@@ -225,6 +242,14 @@ impl MaterialLibrary {
 
     pub fn face_mark(&self) -> Material {
         self.face_mark.clone()
+    }
+
+    pub fn ship_orange(&self) -> Material {
+        self.ship_orange.clone()
+    }
+
+    pub fn cockpit(&self) -> Material {
+        self.cockpit.clone()
     }
 }
 
