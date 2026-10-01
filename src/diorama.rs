@@ -143,6 +143,26 @@ fn add_blocks(scene: &mut Scene, blocks: Vec<Block>, materials: &MaterialLibrary
     }
 }
 
+fn add_mario_block(
+    scene: &mut Scene,
+    materials: &MaterialLibrary,
+    center: Vec3,
+    size: Vec3,
+    material_id: MaterialId,
+) {
+    scene.add_custom_block(center, size, materials.get(material_id));
+}
+
+fn add_mario_gold_block(scene: &mut Scene, materials: &MaterialLibrary, center: Vec3, size: Vec3) {
+    let mut gold = materials.get(MaterialId::Lava);
+    gold.emission = [0.0, 0.0, 0.0];
+    gold.albedo = [1.0, 0.9, 0.25];
+    gold.specular = 48.0;
+    add_mario_block(scene, materials, center, size, MaterialId::Lava);
+    scene.objects.pop();
+    scene.add_custom_block(center, size, gold);
+}
+
 pub fn build_forest_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x10152C);
     add_blocks(&mut scene, build_floating_island(), materials);
@@ -208,47 +228,54 @@ fn build_mario_pipe(x: f32, z: f32, height: i32) -> Vec<Block> {
 fn build_mario_castle() -> Vec<Block> {
     let mut blocks = Vec::new();
     blocks.push(block(
-        Vec3::new(0.0, 0.35, -2.8),
-        Vec3::new(2.8, 1.7, 0.7),
+        Vec3::new(0.0, 0.9, -2.8),
+        Vec3::new(4.8, 2.4, 0.8),
         MaterialId::Stone,
     ));
-    for x in [-1.1, 1.1] {
+    for x in [-1.8, 1.8] {
         blocks.push(block(
-            Vec3::new(x, 1.15, -2.8),
-            Vec3::new(0.7, 1.4, 0.7),
+            Vec3::new(x, 1.9, -2.8),
+            Vec3::new(1.05, 3.2, 0.85),
             MaterialId::Stone,
         ));
         blocks.push(block(
-            Vec3::new(x, 1.95, -2.8),
-            Vec3::new(0.95, 0.25, 0.95),
-            MaterialId::Lava,
+            Vec3::new(x, 3.65, -2.8),
+            Vec3::new(1.35, 0.35, 1.1),
+            MaterialId::Wood,
         ));
     }
     blocks.push(block(
-        Vec3::new(0.0, 1.38, -2.8),
-        Vec3::new(1.15, 0.55, 0.72),
+        Vec3::new(0.0, 2.35, -2.8),
+        Vec3::new(1.6, 3.8, 0.9),
         MaterialId::Stone,
     ));
     blocks.push(block(
-        Vec3::new(0.0, 2.25, -2.8),
-        Vec3::new(1.25, 0.25, 0.85),
-        MaterialId::Lava,
-    ));
-    blocks.push(block(
-        Vec3::new(0.0, 2.95, -2.8),
-        Vec3::new(0.12, 1.2, 0.12),
+        Vec3::new(0.0, 4.45, -2.8),
+        Vec3::new(1.95, 0.4, 1.15),
         MaterialId::Wood,
     ));
     blocks.push(block(
-        Vec3::new(0.38, 3.18, -2.8),
-        Vec3::new(0.65, 0.35, 0.12),
-        MaterialId::Lava,
+        Vec3::new(0.0, 5.2, -2.8),
+        Vec3::new(0.14, 1.2, 0.14),
+        MaterialId::Wood,
     ));
     blocks.push(block(
-        Vec3::new(0.0, 0.62, -2.43),
-        Vec3::new(0.42, 0.62, 0.08),
+        Vec3::new(0.4, 5.42, -2.8),
+        Vec3::new(0.7, 0.35, 0.12),
+        MaterialId::Wood,
+    ));
+    blocks.push(block(
+        Vec3::new(0.0, 0.4, -2.35),
+        Vec3::new(0.65, 1.0, 0.08),
         MaterialId::Crystal,
     ));
+    for x in [-1.8, 1.8] {
+        blocks.push(block(
+            Vec3::new(x, 1.8, -2.35),
+            Vec3::new(0.32, 0.65, 0.08),
+            MaterialId::Crystal,
+        ));
+    }
     blocks
 }
 
@@ -277,7 +304,19 @@ pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
     add_blocks(&mut scene, build_mario_hills(), materials);
     add_blocks(&mut scene, build_mario_pipe(-2.6, -0.4, 2), materials);
     add_blocks(&mut scene, build_mario_pipe(2.6, 0.0, 1), materials);
-    add_blocks(&mut scene, build_mario_blocks(), materials);
+    for block in build_mario_blocks() {
+        if matches!(block.material, MaterialId::Lava) {
+            add_mario_gold_block(&mut scene, materials, block.center, block.size);
+        } else {
+            add_mario_block(
+                &mut scene,
+                materials,
+                block.center,
+                block.size,
+                block.material,
+            );
+        }
+    }
 
     for x in -3..=3 {
         for z in -2..=2 {

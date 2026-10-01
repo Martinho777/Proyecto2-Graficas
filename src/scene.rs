@@ -40,13 +40,19 @@ impl Scene {
     }
 
     pub fn add_block(&mut self, block: Block, materials: &MaterialLibrary) {
-        self.objects.push(Box::new(Cube::from_center_size(
-            block.center,
-            block.size,
-            materials.get(block.material),
-        )));
+        self.add_custom_block(block.center, block.size, materials.get(block.material));
 
         self.blocks.push(block);
+    }
+
+    pub fn add_custom_block(
+        &mut self,
+        center: Vec3,
+        size: Vec3,
+        material: crate::material::Material,
+    ) {
+        self.objects
+            .push(Box::new(Cube::from_center_size(center, size, material)));
     }
 
     pub fn intersect(&self, ray: &Ray) -> Option<Hit> {
