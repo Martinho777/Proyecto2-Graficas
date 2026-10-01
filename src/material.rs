@@ -127,7 +127,7 @@ impl MaterialLibrary {
         navi.albedo = [0.25, 0.9, 1.0];
         navi.specular = 96.0;
         navi.reflectivity = 0.12;
-        navi.emission = [1.1, 1.6, 2.2];
+        navi.emission = [1.8, 2.4, 3.2];
 
         Ok(Self {
             materials: [stone, wood, leaves, plain_crystal.clone(), lava],
