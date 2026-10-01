@@ -1,7 +1,9 @@
 use nalgebra_glm::Vec3;
 
-use crate::material::MaterialId;
-use crate::scene::Block;
+use crate::app::Character;
+use crate::material::{MaterialId, MaterialLibrary};
+use crate::scene::{Block, Scene};
+use crate::sphere::Sphere;
 
 fn block(center: Vec3, size: Vec3, material: MaterialId) -> Block {
     Block {
@@ -132,4 +134,119 @@ pub fn build_forest() -> Vec<Block> {
     }
 
     blocks
+}
+
+fn add_blocks(scene: &mut Scene, blocks: Vec<Block>, materials: &MaterialLibrary) {
+    for block in blocks {
+        scene.add_block(block, materials);
+    }
+}
+
+pub fn build_forest_stage(materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::new();
+    add_blocks(&mut scene, build_floating_island(), materials);
+    add_blocks(&mut scene, build_forest(), materials);
+    add_blocks(&mut scene, build_bridge(), materials);
+    add_blocks(&mut scene, build_shrine(), materials);
+    scene.add(Box::new(Sphere {
+        center: Vec3::new(0.0, 0.0, 0.0),
+        radius: 1.5,
+        material: materials.get(MaterialId::Crystal),
+    }));
+    scene
+}
+
+pub fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::new();
+
+    for x in -3..=3 {
+        for z in -2..=2 {
+            add_blocks(
+                &mut scene,
+                vec![block(
+                    Vec3::new(x as f32, -1.2, z as f32),
+                    Vec3::new(1.0, 0.8, 1.0),
+                    MaterialId::Stone,
+                )],
+                materials,
+            );
+            add_blocks(
+                &mut scene,
+                vec![block(
+                    Vec3::new(x as f32, -0.72, z as f32),
+                    Vec3::new(1.0, 0.18, 1.0),
+                    MaterialId::Leaves,
+                )],
+                materials,
+            );
+        }
+    }
+
+    for (x, y, z, width) in [
+        (-2.0, 0.25, 0.5, 2.0),
+        (1.5, 1.15, -0.5, 2.5),
+        (-0.5, 2.0, -1.5, 1.5),
+    ] {
+        add_blocks(
+            &mut scene,
+            vec![block(
+                Vec3::new(x, y, z),
+                Vec3::new(width, 0.35, 0.8),
+                MaterialId::Wood,
+            )],
+            materials,
+        );
+    }
+
+    for x in [-2.5, 2.5] {
+        for y in [-0.25, 0.55, 1.35] {
+            add_blocks(
+                &mut scene,
+                vec![block(
+                    Vec3::new(x, y, -1.3),
+                    Vec3::new(0.8, 0.75, 0.8),
+                    MaterialId::Leaves,
+                )],
+                materials,
+            );
+        }
+    }
+
+    add_blocks(
+        &mut scene,
+        vec![
+            block(
+                Vec3::new(-2.5, 0.95, -1.3),
+                Vec3::new(1.0, 0.25, 1.0),
+                MaterialId::Lava,
+            ),
+            block(
+                Vec3::new(2.5, 0.95, -1.3),
+                Vec3::new(1.0, 0.25, 1.0),
+                MaterialId::Lava,
+            ),
+        ],
+        materials,
+    );
+
+    for x in -1..=1 {
+        add_blocks(
+            &mut scene,
+            vec![block(
+                Vec3::new(x as f32, 0.75, -2.0),
+                Vec3::new(0.8, 0.8, 0.8),
+                MaterialId::Stone,
+            )],
+            materials,
+        );
+    }
+
+    scene
+}
+
+pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
+    match character {
+        Character::Mario => build_mario_stage(materials),
+        _ => build_forest_stage(materials),
+    }
 }

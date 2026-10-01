@@ -16,7 +16,7 @@ mod ui;
 use app::{AppState, Character};
 use camera::Camera;
 use framebuffer::Framebuffer;
-use material::{MaterialId, MaterialLibrary};
+use material::MaterialLibrary;
 use minifb::{Key, KeyRepeat, Window, WindowOptions};
 use nalgebra_glm::Vec3;
 
@@ -29,26 +29,7 @@ fn main() {
     let mut state = AppState::Title;
     let mut selected = 0usize;
     let materials = MaterialLibrary::load().expect("no se pudieron cargar los materiales");
-    let mut scene = scene::Scene::new();
-
-    for block in diorama::build_floating_island() {
-        scene.add_block(block, &materials);
-    }
-    for block in diorama::build_forest() {
-        scene.add_block(block, &materials);
-    }
-    for block in diorama::build_bridge() {
-        scene.add_block(block, &materials);
-    }
-    for block in diorama::build_shrine() {
-        scene.add_block(block, &materials);
-    }
-
-    scene.add(Box::new(sphere::Sphere {
-        center: Vec3::new(0.0, 0.0, 0.0),
-        radius: 1.5,
-        material: materials.get(MaterialId::Crystal),
-    }));
+    let mut scene = diorama::build_stage(Character::Mario, &materials);
     let mut window = Window::new(
         "Proyecto 2 — Diorama con Raytracing",
         FRAMEBUFFER_WIDTH * WINDOW_SCALE,
