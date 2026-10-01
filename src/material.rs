@@ -43,6 +43,8 @@ pub struct MaterialLibrary {
     question_mark: Material,
     plain_crystal: Material,
     stained_glass: Material,
+    thatch: Material,
+    banana: Material,
 }
 
 impl MaterialLibrary {
@@ -101,6 +103,14 @@ impl MaterialLibrary {
         question_mark.albedo = [1.0, 1.0, 1.0];
         question_mark.specular = 24.0;
 
+        let mut thatch = Material::from_texture(Texture::solid([0.78, 0.52, 0.16]));
+        thatch.albedo = [0.95, 0.68, 0.25];
+        thatch.specular = 8.0;
+
+        let mut banana = Material::from_texture(Texture::solid([0.95, 0.82, 0.08]));
+        banana.albedo = [1.0, 0.82, 0.06];
+        banana.specular = 20.0;
+
         Ok(Self {
             materials: [stone, wood, leaves, plain_crystal.clone(), lava],
             coin,
@@ -109,6 +119,8 @@ impl MaterialLibrary {
             question_mark,
             plain_crystal,
             stained_glass,
+            thatch,
+            banana,
         })
     }
 
@@ -138,6 +150,14 @@ impl MaterialLibrary {
 
     pub fn stained_glass(&self) -> Material {
         self.stained_glass.clone()
+    }
+
+    pub fn thatch(&self) -> Material {
+        self.thatch.clone()
+    }
+
+    pub fn banana(&self) -> Material {
+        self.banana.clone()
     }
 }
 
