@@ -162,6 +162,7 @@ fn build_pipes() -> Vec<Block> {
 
 fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let question = materials.question();
+    let question_mark = materials.question_mark();
     let coin = materials.coin();
     for (x, y, z) in [
         (-2.0, 0.18, 0.5),
@@ -169,15 +170,33 @@ fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary, time: f3
         (2.7, 0.35, -0.8),
         (-2.7, 1.25, 2.1),
     ] {
+        let center = Vec3::new(x, y, z);
+        scene.add_custom_block(center, Vec3::new(0.62, 0.62, 0.62), question.clone());
+        let front_z = z + 0.325;
         scene.add_custom_block(
-            Vec3::new(x, y, z),
-            Vec3::new(0.62, 0.62, 0.62),
-            question.clone(),
+            Vec3::new(x, y + 0.16, front_z),
+            Vec3::new(0.25, 0.07, 0.035),
+            question_mark.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x + 0.1, y + 0.04, front_z),
+            Vec3::new(0.07, 0.22, 0.035),
+            question_mark.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x, y - 0.09, front_z),
+            Vec3::new(0.2, 0.07, 0.035),
+            question_mark.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x - 0.03, y - 0.2, front_z),
+            Vec3::new(0.07, 0.08, 0.035),
+            question_mark.clone(),
         );
     }
     for (x, y, z, phase) in [
         (-1.35, -0.15, 1.2, 0.0),
-        (0.0, -0.05, 1.5, 1.1),
+        (1.8, -0.05, 1.05, 1.1),
         (1.35, 0.05, 1.35, 2.2),
         (-2.2, -0.1, 2.45, 3.3),
     ] {
