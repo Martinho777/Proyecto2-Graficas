@@ -869,6 +869,34 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
         }));
     }
 
+    // Detalles finales cute: hongos y piedras alrededor del nido.
+    let stone = materials.get(MaterialId::Stone);
+    for (x, z, cap) in [
+        (-2.25, 0.35, pink.clone()),
+        (2.35, -0.05, yellow.clone()),
+        (0.15, -2.55, pink.clone()),
+    ] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, -0.525, z),
+            radius: 0.12,
+            height: 0.3,
+            material: stone.clone(),
+        }));
+        scene.add(Box::new(Sphere {
+            center: Vec3::new(x, -0.31, z),
+            radius: 0.22,
+            material: cap,
+        }));
+    }
+    for (x, z, size) in [
+        (-1.35, 2.4, Vec3::new(0.42, 0.18, 0.3)),
+        (1.2, -2.35, Vec3::new(0.5, 0.2, 0.34)),
+        (3.15, -1.15, Vec3::new(0.38, 0.16, 0.26)),
+        (-3.1, 1.0, Vec3::new(0.36, 0.16, 0.28)),
+    ] {
+        scene.add_custom_block(Vec3::new(x, -0.57, z), size, stone.clone());
+    }
+
     scene
 }
 
