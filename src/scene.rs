@@ -15,6 +15,7 @@ pub struct Block {
 pub struct Scene {
     pub objects: Vec<Box<dyn Primitive>>,
     pub blocks: Vec<Block>,
+    pub background: u32,
 }
 
 impl Scene {
@@ -22,6 +23,15 @@ impl Scene {
         Self {
             objects: Vec::new(),
             blocks: Vec::new(),
+            background: 0x07111F,
+        }
+    }
+
+    pub fn with_background(background: u32) -> Self {
+        Self {
+            objects: Vec::new(),
+            blocks: Vec::new(),
+            background,
         }
     }
 

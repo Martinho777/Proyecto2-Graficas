@@ -8,6 +8,7 @@ pub fn render_raytraced_scene(framebuffer: &mut Framebuffer, camera: &Camera, sc
     framebuffer.clear(0);
     let aspect = framebuffer.width as f32 / framebuffer.height as f32;
     let fov = std::f32::consts::FRAC_PI_3;
+    let background = scene.background;
 
     for y in 0..framebuffer.height {
         for x in 0..framebuffer.width {
@@ -43,9 +44,12 @@ pub fn render_raytraced_scene(framebuffer: &mut Framebuffer, camera: &Camera, sc
                 (red << 16) | (green << 8) | blue
             } else {
                 let t = screen_y * 0.5 + 0.5;
-                let red = (8.0 + 14.0 * t) as u32;
-                let green = (18.0 + 22.0 * t) as u32;
-                let blue = (38.0 + 42.0 * t) as u32;
+                let base_red = ((background >> 16) & 0xFF) as f32;
+                let base_green = ((background >> 8) & 0xFF) as f32;
+                let base_blue = (background & 0xFF) as f32;
+                let red = (base_red * (0.75 + 0.25 * t)).clamp(0.0, 255.0) as u32;
+                let green = (base_green * (0.75 + 0.25 * t)).clamp(0.0, 255.0) as u32;
+                let blue = (base_blue * (0.75 + 0.25 * t)).clamp(0.0, 255.0) as u32;
                 (red << 16) | (green << 8) | blue
             };
 

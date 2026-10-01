@@ -144,7 +144,7 @@ fn add_blocks(scene: &mut Scene, blocks: Vec<Block>, materials: &MaterialLibrary
 }
 
 pub fn build_forest_stage(materials: &MaterialLibrary) -> Scene {
-    let mut scene = Scene::new();
+    let mut scene = Scene::with_background(0x10152C);
     add_blocks(&mut scene, build_floating_island(), materials);
     add_blocks(&mut scene, build_forest(), materials);
     add_blocks(&mut scene, build_bridge(), materials);
@@ -162,7 +162,7 @@ pub fn build_mario_stage(materials: &MaterialLibrary) -> Scene {
 }
 
 pub fn build_mario_stage_at(materials: &MaterialLibrary, time: f32) -> Scene {
-    let mut scene = Scene::new();
+    let mut scene = Scene::with_background(0x6BC7F2);
 
     for x in -3..=3 {
         for z in -2..=2 {
