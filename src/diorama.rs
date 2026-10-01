@@ -964,7 +964,7 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
     // Estrella central de Kirby: cinco puntas geométricas y gruesas.
     let star = materials.kirby_star();
     scene.add(Box::new(Star {
-        center: Vec3::new(0.0, 0.92, 0.0),
+        center: Vec3::new(0.0, 1.65, 0.0),
         outer_radius: 0.98,
         inner_radius: 0.43,
         depth: 0.22,

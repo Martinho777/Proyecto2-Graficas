@@ -197,7 +197,7 @@ impl MaterialLibrary {
         kirby_star.albedo = [1.0, 0.78, 0.08];
         kirby_star.specular = 128.0;
         kirby_star.reflectivity = 0.22;
-        kirby_star.emission = [0.16, 0.08, 0.01];
+        kirby_star.emission = [1.2, 0.72, 0.05];
 
         let mut ridley_eye = Material::from_texture(Texture::solid([1.0, 0.02, 0.01]));
         ridley_eye.albedo = [1.0, 0.02, 0.01];
