@@ -548,16 +548,7 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     }
     add_blocks(&mut scene, materials, industrial_island);
     let metal = materials.metal();
-    let lava = materials.get(MaterialId::Lava);
-    let stone = materials.get(MaterialId::Stone);
     let energy = materials.navi();
-
-    // Plataforma industrial del mismo tamaño que el resto de los stages.
-    scene.add_custom_block(
-        Vec3::new(0.0, -0.52, 0.0),
-        Vec3::new(4.8, 0.24, 3.2),
-        metal.clone(),
-    );
 
     // Camino de tierra con balizas luminosas directamente sobre el piso.
     for (index, z) in [2.7, 2.1, 1.5, 0.9, 0.3].into_iter().enumerate() {
@@ -580,39 +571,6 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
         }
     }
 
-    // Compuerta central industrial al fondo.
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.45, -1.0),
-        Vec3::new(2.0, 1.8, 0.3),
-        stone.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.45, -0.8),
-        Vec3::new(1.15, 1.35, 0.08),
-        metal.clone(),
-    );
-
-    // Paneles industriales y tuberías.
-    for x in [-1.25, -0.42, 0.42, 1.25] {
-        scene.add_custom_block(
-            Vec3::new(x, -0.33, 0.72),
-            Vec3::new(0.48, 0.12, 0.55),
-            stone.clone(),
-        );
-    }
-    for x in [-2.55, 2.55] {
-        scene.add_custom_block(
-            Vec3::new(x, 0.0, 0.65),
-            Vec3::new(0.28, 1.25, 0.28),
-            metal.clone(),
-        );
-        scene.add_custom_block(
-            Vec3::new(x, 0.64, 0.65),
-            Vec3::new(0.55, 0.16, 0.55),
-            metal.clone(),
-        );
-    }
-
     // Solo tres energy towers, cada una con una punta azulada bien visible.
     for (x, z, height) in [(-1.45, -0.7, 1.7), (1.45, -0.7, 1.7), (0.0, -1.45, 2.15)] {
         scene.add(Box::new(VerticalCylinder {
@@ -625,27 +583,6 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
             Vec3::new(x, height - 0.28, z),
             Vec3::new(0.58, 0.16, 0.58),
             energy.clone(),
-        );
-        scene.add_custom_block(
-            Vec3::new(x, 0.18, z),
-            Vec3::new(0.42, 0.12, 0.42),
-            lava.clone(),
-        );
-    }
-
-    // Luces de alarma y energy tanks.
-    for x in [-1.45, 1.45] {
-        scene.add_custom_block(
-            Vec3::new(x, 0.0, 1.0),
-            Vec3::new(0.25, 0.65, 0.2),
-            materials.rupee(),
-        );
-    }
-    for x in [-1.75, -0.58, 0.58, 1.75] {
-        scene.add_custom_block(
-            Vec3::new(x, 0.96, 0.3),
-            Vec3::new(0.18, 0.18, 0.18),
-            lava.clone(),
         );
     }
 
@@ -687,15 +624,7 @@ fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f
 }
 
 fn update_samus_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
-    let lava = materials.get(MaterialId::Lava);
-    for (index, x) in [-2.4, -0.8, 0.8, 2.4].into_iter().enumerate() {
-        let pulse = (time * 1.6 + index as f32 * 0.7).sin() * 0.08;
-        scene.add_dynamic(Box::new(Cube::from_center_size(
-            Vec3::new(x, -2.98 + pulse, 0.4),
-            Vec3::new(0.7, 0.12, 0.28),
-            lava.clone(),
-        )));
-    }
+    let _ = (scene, materials, time);
 }
 
 /// Actualiza solamente la animación correspondiente al stage seleccionado.
