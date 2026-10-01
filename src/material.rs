@@ -55,6 +55,7 @@ pub struct MaterialLibrary {
     flower_pink: Material,
     water: Material,
     kirby_crystal: Material,
+    kirby_base: Material,
     ridley_eye: Material,
     rupee: Material,
     face_mark: Material,
@@ -178,13 +179,18 @@ impl MaterialLibrary {
         water.refractive_index = 1.33;
         water.emission = [0.08, 0.24, 0.52];
 
-        let mut kirby_crystal = Material::from_texture(Texture::solid([1.0, 0.28, 0.72]));
-        kirby_crystal.albedo = [1.0, 0.28, 0.72];
+        let mut kirby_crystal = Material::from_texture(Texture::solid([1.0, 0.55, 0.82]));
+        kirby_crystal.albedo = [1.0, 0.55, 0.82];
         kirby_crystal.specular = 128.0;
         kirby_crystal.transparency = 0.28;
         kirby_crystal.reflectivity = 0.24;
         kirby_crystal.refractive_index = 1.45;
-        kirby_crystal.emission = [0.16, 0.025, 0.12];
+        kirby_crystal.emission = [0.12, 0.05, 0.08];
+
+        let mut kirby_base = Material::from_texture(Texture::solid([0.48, 0.64, 0.82]));
+        kirby_base.albedo = [0.48, 0.64, 0.82];
+        kirby_base.specular = 72.0;
+        kirby_base.reflectivity = 0.18;
 
         let mut ridley_eye = Material::from_texture(Texture::solid([1.0, 0.02, 0.01]));
         ridley_eye.albedo = [1.0, 0.02, 0.01];
@@ -223,6 +229,7 @@ impl MaterialLibrary {
             flower_pink,
             water,
             kirby_crystal,
+            kirby_base,
             ridley_eye,
             rupee,
             face_mark,
@@ -304,6 +311,10 @@ impl MaterialLibrary {
 
     pub fn kirby_crystal(&self) -> Material {
         self.kirby_crystal.clone()
+    }
+
+    pub fn kirby_base(&self) -> Material {
+        self.kirby_base.clone()
     }
 
     pub fn ridley_eye(&self) -> Material {

@@ -902,7 +902,7 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
 
 fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x111B46);
-    let stone = materials.get(MaterialId::Stone);
+    let stone = materials.kirby_base();
     let crystal = materials.kirby_crystal();
     let water = materials.water();
 
@@ -917,7 +917,7 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
         center: Vec3::new(0.0, -0.28, 0.0),
         radius: 4.25,
         height: 0.10,
-        material: materials.get(MaterialId::Leaves),
+        material: materials.kirby_base(),
     }));
     scene.add(Box::new(VerticalCylinder {
         center: Vec3::new(0.0, -0.20, 0.0),
