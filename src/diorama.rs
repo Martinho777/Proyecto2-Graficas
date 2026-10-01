@@ -94,6 +94,11 @@ fn build_castle() -> Vec<Block> {
             MaterialId::Crystal,
         ));
     }
+    blocks.push(block(
+        Vec3::new(0.0, 2.55, 1.15),
+        Vec3::new(0.55, 0.85, 0.08),
+        MaterialId::Crystal,
+    ));
 
     for castle_block in &mut blocks {
         castle_block.center.x *= 1.2;

@@ -55,7 +55,9 @@ impl MaterialLibrary {
         leaves.albedo = [0.3, 0.86, 0.22];
         leaves.specular = 12.0;
 
-        let mut crystal = Material::from_texture(Texture::procedural(TextureKind::Crystal));
+        let mut crystal = Material::from_texture(Texture::load_ppm(
+            "assets/textures/peach_stained_glass.ppm",
+        )?);
         crystal.albedo = [0.55, 0.8, 1.0];
         crystal.specular = 128.0;
         crystal.transparency = 0.7;
@@ -66,7 +68,8 @@ impl MaterialLibrary {
         lava.specular = 24.0;
         lava.emission = [0.0, 0.0, 0.0];
 
-        let mut coin = Material::from_texture(Texture::procedural(TextureKind::Coin));
+        let mut coin =
+            Material::from_texture(Texture::load_ppm("assets/textures/coin_reference.ppm")?);
         coin.albedo = [1.0, 0.82, 0.12];
         coin.specular = 96.0;
         coin.reflectivity = 0.35;
