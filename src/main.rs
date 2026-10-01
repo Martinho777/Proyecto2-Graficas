@@ -11,6 +11,7 @@ mod ray;
 mod renderer;
 mod scene;
 mod sphere;
+mod star;
 mod texture;
 mod ui;
 
