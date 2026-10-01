@@ -1,4 +1,4 @@
-use crate::texture::Texture;
+use crate::texture::{Texture, TextureKind};
 
 #[derive(Clone, Copy, Debug)]
 pub enum MaterialId {
@@ -42,34 +42,34 @@ pub struct MaterialLibrary {
 
 impl MaterialLibrary {
     pub fn load() -> Result<Self, String> {
-        let mut stone = Material::from_texture(Texture::solid([0.65, 0.65, 0.65]));
+        let mut stone = Material::from_texture(Texture::procedural(TextureKind::Stone));
         stone.albedo = [0.95, 0.9, 0.78];
 
-        let mut wood = Material::from_texture(Texture::solid([0.45, 0.25, 0.12]));
+        let mut wood = Material::from_texture(Texture::procedural(TextureKind::Dirt));
         wood.albedo = [0.78, 0.38, 0.16];
         wood.specular = 18.0;
 
-        let mut leaves = Material::from_texture(Texture::solid([0.2, 0.65, 0.18]));
+        let mut leaves = Material::from_texture(Texture::procedural(TextureKind::Grass));
         leaves.albedo = [0.3, 0.86, 0.22];
         leaves.specular = 12.0;
 
-        let mut crystal = Material::from_texture(Texture::solid([0.35, 0.7, 0.95]));
+        let mut crystal = Material::from_texture(Texture::procedural(TextureKind::Crystal));
         crystal.albedo = [0.55, 0.8, 1.0];
         crystal.specular = 128.0;
         crystal.transparency = 0.7;
         crystal.refractive_index = 1.5;
 
-        let mut lava = Material::from_texture(Texture::solid([0.9, 0.25, 0.05]));
-        lava.albedo = [1.0, 0.72, 0.08];
+        let mut lava = Material::from_texture(Texture::procedural(TextureKind::Roof));
+        lava.albedo = [1.0, 0.35, 0.22];
         lava.specular = 24.0;
-        lava.emission = [0.55, 0.12, 0.0];
+        lava.emission = [0.0, 0.0, 0.0];
 
-        let mut coin = Material::from_texture(Texture::solid([1.0, 0.75, 0.05]));
+        let mut coin = Material::from_texture(Texture::procedural(TextureKind::Coin));
         coin.albedo = [1.0, 0.82, 0.12];
         coin.specular = 96.0;
         coin.reflectivity = 0.35;
 
-        let mut question = Material::from_texture(Texture::solid([1.0, 0.8, 0.08]));
+        let mut question = Material::from_texture(Texture::procedural(TextureKind::Question));
         question.albedo = [1.0, 0.88, 0.18];
         question.specular = 48.0;
 

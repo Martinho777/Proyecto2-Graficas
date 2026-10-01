@@ -61,7 +61,7 @@ fn build_castle() -> Vec<Block> {
             blocks.push(block(
                 Vec3::new(x, 1.75 + roof_layer as f32 * 0.24, -0.7),
                 Vec3::new(1.5 - shrink, 0.24, 1.75 - shrink),
-                MaterialId::Wood,
+                MaterialId::Lava,
             ));
         }
     }
@@ -76,7 +76,7 @@ fn build_castle() -> Vec<Block> {
         blocks.push(block(
             Vec3::new(0.0, 3.7 + roof_layer as f32 * 0.25, -0.7),
             Vec3::new(2.0 - shrink, 0.25, 2.1 - shrink),
-            MaterialId::Wood,
+            MaterialId::Lava,
         ));
     }
 
