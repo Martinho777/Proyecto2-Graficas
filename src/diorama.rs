@@ -540,76 +540,77 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
 
 fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x04071A);
+    add_blocks(&mut scene, materials, build_floating_island());
     let metal = materials.metal();
     let lava = materials.get(MaterialId::Lava);
-    let orange = materials.ship_orange();
-    let cockpit = materials.cockpit();
+    let stone = materials.get(MaterialId::Stone);
 
-    // Fuselaje esférico grande para que la nave tenga volumen real.
-    scene.add(Box::new(Sphere {
-        center: Vec3::new(0.0, 0.15, 0.0),
-        radius: 2.65,
-        material: orange.clone(),
-    }));
+    // Plataforma industrial del mismo tamaño que el resto de los stages.
     scene.add_custom_block(
-        Vec3::new(0.0, -1.65, -0.05),
-        Vec3::new(2.8, 0.28, 1.8),
+        Vec3::new(0.0, -0.52, 0.0),
+        Vec3::new(4.8, 0.24, 3.2),
         metal.clone(),
     );
-    scene.add_custom_block(
-        Vec3::new(0.0, 1.95, -0.25),
-        Vec3::new(1.9, 0.28, 1.3),
-        orange.clone(),
-    );
 
-    // Alas laterales y paneles oscuros abrazando el cuerpo.
-    for x in [-2.35, 2.35] {
+    // Torres laterales y compuerta central.
+    for x in [-1.85, 1.85] {
         scene.add_custom_block(
-            Vec3::new(x, 0.05, -0.2),
-            Vec3::new(1.65, 0.28, 2.2),
-            orange.clone(),
-        );
-        scene.add_custom_block(
-            Vec3::new(x, 0.3, -0.35),
-            Vec3::new(1.2, 0.12, 1.55),
+            Vec3::new(x, 0.25, -0.8),
+            Vec3::new(0.55, 1.55, 0.8),
             metal.clone(),
         );
-    }
-
-    // Cockpit verde reflectivo al frente de la esfera.
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.8, 2.28),
-        Vec3::new(1.8, 0.55, 0.38),
-        cockpit,
-    );
-    for x in [-1.05, 1.05] {
         scene.add_custom_block(
-            Vec3::new(x, 0.45, 2.0),
-            Vec3::new(0.42, 0.5, 0.6),
-            metal.clone(),
-        );
-    }
-
-    // Paneles, aletas superiores y cuatro propulsores traseros.
-    for x in [-1.7, -0.55, 0.55, 1.7] {
-        scene.add_custom_block(
-            Vec3::new(x, 0.55, -2.25),
-            Vec3::new(0.36, 0.18, 0.12),
+            Vec3::new(x, 1.08, -0.8),
+            Vec3::new(0.75, 0.14, 1.0),
             lava.clone(),
         );
     }
     scene.add_custom_block(
-        Vec3::new(0.0, 1.35, -1.2),
-        Vec3::new(2.5, 0.16, 0.22),
+        Vec3::new(0.0, 0.45, -1.0),
+        Vec3::new(2.0, 1.8, 0.3),
+        stone.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, 0.45, -0.8),
+        Vec3::new(1.15, 1.35, 0.08),
         metal.clone(),
     );
-    for x in [-1.65, -0.55, 0.55, 1.65] {
-        scene.add(Box::new(Cylinder {
-            center: Vec3::new(x, -0.25, -2.15),
-            radius: 0.3,
-            height: 0.8,
-            material: metal.clone(),
-        }));
+
+    // Paneles industriales y tuberías.
+    for x in [-1.25, -0.42, 0.42, 1.25] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.33, 0.72),
+            Vec3::new(0.48, 0.12, 0.55),
+            stone.clone(),
+        );
+    }
+    for x in [-2.55, 2.55] {
+        scene.add_custom_block(
+            Vec3::new(x, 0.0, 0.65),
+            Vec3::new(0.28, 1.25, 0.28),
+            metal.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x, 0.64, 0.65),
+            Vec3::new(0.55, 0.16, 0.55),
+            metal.clone(),
+        );
+    }
+
+    // Luces de alarma y energy tanks.
+    for x in [-1.45, 1.45] {
+        scene.add_custom_block(
+            Vec3::new(x, 0.0, 1.0),
+            Vec3::new(0.25, 0.65, 0.2),
+            materials.rupee(),
+        );
+    }
+    for x in [-1.75, -0.58, 0.58, 1.75] {
+        scene.add_custom_block(
+            Vec3::new(x, 0.96, 0.3),
+            Vec3::new(0.18, 0.18, 0.18),
+            lava.clone(),
+        );
     }
 
     scene
