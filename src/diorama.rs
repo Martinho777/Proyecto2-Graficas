@@ -83,6 +83,17 @@ fn build_castle() -> Vec<Block> {
     }
 
     blocks.push(block(
+        Vec3::new(0.0, 5.0, 1.15),
+        Vec3::new(0.1, 1.0, 0.1),
+        MaterialId::Wood,
+    ));
+    blocks.push(block(
+        Vec3::new(0.32, 5.2, 1.15),
+        Vec3::new(0.65, 0.32, 0.08),
+        MaterialId::Lava,
+    ));
+
+    blocks.push(block(
         Vec3::new(0.0, -0.05, 1.15),
         Vec3::new(0.65, 0.9, 0.12),
         MaterialId::Wood,
