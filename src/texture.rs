@@ -34,8 +34,13 @@ impl Texture {
     }
 
     pub fn procedural(kind: TextureKind) -> Self {
-        let width = 16;
-        let height = 16;
+        let texture_size = if matches!(kind, TextureKind::YoshiEgg) {
+            32
+        } else {
+            16
+        };
+        let width = texture_size;
+        let height = texture_size;
         let mut pixels = Vec::with_capacity(width * height);
 
         for y in 0..height {
@@ -107,20 +112,16 @@ impl Texture {
                         [0.24 * groove * grain, 0.1 * groove * grain, 0.035 * groove]
                     }
                     TextureKind::YoshiEgg => {
-                        let spots = [(3.0, 4.0), (11.0, 5.0), (6.0, 11.0), (13.0, 12.0)];
+                        let spots = [(7.0, 8.0), (23.0, 10.0), (12.0, 23.0), (27.0, 25.0)];
                         let spotted = spots.iter().any(|(spot_x, spot_y)| {
                             let dx = x as f32 - spot_x;
                             let dy = y as f32 - spot_y;
-                            dx * dx + dy * dy < 4.8
+                            dx * dx + dy * dy < 22.0
                         });
                         if spotted {
-                            [0.16, 0.72 + noise * 0.12, 0.12]
+                            [0.10, 0.66 + noise * 0.12, 0.08]
                         } else {
-                            [
-                                0.94 + noise * 0.04,
-                                0.84 + noise * 0.05,
-                                0.58 + noise * 0.05,
-                            ]
+                            [0.98, 0.98, 0.98]
                         }
                     }
                 };
