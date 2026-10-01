@@ -21,14 +21,14 @@ fn build_floating_island() -> Vec<Block> {
     let mut blocks = Vec::new();
 
     for layer in 0..4 {
-        let radius = 3.8 - layer as f32 * 0.7;
+        let radius = 4.15 - layer as f32 * 0.75;
         let y = -1.0 - layer as f32 * 0.65;
         for x in -4..=4 {
             for z in -4..=4 {
                 if (x as f32).hypot(z as f32) <= radius {
                     blocks.push(block(
                         Vec3::new(x as f32, y, z as f32),
-                        Vec3::new(0.9, 0.65, 0.9),
+                        Vec3::new(1.0, 0.65, 1.0),
                         if layer == 0 {
                             MaterialId::Leaves
                         } else {
