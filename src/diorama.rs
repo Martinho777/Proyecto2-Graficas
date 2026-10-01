@@ -771,6 +771,38 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
         }));
     }
 
+    // Relleno natural en el sector frontal derecho de la isla.
+    for (x, z, scale) in [(2.35, 0.25, 0.82), (3.25, 0.45, 0.68)] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.37, z),
+            Vec3::new(1.05 * scale, 0.58, 0.78 * scale),
+            leaves.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x - 0.12, 0.08, z - 0.05),
+            Vec3::new(0.62 * scale, 0.36, 0.52 * scale),
+            leaves.clone(),
+        );
+    }
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(2.65, -0.20, -0.72),
+        radius: 0.055,
+        height: 0.95,
+        material: stem.clone(),
+    }));
+    for (petal_x, petal_z) in [(-0.16, 0.0), (0.16, 0.0), (0.0, -0.16), (0.0, 0.16)] {
+        scene.add(Box::new(Sphere {
+            center: Vec3::new(2.65 + petal_x, 0.3, -0.72 + petal_z),
+            radius: 0.13,
+            material: pink.clone(),
+        }));
+    }
+    scene.add(Box::new(Sphere {
+        center: Vec3::new(2.65, 0.3, -0.72),
+        radius: 0.09,
+        material: yellow,
+    }));
+
     scene
 }
 
