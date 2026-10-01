@@ -960,6 +960,22 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
         material: crystal,
     }));
 
+    // Estrella central de Kirby: cinco puntas gruesas y redondeadas.
+    let star = materials.kirby_star();
+    scene.add(Box::new(Sphere {
+        center: Vec3::new(0.0, 0.92, 0.0),
+        radius: 0.52,
+        material: star.clone(),
+    }));
+    for index in 0..5 {
+        let angle = std::f32::consts::FRAC_PI_2 + index as f32 * std::f32::consts::TAU / 5.0;
+        scene.add(Box::new(Sphere {
+            center: Vec3::new(angle.cos() * 0.66, 0.92 + angle.sin() * 0.66, 0.0),
+            radius: 0.36,
+            material: star.clone(),
+        }));
+    }
+
     scene
 }
 
