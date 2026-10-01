@@ -803,6 +803,20 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
         material: yellow,
     }));
 
+    // Vegetación adicional para cerrar los espacios abiertos de la isla.
+    for (x, z, scale) in [(-2.25, 2.35, 0.72), (2.2, 2.45, 0.62)] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.37, z),
+            Vec3::new(0.9 * scale, 0.5, 0.7 * scale),
+            leaves.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x + 0.1, 0.05, z),
+            Vec3::new(0.55 * scale, 0.3, 0.46 * scale),
+            leaves.clone(),
+        );
+    }
+
     scene
 }
 
