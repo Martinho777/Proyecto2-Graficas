@@ -975,6 +975,7 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
 }
 
 fn update_kirby_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+    scene.navi_light_position = Some(Vec3::new(0.0, 1.65, 0.0));
     let wave = (time * 1.4).sin() * 0.16;
     for radius in [0.9 + wave, 1.55 - wave * 0.6] {
         scene.add_dynamic(Box::new(VerticalCylinder {
