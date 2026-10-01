@@ -86,11 +86,12 @@ fn main() {
                 }
                 ui::render_state(&mut framebuffer, state, selected);
             }
-            AppState::Diorama(_) => {
+            AppState::Diorama(character) => {
                 camera.update_from_input(&window);
                 if window.is_key_pressed(Key::Escape, KeyRepeat::No) {
                     state = AppState::CharacterSelect;
                 }
+                scene = diorama::build_stage_at(character, &materials, clock.seconds());
                 renderer::render_raytraced_scene(&mut framebuffer, &camera, &scene);
             }
         }
