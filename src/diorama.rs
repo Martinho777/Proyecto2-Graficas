@@ -516,26 +516,6 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
     );
     scene.add_custom_block(Vec3::new(0.0, 1.42, 2.0), Vec3::new(0.18, 0.38, 0.18), bark);
 
-    // Blue rupees placed around the path with a faceted silhouette.
-    let rupee = materials.rupee();
-    for (x, z) in [(-2.3, 1.9), (2.1, 1.75), (-2.9, 0.25), (2.8, -0.55)] {
-        scene.add_custom_block(
-            Vec3::new(x, -0.4, z),
-            Vec3::new(0.2, 0.5, 0.12),
-            rupee.clone(),
-        );
-        scene.add_custom_block(
-            Vec3::new(x, -0.68, z),
-            Vec3::new(0.12, 0.12, 0.1),
-            rupee.clone(),
-        );
-        scene.add_custom_block(
-            Vec3::new(x, -0.12, z),
-            Vec3::new(0.12, 0.12, 0.1),
-            rupee.clone(),
-        );
-    }
-
     let shrub = materials.get(MaterialId::Leaves);
     for (x, z, scale) in [
         (-3.4, 1.5, 0.9),
@@ -571,6 +551,25 @@ fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f
         radius: 0.24,
         material: navi,
     }));
+
+    let rupee = materials.rupee();
+    for (index, (x, z)) in [(-2.3, 1.9), (2.1, 1.75), (-2.9, 0.25), (2.8, -0.55)]
+        .into_iter()
+        .enumerate()
+    {
+        let bob = bobbing_height(time, index as f32 * 0.8, 0.1, 1.6);
+        for (center, size) in [
+            (Vec3::new(x, -0.4 + bob, z), Vec3::new(0.2, 0.5, 0.12)),
+            (Vec3::new(x, -0.68 + bob, z), Vec3::new(0.12, 0.12, 0.1)),
+            (Vec3::new(x, -0.12 + bob, z), Vec3::new(0.12, 0.12, 0.1)),
+        ] {
+            scene.add_dynamic(Box::new(Cube::from_center_size(
+                center,
+                size,
+                rupee.clone(),
+            )));
+        }
+    }
 }
 
 /// Actualiza solamente la animación correspondiente al stage seleccionado.
