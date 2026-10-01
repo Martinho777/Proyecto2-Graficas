@@ -224,13 +224,14 @@ fn update_dk_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32
         .enumerate()
     {
         let sway = (time * 1.8 + palm_index as f32 * 0.9).sin() * 0.16;
+        let sway_depth = (time * 1.45 + palm_index as f32 * 0.7).cos() * 0.07;
         for (dx, dz, dy, size) in [
             (-0.55, 0.0, 0.0, 1.15),
             (0.35, 0.28, 0.12, 1.0),
             (0.25, -0.42, -0.06, 0.9),
         ] {
             scene.add_dynamic(Box::new(Cube::from_center_size(
-                Vec3::new(x + dx + sway, 1.28 + dy, z + dz),
+                Vec3::new(x + dx + sway, 1.28 + dy, z + dz + sway_depth),
                 Vec3::new(size, 0.16, 0.32),
                 leaves.clone(),
             )));
@@ -282,7 +283,8 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0xD66B45);
     add_blocks(&mut scene, materials, build_floating_island());
 
-    let hut = materials.get(MaterialId::Wood);
+    let hut = materials.bamboo();
+    let door = materials.get(MaterialId::Wood);
     scene.add(Box::new(VerticalCylinder {
         center: Vec3::new(0.0, 0.18, -0.85),
         radius: 1.55,
@@ -309,12 +311,12 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
     scene.add_custom_block(
         Vec3::new(0.0, -0.02, 0.62),
         Vec3::new(0.9, 1.25, 0.14),
-        hut.clone(),
+        door.clone(),
     );
     scene.add_custom_block(
         Vec3::new(0.0, 1.48, 0.42),
         Vec3::new(2.4, 0.62, 0.14),
-        hut.clone(),
+        door.clone(),
     );
     add_dk_letter(
         &mut scene,

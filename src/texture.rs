@@ -18,6 +18,8 @@ pub enum TextureKind {
     Coin,
     Question,
     Lava,
+    Bamboo,
+    Thatch,
 }
 
 impl Texture {
@@ -76,6 +78,22 @@ impl Texture {
                         }
                     }
                     TextureKind::Lava => [0.8 + noise * 0.2, 0.08 + noise * 0.16, 0.01],
+                    TextureKind::Bamboo => {
+                        let band = if x % 5 == 0 {
+                            0.28
+                        } else {
+                            0.52 + noise * 0.12
+                        };
+                        [0.16 + band * 0.35, 0.25 + band * 0.65, 0.08 + band * 0.2]
+                    }
+                    TextureKind::Thatch => {
+                        let strand = if (x + y * 2) % 5 == 0 {
+                            0.42
+                        } else {
+                            0.72 + noise * 0.18
+                        };
+                        [strand, strand * 0.62, strand * 0.2]
+                    }
                 };
                 pixels.push(color);
             }

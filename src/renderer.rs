@@ -73,7 +73,11 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
         return background;
     };
 
-    let light_direction = normalize(&Vec3::new(-0.6, 1.0, 0.8));
+    let light_direction = if scene.background & 0xFFFFFF == 0xD66B45 {
+        normalize(&Vec3::new(-0.72, 0.58, 0.48))
+    } else {
+        normalize(&Vec3::new(-0.6, 1.0, 0.8))
+    };
     let shadow_origin = hit.point + hit.normal * 0.012;
     let visible_lights = if scene
         .intersect(&Ray::new(shadow_origin, light_direction))
@@ -92,8 +96,12 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
         * visible_lights;
 
     let texture = hit.material.texture.sample(hit.uv[0], hit.uv[1]);
-    let ambient = 0.24;
-    let direct = diffuse * visible_lights * 0.76;
+    let ambient = if scene.background & 0xFFFFFF == 0xD66B45 {
+        0.2
+    } else {
+        0.24
+    };
+    let direct = diffuse * visible_lights * 0.8;
     let local = Vec3::new(
         texture[0] * hit.material.albedo[0] * (ambient + direct)
             + specular
