@@ -51,6 +51,9 @@ pub struct MaterialLibrary {
     energy_blue: Material,
     phosphor_green: Material,
     alien_egg: Material,
+    yoshi_egg: Material,
+    yoshi_spot: Material,
+    flower_pink: Material,
     ridley_eye: Material,
     rupee: Material,
     face_mark: Material,
@@ -157,6 +160,19 @@ impl MaterialLibrary {
         alien_egg.reflectivity = 0.16;
         alien_egg.emission = [0.18, 0.02, 0.28];
 
+        let mut yoshi_egg = Material::from_texture(Texture::solid([1.0, 0.92, 0.68]));
+        yoshi_egg.albedo = [1.0, 0.92, 0.68];
+        yoshi_egg.specular = 72.0;
+        yoshi_egg.reflectivity = 0.08;
+
+        let mut yoshi_spot = Material::from_texture(Texture::solid([0.18, 0.78, 0.2]));
+        yoshi_spot.albedo = [0.18, 0.78, 0.2];
+        yoshi_spot.specular = 40.0;
+
+        let mut flower_pink = Material::from_texture(Texture::solid([1.0, 0.22, 0.56]));
+        flower_pink.albedo = [1.0, 0.22, 0.56];
+        flower_pink.specular = 48.0;
+
         let mut ridley_eye = Material::from_texture(Texture::solid([1.0, 0.02, 0.01]));
         ridley_eye.albedo = [1.0, 0.02, 0.01];
         ridley_eye.specular = 96.0;
@@ -190,6 +206,9 @@ impl MaterialLibrary {
             energy_blue,
             phosphor_green,
             alien_egg,
+            yoshi_egg,
+            yoshi_spot,
+            flower_pink,
             ridley_eye,
             rupee,
             face_mark,
@@ -255,6 +274,18 @@ impl MaterialLibrary {
 
     pub fn alien_egg(&self) -> Material {
         self.alien_egg.clone()
+    }
+
+    pub fn yoshi_egg(&self) -> Material {
+        self.yoshi_egg.clone()
+    }
+
+    pub fn yoshi_spot(&self) -> Material {
+        self.yoshi_spot.clone()
+    }
+
+    pub fn flower_pink(&self) -> Material {
+        self.flower_pink.clone()
     }
 
     pub fn ridley_eye(&self) -> Material {

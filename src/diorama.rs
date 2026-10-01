@@ -524,7 +524,7 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
         (3.35, -1.1, 0.9),
     ] {
         scene.add_custom_block(
-            Vec3::new(x, -0.38, z),
+            Vec3::new(x, -0.52, z),
             Vec3::new(0.9 * scale, 0.55, 0.75 * scale),
             shrub.clone(),
         );
@@ -685,6 +685,109 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::with_background(0x7BCBFF);
+    add_blocks(&mut scene, materials, build_floating_island());
+
+    let nest = materials.get(MaterialId::Wood);
+    let leaves = materials.get(MaterialId::Leaves);
+    let egg = materials.yoshi_egg();
+    let spot = materials.yoshi_spot();
+
+    // Nido circular de ramas en el centro de la isla.
+    for (x, z) in [
+        (-0.95, 0.0),
+        (-0.68, -0.62),
+        (0.0, -0.88),
+        (0.68, -0.62),
+        (0.95, 0.0),
+        (0.68, 0.62),
+        (0.0, 0.88),
+        (-0.68, 0.62),
+    ] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.38, z),
+            Vec3::new(0.62, 0.22, 0.34),
+            nest.clone(),
+        );
+    }
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.22, 0.0),
+        Vec3::new(1.45, 0.18, 1.45),
+        leaves.clone(),
+    );
+
+    // Huevo de Yoshi protagonista, con manchas verdes visibles al frente.
+    scene.add(Box::new(Sphere {
+        center: Vec3::new(0.0, 0.55, 0.0),
+        radius: 0.82,
+        material: egg,
+    }));
+    for (x, y, radius) in [
+        (-0.34, 0.48, 0.14),
+        (0.28, 0.76, 0.12),
+        (0.42, 0.22, 0.13),
+        (-0.18, 0.08, 0.10),
+    ] {
+        scene.add(Box::new(Sphere {
+            center: Vec3::new(x, y, 1.32),
+            radius,
+            material: spot.clone(),
+        }));
+    }
+
+    // Arbustos suaves para enmarcar el nido.
+    for (x, z, scale) in [
+        (-3.0, 1.5, 1.0),
+        (3.0, 1.25, 0.9),
+        (-2.8, -1.9, 0.85),
+        (2.85, -2.0, 1.0),
+    ] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.37, z),
+            Vec3::new(1.05 * scale, 0.58, 0.8 * scale),
+            leaves.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x + 0.14, 0.08, z - 0.04),
+            Vec3::new(0.68 * scale, 0.38, 0.58 * scale),
+            leaves.clone(),
+        );
+    }
+
+    // Flores coloridas alrededor del nido.
+    let stem = materials.bamboo();
+    let pink = materials.flower_pink();
+    let yellow = materials.banana();
+    for (x, z, material) in [
+        (-1.85, 1.15, pink.clone()),
+        (1.75, 1.35, yellow.clone()),
+        (-1.85, -1.45, yellow.clone()),
+        (1.85, -1.35, pink.clone()),
+    ] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, -0.20, z),
+            radius: 0.055,
+            height: 0.95,
+            material: stem.clone(),
+        }));
+        for (petal_x, petal_z) in [(-0.16, 0.0), (0.16, 0.0), (0.0, -0.16), (0.0, 0.16)] {
+            scene.add(Box::new(Sphere {
+                center: Vec3::new(x + petal_x, 0.3, z + petal_z),
+                radius: 0.13,
+                material: material.clone(),
+            }));
+        }
+        scene.add(Box::new(Sphere {
+            center: Vec3::new(x, 0.3, z),
+            radius: 0.09,
+            material: yellow.clone(),
+        }));
+    }
+
+    scene
+}
+
 fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let navi = materials.navi();
     let center = Vec3::new(
@@ -797,7 +900,8 @@ pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
         Character::DonkeyKong => build_dk_stage(materials),
         Character::Link => build_link_stage(materials),
         Character::Samus => build_samus_stage(materials),
-        Character::Yoshi | Character::Kirby | Character::Fox | Character::Pikachu => {
+        Character::Yoshi => build_yoshi_stage(materials),
+        Character::Kirby | Character::Fox | Character::Pikachu => {
             build_placeholder_stage(character, materials)
         }
     }
