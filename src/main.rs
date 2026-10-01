@@ -73,8 +73,10 @@ fn main() {
                     selected = (selected + 4) % Character::ALL.len();
                 }
                 if window.is_key_pressed(Key::Enter, KeyRepeat::No) {
+                    let character = Character::ALL[selected];
+                    scene = diorama::build_stage(character, &materials);
                     camera.reset();
-                    state = AppState::Diorama(Character::ALL[selected]);
+                    state = AppState::Diorama(character);
                 }
                 if window.is_key_pressed(Key::Escape, KeyRepeat::No) {
                     state = AppState::Title;
