@@ -1,3 +1,4 @@
+mod animation;
 mod app;
 mod camera;
 mod cube;
@@ -13,6 +14,7 @@ mod sphere;
 mod texture;
 mod ui;
 
+use animation::AnimationClock;
 use app::{AppState, Character};
 use camera::Camera;
 use framebuffer::Framebuffer;
@@ -28,6 +30,7 @@ fn main() {
     let mut camera = Camera::new(Vec3::new(0.0, 0.0, 0.0), 7.0);
     let mut state = AppState::Title;
     let mut selected = 0usize;
+    let clock = AnimationClock::new();
     let materials = MaterialLibrary::load().expect("no se pudieron cargar los materiales");
     let mut scene = diorama::build_stage(Character::Mario, &materials);
     let mut window = Window::new(
