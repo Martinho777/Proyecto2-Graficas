@@ -961,21 +961,52 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
         material: crystal,
     }));
 
-    // Estrella central de Kirby: cinco puntas geométricas y gruesas.
-    let star = materials.kirby_star();
-    scene.add(Box::new(Star {
-        center: Vec3::new(0.0, 1.65, 0.0),
-        outer_radius: 0.98,
-        inner_radius: 0.43,
-        depth: 0.22,
-        material: star,
-    }));
+    // Cascadas transparentes cayendo por el borde frontal.
+    for x in [-2.35, 0.0, 2.35] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, -1.05, 3.78),
+            radius: 0.18,
+            height: 1.7,
+            material: materials.water(),
+        }));
+    }
+
+    // Anillos luminosos sobre las cuatro torres exteriores.
+    let ring = materials.navi();
+    for (x, z, height, radius) in [
+        (-2.8, -1.7, 1.8, 0.42),
+        (2.7, -1.4, 2.2, 0.48),
+        (-2.5, 1.8, 1.45, 0.36),
+        (2.4, 2.0, 1.7, 0.4),
+    ] {
+        let ring_y = height + 0.34;
+        for index in 0..8 {
+            let angle = index as f32 * std::f32::consts::TAU / 8.0;
+            scene.add(Box::new(Sphere {
+                center: Vec3::new(
+                    x + angle.cos() * radius * 0.92,
+                    ring_y,
+                    z + angle.sin() * radius * 0.92,
+                ),
+                radius: 0.095,
+                material: ring.clone(),
+            }));
+        }
+    }
 
     scene
 }
 
 fn update_kirby_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
-    scene.navi_light_position = Some(Vec3::new(0.0, 1.65, 0.0));
+    let star_y = 1.65 + (time * 1.15).sin() * 0.16;
+    scene.navi_light_position = Some(Vec3::new(0.0, star_y, 0.0));
+    scene.add_dynamic(Box::new(Star {
+        center: Vec3::new(0.0, star_y, 0.0),
+        outer_radius: 0.98,
+        inner_radius: 0.43,
+        depth: 0.22,
+        material: materials.kirby_star(),
+    }));
     let wave = (time * 1.4).sin() * 0.16;
     for radius in [0.9 + wave, 1.55 - wave * 0.6] {
         scene.add_dynamic(Box::new(VerticalCylinder {
