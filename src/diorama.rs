@@ -269,7 +269,14 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
     }));
 
     let roof = materials.thatch();
-    for (y, width, depth) in [(1.12, 3.5, 3.1), (1.34, 3.0, 2.7), (1.56, 2.45, 2.3)] {
+    for (y, width, depth) in [
+        (1.12, 3.5, 3.1),
+        (1.34, 3.0, 2.7),
+        (1.56, 2.45, 2.3),
+        (1.78, 1.9, 1.85),
+        (2.0, 1.35, 1.35),
+        (2.22, 0.72, 0.72),
+    ] {
         scene.add_custom_block(
             Vec3::new(0.0, y, -0.85),
             Vec3::new(width, 0.25, depth),
@@ -324,8 +331,37 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
         }
     }
 
+    let bush = materials.get(MaterialId::Leaves);
+    for (x, z, scale) in [
+        (-3.7, 0.45, 1.0),
+        (-2.9, 2.25, 0.8),
+        (2.9, 2.15, 0.9),
+        (3.75, 0.25, 1.1),
+        (-3.65, -1.65, 0.75),
+        (3.55, -1.55, 0.8),
+    ] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.35, z),
+            Vec3::new(0.9 * scale, 0.55, 0.8 * scale),
+            bush.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x + 0.18 * scale, 0.04, z - 0.08),
+            Vec3::new(0.62 * scale, 0.38, 0.58 * scale),
+            bush.clone(),
+        );
+    }
+
     let banana = materials.banana();
-    for (x, z) in [(-2.0, 1.15), (-1.45, 1.75), (1.8, 1.2), (2.35, 0.55)] {
+    for (x, z) in [
+        (-2.0, 1.15),
+        (-1.45, 1.75),
+        (1.8, 1.2),
+        (2.35, 0.55),
+        (-3.0, 0.65),
+        (2.85, 1.9),
+        (-2.55, -0.35),
+    ] {
         for (dx, dy, dz, sx, sz) in [
             (-0.18, 0.0, 0.0, 0.28, 0.12),
             (0.0, 0.06, 0.06, 0.28, 0.14),
