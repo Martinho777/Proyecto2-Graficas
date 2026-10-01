@@ -922,7 +922,7 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
     }));
     scene.add(Box::new(VerticalCylinder {
         center: Vec3::new(0.0, -0.20, 0.0),
-        radius: 3.95,
+        radius: 4.18,
         height: 0.07,
         material: water,
     }));
@@ -962,9 +962,9 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
     }));
 
     // Cascadas transparentes cayendo por el borde frontal.
-    for x in [-2.35, 0.0, 2.35] {
+    for (x, z) in [(-2.35, 3.48), (0.0, 4.18), (2.35, 3.48)] {
         scene.add(Box::new(VerticalCylinder {
-            center: Vec3::new(x, -1.05, 3.78),
+            center: Vec3::new(x, -1.05, z),
             radius: 0.18,
             height: 1.7,
             material: materials.water(),
