@@ -113,7 +113,7 @@ impl MaterialLibrary {
         banana.specular = 20.0;
 
         let mut bamboo = Material::from_texture(Texture::procedural(TextureKind::Bamboo));
-        bamboo.albedo = [0.42, 0.72, 0.18];
+        bamboo.albedo = [0.9, 0.62, 0.28];
         bamboo.specular = 10.0;
 
         Ok(Self {
