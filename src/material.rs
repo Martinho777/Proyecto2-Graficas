@@ -160,7 +160,7 @@ impl MaterialLibrary {
         alien_egg.emission = [0.18, 0.02, 0.28];
 
         let mut yoshi_egg = Material::from_texture(Texture::procedural(TextureKind::YoshiEgg));
-        yoshi_egg.albedo = [1.0, 0.92, 0.68];
+        yoshi_egg.albedo = [1.0, 1.0, 1.0];
         yoshi_egg.specular = 72.0;
         yoshi_egg.reflectivity = 0.08;
 
