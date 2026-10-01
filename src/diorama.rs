@@ -405,6 +405,102 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn build_link_stage(materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::with_background(0x335B8A);
+    add_blocks(&mut scene, materials, build_floating_island());
+
+    let bark = materials.get(MaterialId::Wood);
+    let leaves = materials.get(MaterialId::Leaves);
+    let stone = materials.get(MaterialId::Stone);
+
+    // Camino de piedra que dirige la mirada hacia la espada y el árbol.
+    for (index, z) in [2.8, 2.1, 1.4, 0.7, 0.0].into_iter().enumerate() {
+        scene.add_custom_block(
+            Vec3::new(0.0, -0.57, z),
+            Vec3::new(0.82 + index as f32 * 0.08, 0.16, 0.5),
+            stone.clone(),
+        );
+    }
+
+    // Árbol Deku gigante al fondo.
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, 0.95, -1.75),
+        radius: 1.35,
+        height: 3.35,
+        material: bark.clone(),
+    }));
+    for (x, z, width, depth) in [
+        (-1.15, -0.75, 1.3, 0.75),
+        (1.15, -0.8, 1.3, 0.75),
+        (-0.8, -2.45, 1.1, 0.7),
+        (0.9, -2.35, 1.1, 0.7),
+    ] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.28, z),
+            Vec3::new(width, 0.5, depth),
+            bark.clone(),
+        );
+    }
+    for (x, y, z, size) in [
+        (-1.7, 2.45, -1.65, 2.2),
+        (1.7, 2.55, -1.75, 2.25),
+        (0.0, 3.15, -1.75, 2.9),
+        (-0.8, 3.75, -1.7, 2.1),
+        (0.85, 3.8, -1.7, 2.0),
+        (0.0, 4.3, -1.7, 1.45),
+    ] {
+        scene.add_custom_block(
+            Vec3::new(x, y, z),
+            Vec3::new(size, 0.9, size * 0.82),
+            leaves.clone(),
+        );
+    }
+
+    // Entrada del árbol y ojos simples para que la silueta sea reconocible.
+    scene.add_custom_block(
+        Vec3::new(0.0, 0.0, -0.32),
+        Vec3::new(0.9, 1.25, 0.14),
+        bark.clone(),
+    );
+    for x in [-0.38, 0.38] {
+        scene.add_custom_block(
+            Vec3::new(x, 1.45, -0.34),
+            Vec3::new(0.22, 0.3, 0.12),
+            materials.plain_crystal(),
+        );
+    }
+
+    // Master Sword clavada frente al árbol.
+    let metal = materials.metal();
+    scene.add_custom_block(
+        Vec3::new(0.0, 0.25, 0.85),
+        Vec3::new(0.16, 1.45, 0.12),
+        metal,
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.43, 0.85),
+        Vec3::new(0.72, 0.14, 0.2),
+        materials.banana(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.68, 0.85),
+        Vec3::new(0.18, 0.38, 0.18),
+        bark,
+    );
+
+    // Triforce dorada sobre la entrada.
+    let gold = materials.banana();
+    for (x, y) in [(-0.24, 1.95), (0.24, 1.95), (0.0, 1.72)] {
+        scene.add_custom_block(
+            Vec3::new(x, y, -0.4),
+            Vec3::new(0.2, 0.2, 0.08),
+            gold.clone(),
+        );
+    }
+
+    scene
+}
+
 /// Actualiza solamente la animación correspondiente al stage seleccionado.
 pub fn update_stage_animation(
     scene: &mut Scene,
@@ -432,8 +528,8 @@ pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
     match character {
         Character::Mario => build_mario_stage(materials),
         Character::DonkeyKong => build_dk_stage(materials),
-        Character::Link
-        | Character::Samus
+        Character::Link => build_link_stage(materials),
+        Character::Samus
         | Character::Yoshi
         | Character::Kirby
         | Character::Fox
