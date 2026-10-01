@@ -575,12 +575,12 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     let phosphor = materials.phosphor_green();
     for (x, z, spill_direction) in [(-2.55, 0.85, 1.0), (2.45, 1.55, -1.0)] {
         scene.add(Box::new(VerticalCylinder {
-            center: Vec3::new(x, -0.22, z),
+            center: Vec3::new(x, -0.385, z),
             radius: 0.34,
             height: 0.58,
             material: metal.clone(),
         }));
-        for y in [-0.43, -0.02] {
+        for y in [-0.595, -0.185] {
             scene.add_custom_block(
                 Vec3::new(x, y, z),
                 Vec3::new(0.72, 0.07, 0.72),
@@ -591,7 +591,7 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
             scene.add_custom_block(
                 Vec3::new(
                     x + spill_direction * distance,
-                    -0.51,
+                    -0.645,
                     z + 0.06 * index as f32,
                 ),
                 Vec3::new(0.42 - index as f32 * 0.08, 0.06, 0.26),
@@ -603,13 +603,13 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     // Solo tres energy towers, cada una con una punta azulada bien visible.
     for (x, z, height) in [(-1.45, -0.7, 0.95), (1.45, -0.7, 0.95), (0.0, -1.45, 1.15)] {
         scene.add(Box::new(VerticalCylinder {
-            center: Vec3::new(x, height * 0.5 - 0.45, z),
+            center: Vec3::new(x, height * 0.5 - 0.675, z),
             radius: 0.40,
             height,
             material: metal.clone(),
         }));
         scene.add_custom_block(
-            Vec3::new(x, height - 0.38, z),
+            Vec3::new(x, height - 0.595, z),
             Vec3::new(0.78, 0.16, 0.78),
             energy.clone(),
         );
@@ -620,7 +620,7 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     for (x, z) in [(-3.05, -1.35), (3.0, -0.95), (-2.85, 2.05), (2.75, 2.35)] {
         for (offset_x, offset_z) in [(-0.18, -0.10), (0.18, 0.10)] {
             scene.add(Box::new(Sphere {
-                center: Vec3::new(x + offset_x, -0.42, z + offset_z),
+                center: Vec3::new(x + offset_x, -0.455, z + offset_z),
                 radius: 0.22,
                 material: alien_egg.clone(),
             }));
@@ -676,13 +676,13 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     // Patas delgadas y pies apoyados detrás de la isla.
     for x in [-0.48, 0.48] {
         scene.add(Box::new(VerticalCylinder {
-            center: Vec3::new(x, 0.38, -3.65),
+            center: Vec3::new(x, 0.05, -3.65),
             radius: 0.22,
-            height: 0.95,
+            height: 1.45,
             material: ridley.clone(),
         }));
         scene.add_custom_block(
-            Vec3::new(x, -0.08, -3.42),
+            Vec3::new(x, -0.585, -3.42),
             Vec3::new(0.48, 0.18, 0.78),
             ridley.clone(),
         );
