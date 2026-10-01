@@ -516,16 +516,6 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
     );
     scene.add_custom_block(Vec3::new(0.0, 1.42, 2.0), Vec3::new(0.18, 0.38, 0.18), bark);
 
-    // Triforce dorada sobre la entrada.
-    let gold = materials.banana();
-    for (x, y) in [(-0.24, 1.95), (0.24, 1.95), (0.0, 1.72)] {
-        scene.add_custom_block(
-            Vec3::new(x, y, -0.4),
-            Vec3::new(0.2, 0.2, 0.08),
-            gold.clone(),
-        );
-    }
-
     // Blue rupees placed around the path with a faceted silhouette.
     let rupee = materials.rupee();
     for (x, z) in [(-2.3, 1.9), (2.1, 1.75), (-2.9, 0.25), (2.8, -0.55)] {
