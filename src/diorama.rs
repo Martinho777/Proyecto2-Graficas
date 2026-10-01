@@ -536,6 +536,35 @@ fn build_link_stage(materials: &MaterialLibrary) -> Scene {
         );
     }
 
+    let shrub = materials.get(MaterialId::Leaves);
+    for (x, z, scale) in [
+        (-3.4, 1.5, 0.9),
+        (3.25, 1.15, 0.8),
+        (-3.0, -0.8, 0.75),
+        (3.35, -1.1, 0.9),
+    ] {
+        scene.add_custom_block(
+            Vec3::new(x, -0.38, z),
+            Vec3::new(0.9 * scale, 0.55, 0.75 * scale),
+            shrub.clone(),
+        );
+        scene.add_custom_block(
+            Vec3::new(x + 0.14, -0.02, z - 0.04),
+            Vec3::new(0.58 * scale, 0.34, 0.5 * scale),
+            shrub.clone(),
+        );
+    }
+
+    // Trifuerza luminosa suspendida sobre la Master Sword.
+    let triforce = materials.triforce();
+    for (x, y) in [(-0.28, 2.05), (0.28, 2.05), (0.0, 1.78)] {
+        scene.add_custom_block(
+            Vec3::new(x, y, 2.0),
+            Vec3::new(0.22, 0.22, 0.1),
+            triforce.clone(),
+        );
+    }
+
     scene
 }
 
