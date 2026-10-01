@@ -572,7 +572,6 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
     }
 
     // Barriles de acero con derrames fosforescentes sobre la tierra.
-    let phosphor = materials.phosphor_green();
     for (x, z, spill_direction) in [(-2.55, 0.85, 1.0), (2.45, 1.55, -1.0)] {
         scene.add(Box::new(VerticalCylinder {
             center: Vec3::new(x, -0.385, z),
@@ -587,17 +586,7 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
                 metal.clone(),
             );
         }
-        for (index, distance) in [0.22, 0.58, 0.94].into_iter().enumerate() {
-            scene.add_custom_block(
-                Vec3::new(
-                    x + spill_direction * distance,
-                    -0.645,
-                    z + 0.06 * index as f32,
-                ),
-                Vec3::new(0.42 - index as f32 * 0.08, 0.06, 0.26),
-                phosphor.clone(),
-            );
-        }
+        let _ = spill_direction;
     }
 
     // Solo tres energy towers, cada una con una punta azulada bien visible.
@@ -608,11 +597,7 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
             height,
             material: metal.clone(),
         }));
-        scene.add_custom_block(
-            Vec3::new(x, height - 0.595, z),
-            Vec3::new(0.78, 0.16, 0.78),
-            energy.clone(),
-        );
+        let _ = (x, z, height, energy.clone());
     }
 
     // Huevos alienígenas en parejas alrededor de la base.
@@ -664,15 +649,6 @@ fn build_samus_stage(materials: &MaterialLibrary) -> Scene {
             material: ridley.clone(),
         }));
     }
-    for (x, z, size) in [
-        (-1.45, -3.7, Vec3::new(2.4, 0.18, 1.35)),
-        (1.45, -3.7, Vec3::new(2.4, 0.18, 1.35)),
-        (-2.35, -3.45, Vec3::new(1.2, 0.16, 0.9)),
-        (2.35, -3.45, Vec3::new(1.2, 0.16, 0.9)),
-    ] {
-        scene.add_custom_block(Vec3::new(x, 2.15, z), size, ridley.clone());
-    }
-
     // Patas delgadas y pies apoyados detrás de la isla.
     for x in [-0.34, 0.34] {
         scene.add(Box::new(VerticalCylinder {
@@ -744,7 +720,48 @@ fn update_link_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f
 }
 
 fn update_samus_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
-    let _ = (scene, materials, time);
+    let pulse = 0.82 + 0.18 * (time * 2.4).sin();
+    let mut energy = materials.energy_blue();
+    energy.emission = [0.08 * pulse, 0.45 * pulse, 1.4 * pulse];
+    for (x, z, height) in [(-1.45, -0.7, 0.95), (1.45, -0.7, 0.95), (0.0, -1.45, 1.15)] {
+        scene.add_dynamic(Box::new(Cube::from_center_size(
+            Vec3::new(x, height - 0.595, z),
+            Vec3::new(0.78, 0.16, 0.78),
+            energy.clone(),
+        )));
+    }
+
+    let mut phosphor = materials.phosphor_green();
+    let green_pulse = 0.78 + 0.22 * (time * 3.0).sin().abs();
+    phosphor.emission = [0.35 * green_pulse, 2.2 * green_pulse, 0.18 * green_pulse];
+    for (x, z, spill_direction) in [(-2.55, 0.85, 1.0), (2.45, 1.55, -1.0)] {
+        for (index, distance) in [0.22, 0.58, 0.94].into_iter().enumerate() {
+            scene.add_dynamic(Box::new(Cube::from_center_size(
+                Vec3::new(
+                    x + spill_direction * distance,
+                    -0.645,
+                    z + 0.06 * index as f32,
+                ),
+                Vec3::new(0.42 - index as f32 * 0.08, 0.06, 0.26),
+                phosphor.clone(),
+            )));
+        }
+    }
+
+    let wing_lift = (time * 1.2).sin() * 0.08;
+    let ridley = materials.alien_egg();
+    for (x, z, size) in [
+        (-1.45, -3.7, Vec3::new(2.4, 0.18, 1.35)),
+        (1.45, -3.7, Vec3::new(2.4, 0.18, 1.35)),
+        (-2.35, -3.45, Vec3::new(1.2, 0.16, 0.9)),
+        (2.35, -3.45, Vec3::new(1.2, 0.16, 0.9)),
+    ] {
+        scene.add_dynamic(Box::new(Cube::from_center_size(
+            Vec3::new(x, 2.15 + wing_lift * x.signum(), z),
+            size,
+            ridley.clone(),
+        )));
+    }
 }
 
 /// Actualiza solamente la animación correspondiente al stage seleccionado.
