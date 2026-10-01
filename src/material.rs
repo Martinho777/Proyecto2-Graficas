@@ -38,6 +38,7 @@ pub struct MaterialLibrary {
     materials: [Material; 5],
     coin: Material,
     question: Material,
+    pipe: Material,
 }
 
 impl MaterialLibrary {
@@ -73,10 +74,16 @@ impl MaterialLibrary {
         question.albedo = [1.0, 0.88, 0.18];
         question.specular = 48.0;
 
+        let mut pipe = Material::from_texture(Texture::procedural(TextureKind::Pipe));
+        pipe.albedo = [0.12, 0.5, 0.08];
+        pipe.specular = 96.0;
+        pipe.reflectivity = 0.4;
+
         Ok(Self {
             materials: [stone, wood, leaves, crystal, lava],
             coin,
             question,
+            pipe,
         })
     }
 
@@ -90,6 +97,10 @@ impl MaterialLibrary {
 
     pub fn question(&self) -> Material {
         self.question.clone()
+    }
+
+    pub fn pipe(&self) -> Material {
+        self.pipe.clone()
     }
 }
 

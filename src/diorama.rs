@@ -1,4 +1,5 @@
 use crate::app::Character;
+use crate::cylinder::Cylinder;
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::scene::{Block, Scene};
 use nalgebra_glm::Vec3;
@@ -179,7 +180,12 @@ fn build_floating_props(scene: &mut Scene, materials: &MaterialLibrary) {
         (1.35, 0.05, 1.35),
         (-2.2, -0.1, 2.45),
     ] {
-        scene.add_custom_block(Vec3::new(x, y, z), Vec3::new(0.3, 0.58, 0.1), coin.clone());
+        scene.add(Box::new(Cylinder {
+            center: Vec3::new(x, y, z),
+            radius: 0.32,
+            height: 0.12,
+            material: coin.clone(),
+        }));
     }
 }
 
@@ -189,7 +195,10 @@ fn build_island_stage(materials: &MaterialLibrary) -> Scene {
     add_blocks(&mut scene, materials, build_castle());
     add_blocks(&mut scene, materials, build_path());
     add_blocks(&mut scene, materials, build_bushes());
-    add_blocks(&mut scene, materials, build_pipes());
+    let pipe = materials.pipe();
+    for pipe_block in build_pipes() {
+        scene.add_custom_block(pipe_block.center, pipe_block.size, pipe.clone());
+    }
     build_floating_props(&mut scene, materials);
     scene
 }
