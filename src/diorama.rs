@@ -385,9 +385,9 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
         (2.65, 2.8),
     ] {
         for (dx, dy, dz, sx, sz) in [
-            (-0.18, 0.0, 0.0, 0.28, 0.12),
-            (0.0, 0.06, 0.06, 0.28, 0.14),
-            (0.18, 0.1, 0.0, 0.2, 0.12),
+            (-0.2, 0.0, 0.0, 0.38, 0.12),
+            (0.0, 0.015, 0.18, 0.12, 0.38),
+            (0.2, 0.0, -0.04, 0.34, 0.12),
         ] {
             scene.add_custom_block(
                 Vec3::new(x + dx, -0.58 + dy, z + dz),
@@ -395,6 +395,11 @@ fn build_dk_stage(materials: &MaterialLibrary) -> Scene {
                 banana.clone(),
             );
         }
+        scene.add_custom_block(
+            Vec3::new(x, -0.4, z),
+            Vec3::new(0.1, 0.3, 0.1),
+            banana.clone(),
+        );
     }
 
     scene
