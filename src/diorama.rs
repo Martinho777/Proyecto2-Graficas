@@ -900,6 +900,68 @@ fn build_yoshi_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::with_background(0x111B46);
+    let stone = materials.get(MaterialId::Stone);
+    let crystal = materials.plain_crystal();
+    let water = materials.water();
+
+    // Plataforma circular principal, inspirada en un escenario cósmico.
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, -0.72, 0.0),
+        radius: 4.7,
+        height: 0.82,
+        material: stone.clone(),
+    }));
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, -0.28, 0.0),
+        radius: 4.25,
+        height: 0.10,
+        material: materials.get(MaterialId::Leaves),
+    }));
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, -0.20, 0.0),
+        radius: 3.95,
+        height: 0.07,
+        material: water,
+    }));
+
+    // Cristales verticales para enmarcar el agua sin saturar la escena.
+    for (x, z, height, radius) in [
+        (-2.8, -1.7, 1.8, 0.42),
+        (2.7, -1.4, 2.2, 0.48),
+        (-2.5, 1.8, 1.45, 0.36),
+        (2.4, 2.0, 1.7, 0.4),
+    ] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, height * 0.5 - 0.18, z),
+            radius,
+            height,
+            material: crystal.clone(),
+        }));
+    }
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, 0.18, 0.0),
+        radius: 0.45,
+        height: 0.72,
+        material: crystal,
+    }));
+
+    scene
+}
+
+fn update_kirby_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+    let wave = (time * 1.4).sin() * 0.16;
+    for radius in [0.9 + wave, 1.55 - wave * 0.6] {
+        scene.add_dynamic(Box::new(VerticalCylinder {
+            center: Vec3::new(0.0, -0.145, 0.0),
+            radius,
+            height: 0.018,
+            material: materials.water(),
+        }));
+    }
+}
+
 fn update_yoshi_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let sway = (time * 1.35).sin();
     let center = Vec3::new(sway * 0.07, 0.55 + sway.abs() * 0.025, sway * 0.025);
@@ -1006,6 +1068,8 @@ pub fn update_stage_animation(
         update_samus_animation(scene, materials, time);
     } else if character == Character::Yoshi {
         update_yoshi_animation(scene, materials, time);
+    } else if character == Character::Kirby {
+        update_kirby_animation(scene, materials, time);
     }
 }
 
@@ -1025,9 +1089,8 @@ pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
         Character::Link => build_link_stage(materials),
         Character::Samus => build_samus_stage(materials),
         Character::Yoshi => build_yoshi_stage(materials),
-        Character::Kirby | Character::Fox | Character::Pikachu => {
-            build_placeholder_stage(character, materials)
-        }
+        Character::Kirby => build_kirby_stage(materials),
+        Character::Fox | Character::Pikachu => build_placeholder_stage(character, materials),
     }
 }
 
