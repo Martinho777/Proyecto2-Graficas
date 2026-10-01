@@ -110,7 +110,7 @@ fn build_path() -> Vec<Block> {
     for z in [-0.2, 0.5, 1.2, 1.9, 2.6] {
         let width = 0.75 + (z + 0.2) * 0.12;
         blocks.push(block(
-            Vec3::new(0.0, -0.28, z),
+            Vec3::new(0.0, -0.595, z),
             Vec3::new(width, 0.16, 0.5),
             MaterialId::Wood,
         ));
@@ -122,12 +122,12 @@ fn build_bushes() -> Vec<Block> {
     let mut blocks = Vec::new();
     for (x, z) in [(-3.0, 0.8), (2.8, 1.6), (-2.8, -2.1), (2.7, -2.2)] {
         blocks.push(block(
-            Vec3::new(x, -0.05, z),
+            Vec3::new(x, -0.35, z),
             Vec3::new(1.3, 0.65, 0.8),
             MaterialId::Leaves,
         ));
         blocks.push(block(
-            Vec3::new(x, 0.38, z),
+            Vec3::new(x, 0.20, z),
             Vec3::new(0.8, 0.45, 0.65),
             MaterialId::Leaves,
         ));
@@ -138,22 +138,22 @@ fn build_bushes() -> Vec<Block> {
 fn build_pipes() -> Vec<Block> {
     vec![
         block(
-            Vec3::new(-3.0, 0.55, -0.3),
+            Vec3::new(-3.0, 0.125, -0.3),
             Vec3::new(0.8, 1.6, 0.8),
             MaterialId::Leaves,
         ),
         block(
-            Vec3::new(-3.0, 1.42, -0.3),
+            Vec3::new(-3.0, 1.04, -0.3),
             Vec3::new(1.05, 0.22, 1.05),
             MaterialId::Leaves,
         ),
         block(
-            Vec3::new(2.65, 0.38, 1.45),
+            Vec3::new(2.65, -0.05, 1.45),
             Vec3::new(0.7, 1.25, 0.7),
             MaterialId::Leaves,
         ),
         block(
-            Vec3::new(2.65, 1.08, 1.45),
+            Vec3::new(2.65, 0.60, 1.45),
             Vec3::new(0.92, 0.2, 0.92),
             MaterialId::Leaves,
         ),

@@ -57,10 +57,6 @@ pub fn render_raytraced_scene(framebuffer: &mut Framebuffer, camera: &Camera, sc
                 let blue_lit = texture[2] * hit.material.albedo[2] * (ambient + direct) * 0.72
                     + specular * 0.65
                     + hit.material.emission[2];
-                let fog = 1.0 - (-hit.distance * 0.035).exp();
-                let red_lit = red_lit * (1.0 - fog) + background_red * fog;
-                let green_lit = green_lit * (1.0 - fog) + background_green * fog;
-                let blue_lit = blue_lit * (1.0 - fog) + background_blue * fog;
                 let red = ((red_lit * (1.0 - reflection) + background_red * reflection * 0.45)
                     .clamp(0.0, 1.0)
                     * 255.0) as u32;
