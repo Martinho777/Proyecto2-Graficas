@@ -1073,16 +1073,16 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     // Cuello diagonal que nace en la parte frontal del fuselaje y avanza
     // hacia adelante antes de sostener la cabina.
     scene.add(Box::new(OrientedCylinder {
-        center: Vec3::new(0.0, 1.20, 1.58),
-        axis: Vec3::new(0.0, 0.66, 0.75),
+        center: Vec3::new(0.0, 1.10, 2.50),
+        axis: Vec3::new(0.0, 0.50, 0.866),
         radius: 0.34,
-        height: 1.35,
+        height: 1.50,
         material: hull.clone(),
     }));
     // Cabina temporalmente hecha del mismo material del fuselaje; el cristal
     // se puede reincorporar despues cuando la silueta quede aprobada.
     scene.add(Box::new(Ellipsoid {
-        center: Vec3::new(0.0, 1.75, 2.22),
+        center: Vec3::new(0.0, 1.67, 3.25),
         radii: Vec3::new(0.56, 0.30, 0.62),
         material: hull.clone(),
     }));
