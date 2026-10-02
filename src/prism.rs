@@ -14,6 +14,14 @@ pub struct TriangularPrism {
     pub material: Material,
 }
 
+/// Triangular prism whose top face can slope in 3D. It is used for wings that
+/// descend toward their tips instead of looking like horizontal plates.
+pub struct SlopedTriangularPrism {
+    pub top_points: [Vec3; 3],
+    pub thickness: f32,
+    pub material: Material,
+}
+
 impl TriangularPrism {
     fn triangle_hit(ray: &Ray, a: Vec3, b: Vec3, c: Vec3, material: &Material) -> Option<Hit> {
         let edge_a = b - a;
@@ -96,6 +104,55 @@ impl Primitive for TriangularPrism {
                 hits.push(hit);
             }
             if let Some(hit) = self.face_hit(ray, a, c, d) {
+                hits.push(hit);
+            }
+        }
+
+        hits.into_iter()
+            .min_by(|left, right| left.distance.total_cmp(&right.distance))
+    }
+}
+
+impl Primitive for SlopedTriangularPrism {
+    fn intersect(&self, ray: &Ray) -> Option<Hit> {
+        let bottom_points = self
+            .top_points
+            .map(|point| point - Vec3::new(0.0, self.thickness, 0.0));
+        let mut hits = Vec::new();
+
+        for (a, b, c) in [
+            (self.top_points[0], self.top_points[1], self.top_points[2]),
+            (bottom_points[2], bottom_points[1], bottom_points[0]),
+        ] {
+            if let Some(hit) = TriangularPrism::triangle_hit(ray, a, b, c, &self.material) {
+                hits.push(hit);
+            }
+        }
+
+        for (a, b, c, d) in [
+            (
+                bottom_points[0],
+                bottom_points[1],
+                self.top_points[1],
+                self.top_points[0],
+            ),
+            (
+                bottom_points[1],
+                bottom_points[2],
+                self.top_points[2],
+                self.top_points[1],
+            ),
+            (
+                bottom_points[2],
+                bottom_points[0],
+                self.top_points[0],
+                self.top_points[2],
+            ),
+        ] {
+            if let Some(hit) = TriangularPrism::triangle_hit(ray, a, b, c, &self.material) {
+                hits.push(hit);
+            }
+            if let Some(hit) = TriangularPrism::triangle_hit(ray, a, c, d, &self.material) {
                 hits.push(hit);
             }
         }

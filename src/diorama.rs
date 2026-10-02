@@ -3,7 +3,7 @@ use crate::app::Character;
 use crate::cube::Cube;
 use crate::cylinder::{Cylinder, OrientedCylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
-use crate::prism::TriangularPrism;
+use crate::prism::{SlopedTriangularPrism, TriangularPrism};
 use crate::scene::{Block, Scene};
 use crate::sphere::{Ellipsoid, Sphere};
 use crate::star::Star;
@@ -1015,24 +1015,22 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
         half_height: 0.22,
         material: panel.clone(),
     }));
-    scene.add(Box::new(TriangularPrism {
-        points: [
-            Vec3::new(-0.58, 0.0, 0.95),
-            Vec3::new(-3.55, 0.0, -1.20),
-            Vec3::new(-0.95, 0.0, -1.48),
+    scene.add(Box::new(SlopedTriangularPrism {
+        top_points: [
+            Vec3::new(-0.58, 0.38, 0.95),
+            Vec3::new(-4.25, -0.20, -1.35),
+            Vec3::new(-1.00, 0.12, -1.58),
         ],
-        center_y: 0.24,
-        half_height: 0.15,
+        thickness: 0.22,
         material: hull.clone(),
     }));
-    scene.add(Box::new(TriangularPrism {
-        points: [
-            Vec3::new(0.58, 0.0, 0.95),
-            Vec3::new(3.55, 0.0, -1.20),
-            Vec3::new(0.95, 0.0, -1.48),
+    scene.add(Box::new(SlopedTriangularPrism {
+        top_points: [
+            Vec3::new(0.58, 0.38, 0.95),
+            Vec3::new(4.25, -0.20, -1.35),
+            Vec3::new(1.00, 0.12, -1.58),
         ],
-        center_y: 0.24,
-        half_height: 0.15,
+        thickness: 0.22,
         material: hull.clone(),
     }));
 
