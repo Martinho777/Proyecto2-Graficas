@@ -66,6 +66,13 @@ pub struct MaterialLibrary {
     fox_panel: Material,
     fox_engine: Material,
     fox_accent: Material,
+    stadium_field: Material,
+    stadium_line: Material,
+    stadium_metal: Material,
+    stadium_light: Material,
+    pika_electric: Material,
+    pika_fire: Material,
+    pika_rock: Material,
 }
 
 impl MaterialLibrary {
@@ -246,6 +253,39 @@ impl MaterialLibrary {
         fox_accent.specular = 64.0;
         fox_accent.reflectivity = 0.08;
 
+        let mut stadium_field = Material::from_texture(Texture::solid([0.08, 0.62, 0.22]));
+        stadium_field.albedo = [0.08, 0.62, 0.22];
+        stadium_field.specular = 28.0;
+
+        let mut stadium_line = Material::from_texture(Texture::solid([0.92, 0.96, 0.88]));
+        stadium_line.albedo = [0.92, 0.96, 0.88];
+        stadium_line.specular = 48.0;
+
+        let mut stadium_metal = Material::from_texture(Texture::solid([0.38, 0.46, 0.56]));
+        stadium_metal.albedo = [0.38, 0.46, 0.56];
+        stadium_metal.specular = 128.0;
+        stadium_metal.reflectivity = 0.3;
+
+        let mut stadium_light = Material::from_texture(Texture::solid([0.04, 0.42, 0.95]));
+        stadium_light.albedo = [0.04, 0.42, 0.95];
+        stadium_light.specular = 128.0;
+        stadium_light.emission = [0.08, 0.45, 1.5];
+
+        let mut pika_electric = Material::from_texture(Texture::solid([1.0, 0.84, 0.04]));
+        pika_electric.albedo = [1.0, 0.84, 0.04];
+        pika_electric.specular = 96.0;
+        pika_electric.emission = [2.2, 1.0, 0.02];
+
+        let mut pika_fire = Material::from_texture(Texture::solid([1.0, 0.20, 0.025]));
+        pika_fire.albedo = [1.0, 0.20, 0.025];
+        pika_fire.specular = 72.0;
+        pika_fire.emission = [1.8, 0.10, 0.01];
+
+        let mut pika_rock = Material::from_texture(Texture::procedural(TextureKind::Stone));
+        pika_rock.albedo = [0.24, 0.28, 0.34];
+        pika_rock.specular = 36.0;
+        pika_rock.reflectivity = 0.08;
+
         Ok(Self {
             materials: [stone, wood, leaves, plain_crystal.clone(), lava],
             coin,
@@ -277,6 +317,13 @@ impl MaterialLibrary {
             fox_panel,
             fox_engine,
             fox_accent,
+            stadium_field,
+            stadium_line,
+            stadium_metal,
+            stadium_light,
+            pika_electric,
+            pika_fire,
+            pika_rock,
         })
     }
 
@@ -398,6 +445,34 @@ impl MaterialLibrary {
 
     pub fn fox_accent(&self) -> Material {
         self.fox_accent.clone()
+    }
+
+    pub fn stadium_field(&self) -> Material {
+        self.stadium_field.clone()
+    }
+
+    pub fn stadium_line(&self) -> Material {
+        self.stadium_line.clone()
+    }
+
+    pub fn stadium_metal(&self) -> Material {
+        self.stadium_metal.clone()
+    }
+
+    pub fn stadium_light(&self) -> Material {
+        self.stadium_light.clone()
+    }
+
+    pub fn pika_electric(&self) -> Material {
+        self.pika_electric.clone()
+    }
+
+    pub fn pika_fire(&self) -> Material {
+        self.pika_fire.clone()
+    }
+
+    pub fn pika_rock(&self) -> Material {
+        self.pika_rock.clone()
     }
 }
 

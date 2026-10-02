@@ -1146,6 +1146,103 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::with_background(0x0B1F35);
+    let metal = materials.stadium_metal();
+    let field = materials.stadium_field();
+    let line = materials.stadium_line();
+    let light = materials.stadium_light();
+
+    // Plataforma y arena principal inspiradas en Pokemon Stadium.
+    scene.add_custom_block(
+        Vec3::new(0.0, -1.10, 0.0),
+        Vec3::new(8.8, 1.15, 6.5),
+        metal.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.48, 0.0),
+        Vec3::new(7.45, 0.16, 5.25),
+        field,
+    );
+
+    for (center, size) in [
+        (Vec3::new(0.0, -0.34, -2.72), Vec3::new(8.0, 0.28, 0.30)),
+        (Vec3::new(0.0, -0.34, 2.72), Vec3::new(8.0, 0.28, 0.30)),
+        (Vec3::new(-3.90, -0.34, 0.0), Vec3::new(0.30, 0.28, 5.5)),
+        (Vec3::new(3.90, -0.34, 0.0), Vec3::new(0.30, 0.28, 5.5)),
+    ] {
+        scene.add_custom_block(center, size, metal.clone());
+    }
+
+    // Marcadores sencillos y centro tipo Pokeball.
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.375, 0.0),
+        Vec3::new(0.08, 0.035, 5.0),
+        line.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.374, 0.0),
+        Vec3::new(7.0, 0.035, 0.08),
+        line.clone(),
+    );
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, -0.375, 0.0),
+        radius: 0.86,
+        height: 0.06,
+        material: line.clone(),
+    }));
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, -0.33, 0.0),
+        radius: 0.48,
+        height: 0.035,
+        material: materials.fox_accent(),
+    }));
+    scene.add_custom_block(
+        Vec3::new(0.0, -0.285, 0.0),
+        Vec3::new(0.95, 0.07, 0.08),
+        metal.clone(),
+    );
+    scene.add(Box::new(Sphere {
+        center: Vec3::new(0.0, -0.23, 0.0),
+        radius: 0.12,
+        material: line,
+    }));
+
+    // Pantalla, torres y luminarias del fondo.
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.35, -3.20),
+        Vec3::new(3.7, 1.65, 0.24),
+        metal.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.38, -3.06),
+        Vec3::new(2.9, 1.05, 0.06),
+        light.clone(),
+    );
+    for x in [-3.25, 3.25] {
+        scene.add(Box::new(VerticalCylinder {
+            center: Vec3::new(x, 0.45, -2.45),
+            radius: 0.26,
+            height: 1.75,
+            material: metal.clone(),
+        }));
+        scene.add_custom_block(
+            Vec3::new(x, 1.37, -2.45),
+            Vec3::new(0.62, 0.16, 0.42),
+            light.clone(),
+        );
+    }
+    for x in [-2.45, -1.55, 1.55, 2.45] {
+        scene.add_custom_block(
+            Vec3::new(x, 0.12, -2.55),
+            Vec3::new(0.56, 0.12, 0.18),
+            light.clone(),
+        );
+    }
+
+    scene
+}
+
 fn update_kirby_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let star_y = 1.65 + (time * 1.15).sin() * 0.16;
     scene.navi_light_position = Some(Vec3::new(0.0, star_y, 0.0));
@@ -1335,6 +1432,8 @@ pub fn update_stage_animation(
         update_kirby_animation(scene, materials, time);
     } else if character == Character::Fox {
         update_fox_animation(scene, materials, time);
+    } else if character == Character::Pikachu {
+        update_pikachu_animation(scene, materials, time);
     }
 }
 
@@ -1347,6 +1446,63 @@ fn update_fox_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f3
             center: Vec3::new(x, 0.25, -2.02),
             radii: Vec3::new(0.28 * pulse, 0.28 * pulse, 0.52 * pulse),
             material: engine,
+        }));
+    }
+}
+
+fn update_pikachu_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+    let pulse = 0.82 + 0.18 * (time * 5.0).sin().abs();
+    let electric = materials.pika_electric();
+
+    // Rayos cortos en zigzag alrededor de la arena.
+    for (bolt_index, (x, z)) in [(-2.85, 1.55), (2.75, 0.15), (-2.55, -1.75)]
+        .into_iter()
+        .enumerate()
+    {
+        for segment in 0..5 {
+            let offset_x = if segment % 2 == 0 { -0.11 } else { 0.11 };
+            scene.add_dynamic(Box::new(Cube::from_center_size(
+                Vec3::new(
+                    x + offset_x,
+                    -0.06 + segment as f32 * 0.27,
+                    z + bolt_index as f32 * 0.08,
+                ),
+                Vec3::new(0.13 * pulse, 0.32, 0.13),
+                electric.clone(),
+            )));
+        }
+    }
+
+    // Llamas compactas en las esquinas de la plataforma.
+    for (index, (x, z)) in [(-2.75, 1.95), (2.70, 1.85), (-2.70, -1.95), (2.75, -1.85)]
+        .into_iter()
+        .enumerate()
+    {
+        let fire = materials.pika_fire();
+        let flame_scale = 0.88 + 0.12 * (time * 4.0 + index as f32).sin();
+        scene.add_dynamic(Box::new(VerticalCylinder {
+            center: Vec3::new(x, -0.08, z),
+            radius: 0.16 * flame_scale,
+            height: 0.52 * flame_scale,
+            material: fire.clone(),
+        }));
+        scene.add_dynamic(Box::new(Ellipsoid {
+            center: Vec3::new(x, 0.25, z),
+            radii: Vec3::new(0.20 * flame_scale, 0.27 * flame_scale, 0.20 * flame_scale),
+            material: fire,
+        }));
+    }
+
+    // Rocas que flotan suavemente sobre los bordes del campo.
+    for (index, (x, z)) in [(-1.8, 1.75), (1.9, 1.55), (1.65, -1.65)]
+        .into_iter()
+        .enumerate()
+    {
+        let bob = (time * 1.5 + index as f32).sin() * 0.12;
+        scene.add_dynamic(Box::new(Ellipsoid {
+            center: Vec3::new(x, -0.05 + bob, z),
+            radii: Vec3::new(0.26, 0.18, 0.32),
+            material: materials.pika_rock(),
         }));
     }
 }
@@ -1369,7 +1525,7 @@ pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
         Character::Yoshi => build_yoshi_stage(materials),
         Character::Kirby => build_kirby_stage(materials),
         Character::Fox => build_fox_stage(materials),
-        Character::Pikachu => build_placeholder_stage(character, materials),
+        Character::Pikachu => build_pikachu_stage(materials),
     }
 }
 
