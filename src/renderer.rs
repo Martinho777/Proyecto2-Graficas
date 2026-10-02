@@ -17,7 +17,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let horizon = if space {
         Vec3::new(0.008, 0.012, 0.035)
     } else if stadium {
-        Vec3::new(0.002, 0.004, 0.012)
+        Vec3::new(0.002, 0.006, 0.022)
     } else if night {
         Vec3::new(0.035, 0.06, 0.16)
     } else if sunset {
@@ -32,7 +32,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let zenith = if space {
         Vec3::new(0.001, 0.002, 0.012)
     } else if stadium {
-        Vec3::new(0.0005, 0.001, 0.004)
+        Vec3::new(0.025, 0.28, 0.62)
     } else if night {
         Vec3::new(0.008, 0.015, 0.06)
     } else if sunset {
@@ -45,14 +45,16 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let mut sky = horizon * (1.0 - sky_factor) + zenith * sky_factor;
 
     if stadium {
-        // Luz ambiental del estadio: el borde inferior permanece casi negro,
-        // mientras que una franja cyan aparece a media altura como reflectores
-        // lejanos, sin agregar geometria adicional al escenario.
-        let band = (1.0 - ((direction.y - 0.16) / 0.24).abs())
+        // Luz ambiental del estadio: la parte inferior permanece oscura,
+        // pero la mitad superior recibe una iluminacion cyan amplia, como
+        // las luces del techo reflejadas en el aire del estadio.
+        let upper_glow = ((direction.y - 0.02) / 0.58).clamp(0.0, 1.0).powf(0.78);
+        sky += Vec3::new(0.018, 0.26, 0.58) * upper_glow;
+
+        let band = (1.0 - ((direction.y - 0.30) / 0.38).abs())
             .clamp(0.0, 1.0)
-            .powf(1.35);
-        let lower_fade = ((direction.y + 0.14) / 0.30).clamp(0.0, 1.0);
-        sky += Vec3::new(0.015, 0.34, 0.82) * band * lower_fade;
+            .powf(0.95);
+        sky += Vec3::new(0.012, 0.16, 0.34) * band;
     }
 
     let sun_direction = if space {
@@ -70,7 +72,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let sun_glow = sun_dot.powf(32.0) * 0.18;
     let sun_disc = sun_dot.powf(520.0) * 1.2;
     let sky_light = if stadium {
-        Vec3::new(0.18, 0.3, 0.58)
+        Vec3::new(0.28, 0.52, 0.92)
     } else if night {
         Vec3::new(0.45, 0.68, 1.0)
     } else {
@@ -162,7 +164,7 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
 
     let texture = hit.material.texture.sample(hit.uv[0], hit.uv[1]);
     let ambient = if scene.background & 0xFFFFFF == 0x060A18 {
-        0.13
+        0.19
     } else if scene.background & 0xFFFFFF == 0x111B46 {
         0.16
     } else if scene.background & 0xFFFFFF == 0xD66B45 {
@@ -173,7 +175,7 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
     let direct = diffuse
         * visible_lights
         * if scene.background & 0xFFFFFF == 0x060A18 {
-            0.7
+            0.78
         } else if scene.background & 0xFFFFFF == 0x111B46 {
             0.62
         } else {
