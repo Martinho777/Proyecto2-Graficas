@@ -23,6 +23,7 @@ use framebuffer::Framebuffer;
 use material::MaterialLibrary;
 use minifb::{Key, KeyRepeat, Window, WindowOptions};
 use nalgebra_glm::Vec3;
+use texture::Texture;
 
 const FRAMEBUFFER_WIDTH: usize = 320;
 const FRAMEBUFFER_HEIGHT: usize = 180;
@@ -34,6 +35,8 @@ fn main() {
     let mut selected = 0usize;
     let clock = AnimationClock::new();
     let materials = MaterialLibrary::load().expect("no se pudieron cargar los materiales");
+    let character_sheet = Texture::load_ppm("assets/textures/character_select.ppm")
+        .expect("no se pudo cargar la pantalla de seleccion");
     let mut scene = diorama::build_stage(Character::Mario, &materials);
     let mut window = Window::new(
         "Proyecto 2 — Diorama con Raytracing",
@@ -54,7 +57,7 @@ fn main() {
                 if window.is_key_pressed(Key::Space, KeyRepeat::No) {
                     state = AppState::CharacterSelect;
                 }
-                ui::render_state(&mut framebuffer, state, selected);
+                ui::render_state(&mut framebuffer, state, selected, &character_sheet);
             }
             AppState::CharacterSelect => {
                 if window.is_key_pressed(Key::Left, KeyRepeat::No)
@@ -86,7 +89,7 @@ fn main() {
                 if window.is_key_pressed(Key::Escape, KeyRepeat::No) {
                     state = AppState::Title;
                 }
-                ui::render_state(&mut framebuffer, state, selected);
+                ui::render_state(&mut framebuffer, state, selected, &character_sheet);
             }
             AppState::Diorama(character) => {
                 camera.update_from_input(&window);

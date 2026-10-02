@@ -1,5 +1,6 @@
 use crate::app::{AppState, Character};
 use crate::framebuffer::Framebuffer;
+use crate::texture::Texture;
 
 fn glyph(character: char) -> [u8; 5] {
     match character {
@@ -217,10 +218,97 @@ pub fn render_character_select(framebuffer: &mut Framebuffer, selected: usize) {
     draw_text(framebuffer, "ENTER SELECT", 218, 166, 1, 0xA0A0A0);
 }
 
-pub fn render_state(framebuffer: &mut Framebuffer, state: AppState, selected: usize) {
+fn draw_texture_nearest(
+    framebuffer: &mut Framebuffer,
+    texture: &Texture,
+    x: usize,
+    y: usize,
+    width: usize,
+    height: usize,
+) {
+    for destination_y in 0..height {
+        let source_y = destination_y * texture.height / height;
+        for destination_x in 0..width {
+            let source_x = destination_x * texture.width / width;
+            let pixel = texture.pixels[source_y * texture.width + source_x];
+            let red = (pixel[0].clamp(0.0, 1.0) * 255.0) as u32;
+            let green = (pixel[1].clamp(0.0, 1.0) * 255.0) as u32;
+            let blue = (pixel[2].clamp(0.0, 1.0) * 255.0) as u32;
+            framebuffer.set_pixel(
+                destination_x + x,
+                destination_y + y,
+                (red << 16) | (green << 8) | blue,
+            );
+        }
+    }
+}
+
+pub fn render_character_select_with_sheet(
+    framebuffer: &mut Framebuffer,
+    selected: usize,
+    character_sheet: &Texture,
+) {
+    fill_rect(
+        framebuffer,
+        0,
+        0,
+        framebuffer.width,
+        framebuffer.height,
+        0x12121C,
+    );
+    draw_centered(framebuffer, "1 PLAYER GAME", 5, 2, 0xF1D36A);
+
+    let sheet_x = 6;
+    let sheet_y = 22;
+    let sheet_width = 308;
+    let sheet_height = 146;
+    draw_texture_nearest(
+        framebuffer,
+        character_sheet,
+        sheet_x,
+        sheet_y,
+        sheet_width,
+        sheet_height,
+    );
+
+    let card_width = sheet_width / 4;
+    let card_height = sheet_height / 2;
+    let column = selected % 4;
+    let row = selected / 4;
+    let card_x = sheet_x + column * card_width;
+    let card_y = sheet_y + row * card_height;
+    outline_rect(
+        framebuffer,
+        card_x.saturating_sub(2),
+        card_y.saturating_sub(2),
+        card_width + 4,
+        card_height + 4,
+        0xFFFFFF,
+    );
+    outline_rect(
+        framebuffer,
+        card_x.saturating_sub(4),
+        card_y.saturating_sub(4),
+        card_width + 8,
+        card_height + 8,
+        0xF1D36A,
+    );
+
+    draw_text(framebuffer, "ARROWS MOVE", 8, 171, 1, 0xA0A0A0);
+    draw_text(framebuffer, "ENTER SELECT", 218, 171, 1, 0xA0A0A0);
+}
+
+pub fn render_state(
+    framebuffer: &mut Framebuffer,
+    state: AppState,
+    selected: usize,
+    character_sheet: &Texture,
+) {
     match state {
         AppState::Title => render_title(framebuffer),
-        AppState::CharacterSelect => render_character_select(framebuffer, selected),
+        AppState::CharacterSelect => {
+            render_character_select_with_sheet(framebuffer, selected, character_sheet)
+        }
         AppState::Diorama(_) => {}
     }
 }
