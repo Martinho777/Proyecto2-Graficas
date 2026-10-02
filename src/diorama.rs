@@ -995,16 +995,11 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     let engine = materials.fox_engine();
     let accent = materials.fox_accent();
 
-    // Cuerpo central con volumen eliptico y una nariz separada para que la
-    // silueta se mantenga reconocible desde el frente y desde los costados.
+    // Cuerpo central con volumen eliptico para que la nave mantenga una
+    // silueta robusta desde el frente y desde los costados.
     scene.add(Box::new(Ellipsoid {
         center: Vec3::new(0.0, 0.35, 0.0),
         radii: Vec3::new(1.48, 0.58, 2.10),
-        material: hull.clone(),
-    }));
-    scene.add(Box::new(Ellipsoid {
-        center: Vec3::new(0.0, 0.34, 1.72),
-        radii: Vec3::new(0.88, 0.36, 0.86),
         material: hull.clone(),
     }));
 
@@ -1078,16 +1073,16 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     // Cuello diagonal que nace en la parte frontal del fuselaje y avanza
     // hacia adelante antes de sostener la cabina.
     scene.add(Box::new(OrientedCylinder {
-        center: Vec3::new(0.0, 1.03, 1.52),
+        center: Vec3::new(0.0, 1.20, 1.58),
         axis: Vec3::new(0.0, 0.66, 0.75),
         radius: 0.34,
-        height: 0.96,
+        height: 1.35,
         material: hull.clone(),
     }));
     // Cabina temporalmente hecha del mismo material del fuselaje; el cristal
     // se puede reincorporar despues cuando la silueta quede aprobada.
     scene.add(Box::new(Ellipsoid {
-        center: Vec3::new(0.0, 1.43, 1.88),
+        center: Vec3::new(0.0, 1.75, 2.22),
         radii: Vec3::new(0.56, 0.30, 0.62),
         material: hull.clone(),
     }));

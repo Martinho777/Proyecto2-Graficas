@@ -64,7 +64,6 @@ pub struct MaterialLibrary {
     deku_bark: Material,
     fox_hull: Material,
     fox_panel: Material,
-    fox_cockpit: Material,
     fox_engine: Material,
     fox_accent: Material,
 }
@@ -237,14 +236,6 @@ impl MaterialLibrary {
         fox_panel.specular = 112.0;
         fox_panel.reflectivity = 0.26;
 
-        let mut fox_cockpit = Material::from_texture(Texture::solid([0.06, 0.45, 0.62]));
-        fox_cockpit.albedo = [0.06, 0.45, 0.62];
-        fox_cockpit.specular = 128.0;
-        fox_cockpit.transparency = 0.22;
-        fox_cockpit.reflectivity = 0.28;
-        fox_cockpit.refractive_index = 1.45;
-        fox_cockpit.emission = [0.02, 0.08, 0.14];
-
         let mut fox_engine = Material::from_texture(Texture::solid([1.0, 0.33, 0.03]));
         fox_engine.albedo = [1.0, 0.33, 0.03];
         fox_engine.specular = 96.0;
@@ -284,7 +275,6 @@ impl MaterialLibrary {
             deku_bark,
             fox_hull,
             fox_panel,
-            fox_cockpit,
             fox_engine,
             fox_accent,
         })
@@ -400,10 +390,6 @@ impl MaterialLibrary {
 
     pub fn fox_panel(&self) -> Material {
         self.fox_panel.clone()
-    }
-
-    pub fn fox_cockpit(&self) -> Material {
-        self.fox_cockpit.clone()
     }
 
     pub fn fox_engine(&self) -> Material {
