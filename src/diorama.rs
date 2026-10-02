@@ -1000,12 +1000,12 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     // silueta se mantenga reconocible desde el frente y desde los costados.
     scene.add(Box::new(Ellipsoid {
         center: Vec3::new(0.0, 0.35, 0.0),
-        radii: Vec3::new(1.28, 0.46, 2.0),
+        radii: Vec3::new(1.48, 0.58, 2.10),
         material: hull.clone(),
     }));
     scene.add(Box::new(Ellipsoid {
         center: Vec3::new(0.0, 0.34, 1.72),
-        radii: Vec3::new(0.78, 0.30, 0.78),
+        radii: Vec3::new(0.88, 0.36, 0.86),
         material: hull.clone(),
     }));
 
@@ -1076,10 +1076,17 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
         accent.clone(),
     );
 
-    // Cabina translucida y reflectiva, colocada arriba de la nariz.
+    // Cuello elevado y cabina translucida: la cabina ya no queda pegada al
+    // cuerpo, sino que se lee como una pequena cabeza sobre su soporte.
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, 1.08, 0.76),
+        radius: 0.36,
+        height: 0.46,
+        material: hull.clone(),
+    }));
     scene.add(Box::new(Ellipsoid {
-        center: Vec3::new(0.0, 0.78, 0.88),
-        radii: Vec3::new(0.62, 0.20, 0.72),
+        center: Vec3::new(0.0, 1.43, 0.76),
+        radii: Vec3::new(0.56, 0.30, 0.62),
         material: cockpit,
     }));
 
