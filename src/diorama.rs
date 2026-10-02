@@ -1,7 +1,7 @@
 use crate::animation::bobbing_height;
 use crate::app::Character;
 use crate::cube::Cube;
-use crate::cylinder::{Cylinder, OrientedCylinder, VerticalCylinder};
+use crate::cylinder::{Cylinder, HalfCylinder, OrientedCylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::prism::{LongitudinalTriangularPrism, SlopedTriangularPrism, TriangularPrism};
 use crate::scene::{Block, Scene};
@@ -1174,37 +1174,36 @@ fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
         scene.add_custom_block(center, size, metal.clone());
     }
 
-    // Marcadores sencillos y centro tipo Pokeball.
-    scene.add_custom_block(
-        Vec3::new(0.0, -0.375, 0.0),
-        Vec3::new(0.08, 0.035, 5.0),
-        line.clone(),
-    );
-    scene.add_custom_block(
-        Vec3::new(0.0, -0.374, 0.0),
-        Vec3::new(7.0, 0.035, 0.08),
-        line.clone(),
-    );
-    scene.add(Box::new(VerticalCylinder {
+    // Unica marca del piso: Pokeball con dos semicirculos reales.
+    scene.add(Box::new(HalfCylinder {
         center: Vec3::new(0.0, -0.375, 0.0),
         radius: 0.86,
         height: 0.06,
+        upper_z_half: false,
         material: line.clone(),
     }));
-    scene.add(Box::new(VerticalCylinder {
+    scene.add(Box::new(HalfCylinder {
         center: Vec3::new(0.0, -0.33, 0.0),
-        radius: 0.48,
-        height: 0.035,
+        radius: 0.86,
+        height: 0.06,
+        upper_z_half: true,
         material: materials.fox_accent(),
     }));
     scene.add_custom_block(
-        Vec3::new(0.0, -0.285, 0.0),
-        Vec3::new(0.95, 0.07, 0.08),
-        metal.clone(),
+        Vec3::new(0.0, -0.255, 0.0),
+        Vec3::new(1.78, 0.07, 0.10),
+        materials.face_mark(),
     );
-    scene.add(Box::new(Sphere {
-        center: Vec3::new(0.0, -0.23, 0.0),
-        radius: 0.12,
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, -0.20, 0.0),
+        radius: 0.15,
+        height: 0.08,
+        material: materials.face_mark(),
+    }));
+    scene.add(Box::new(VerticalCylinder {
+        center: Vec3::new(0.0, -0.145, 0.0),
+        radius: 0.085,
+        height: 0.045,
         material: line,
     }));
 

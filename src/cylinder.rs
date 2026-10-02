@@ -19,6 +19,116 @@ pub struct VerticalCylinder {
     pub material: Material,
 }
 
+/// Thin half-cylinder used for split circular markings such as a Pokeball.
+pub struct HalfCylinder {
+    pub center: Vec3,
+    pub radius: f32,
+    pub height: f32,
+    pub upper_z_half: bool,
+    pub material: Material,
+}
+
+impl HalfCylinder {
+    fn belongs_to_half(&self, point: Vec3) -> bool {
+        let local_z = point.z - self.center.z;
+        if self.upper_z_half {
+            local_z >= -0.0001
+        } else {
+            local_z <= 0.0001
+        }
+    }
+}
+
+impl Primitive for HalfCylinder {
+    fn intersect(&self, ray: &Ray) -> Option<Hit> {
+        let relative = ray.origin - self.center;
+        let a = ray.direction.x * ray.direction.x + ray.direction.z * ray.direction.z;
+        let mut hits = Vec::new();
+
+        if a.abs() > 1e-8 {
+            let b = 2.0 * (relative.x * ray.direction.x + relative.z * ray.direction.z);
+            let c = relative.x * relative.x + relative.z * relative.z - self.radius * self.radius;
+            let discriminant = b * b - 4.0 * a * c;
+            if discriminant >= 0.0 {
+                let root = discriminant.sqrt();
+                for distance in [(-b - root) / (2.0 * a), (-b + root) / (2.0 * a)] {
+                    if distance <= 0.001 {
+                        continue;
+                    }
+                    let point = ray.at(distance);
+                    if point.y < self.center.y - self.height * 0.5
+                        || point.y > self.center.y + self.height * 0.5
+                        || !self.belongs_to_half(point)
+                    {
+                        continue;
+                    }
+                    let radial = Vec3::new(point.x - self.center.x, 0.0, point.z - self.center.z);
+                    hits.push(Hit {
+                        distance,
+                        point,
+                        normal: normalize(&radial),
+                        uv: [0.5, 0.5],
+                        material: self.material.clone(),
+                    });
+                }
+            }
+        }
+
+        if ray.direction.y.abs() > 1e-8 {
+            for (y, normal) in [
+                (self.center.y + self.height * 0.5, Vec3::new(0.0, 1.0, 0.0)),
+                (self.center.y - self.height * 0.5, Vec3::new(0.0, -1.0, 0.0)),
+            ] {
+                let distance = (y - ray.origin.y) / ray.direction.y;
+                if distance <= 0.001 {
+                    continue;
+                }
+                let point = ray.at(distance);
+                let dx = point.x - self.center.x;
+                let dz = point.z - self.center.z;
+                if dx * dx + dz * dz <= self.radius * self.radius && self.belongs_to_half(point) {
+                    hits.push(Hit {
+                        distance,
+                        point,
+                        normal,
+                        uv: [0.5, 0.5],
+                        material: self.material.clone(),
+                    });
+                }
+            }
+        }
+
+        // Flat diameter face closes the semicircle and gives the black band a
+        // clean boundary instead of leaving a missing vertical surface.
+        if ray.direction.z.abs() > 1e-8 {
+            let distance = (self.center.z - ray.origin.z) / ray.direction.z;
+            if distance > 0.001 {
+                let point = ray.at(distance);
+                if point.x >= self.center.x - self.radius
+                    && point.x <= self.center.x + self.radius
+                    && point.y >= self.center.y - self.height * 0.5
+                    && point.y <= self.center.y + self.height * 0.5
+                {
+                    hits.push(Hit {
+                        distance,
+                        point,
+                        normal: if ray.direction.z > 0.0 {
+                            Vec3::new(0.0, 0.0, -1.0)
+                        } else {
+                            Vec3::new(0.0, 0.0, 1.0)
+                        },
+                        uv: [0.5, 0.5],
+                        material: self.material.clone(),
+                    });
+                }
+            }
+        }
+
+        hits.into_iter()
+            .min_by(|left, right| left.distance.total_cmp(&right.distance))
+    }
+}
+
 /// Cylinder with an arbitrary axis, useful for diagonal supports and struts.
 pub struct OrientedCylinder {
     pub center: Vec3,
