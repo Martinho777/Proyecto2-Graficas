@@ -1,7 +1,7 @@
 use crate::animation::bobbing_height;
 use crate::app::Character;
 use crate::cube::Cube;
-use crate::cylinder::{Cylinder, VerticalCylinder};
+use crate::cylinder::{Cylinder, OrientedCylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
 use crate::prism::TriangularPrism;
 use crate::scene::{Block, Scene};
@@ -992,7 +992,6 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     let mut scene = Scene::with_background(0x04071A);
     let hull = materials.fox_hull();
     let panel = materials.fox_panel();
-    let cockpit = materials.fox_cockpit();
     let engine = materials.fox_engine();
     let accent = materials.fox_accent();
 
@@ -1076,18 +1075,21 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
         accent.clone(),
     );
 
-    // Cuello elevado y cabina translucida: la cabina ya no queda pegada al
-    // cuerpo, sino que se lee como una pequena cabeza sobre su soporte.
-    scene.add(Box::new(VerticalCylinder {
-        center: Vec3::new(0.0, 1.08, 0.76),
-        radius: 0.36,
-        height: 0.46,
+    // Cuello diagonal que nace en la parte frontal del fuselaje y avanza
+    // hacia adelante antes de sostener la cabina.
+    scene.add(Box::new(OrientedCylinder {
+        center: Vec3::new(0.0, 1.03, 1.52),
+        axis: Vec3::new(0.0, 0.66, 0.75),
+        radius: 0.34,
+        height: 0.96,
         material: hull.clone(),
     }));
+    // Cabina temporalmente hecha del mismo material del fuselaje; el cristal
+    // se puede reincorporar despues cuando la silueta quede aprobada.
     scene.add(Box::new(Ellipsoid {
-        center: Vec3::new(0.0, 1.43, 0.76),
+        center: Vec3::new(0.0, 1.43, 1.88),
         radii: Vec3::new(0.56, 0.30, 0.62),
-        material: cockpit,
+        material: hull.clone(),
     }));
 
     // Carcasas y anillos traseros de los dos motores.

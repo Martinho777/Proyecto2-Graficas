@@ -1,4 +1,4 @@
-use nalgebra_glm::{normalize, Vec3};
+use nalgebra_glm::{dot, normalize, Vec3};
 
 use crate::material::Material;
 use crate::primitive::{Hit, Primitive};
@@ -17,6 +17,79 @@ pub struct VerticalCylinder {
     pub radius: f32,
     pub height: f32,
     pub material: Material,
+}
+
+/// Cylinder with an arbitrary axis, useful for diagonal supports and struts.
+pub struct OrientedCylinder {
+    pub center: Vec3,
+    pub axis: Vec3,
+    pub radius: f32,
+    pub height: f32,
+    pub material: Material,
+}
+
+impl Primitive for OrientedCylinder {
+    fn intersect(&self, ray: &Ray) -> Option<Hit> {
+        let axis = normalize(&self.axis);
+        let relative = ray.origin - self.center;
+        let ray_axis = dot(&ray.direction, &axis);
+        let origin_axis = dot(&relative, &axis);
+        let perpendicular_direction = ray.direction - axis * ray_axis;
+        let perpendicular_origin = relative - axis * origin_axis;
+        let a = dot(&perpendicular_direction, &perpendicular_direction);
+        let b = 2.0 * dot(&perpendicular_origin, &perpendicular_direction);
+        let c = dot(&perpendicular_origin, &perpendicular_origin) - self.radius * self.radius;
+        let half_height = self.height * 0.5;
+        let mut hits = Vec::new();
+
+        if a.abs() > 1e-8 {
+            let discriminant = b * b - 4.0 * a * c;
+            if discriminant >= 0.0 {
+                let root = discriminant.sqrt();
+                for distance in [(-b - root) / (2.0 * a), (-b + root) / (2.0 * a)] {
+                    if distance <= 0.001 {
+                        continue;
+                    }
+                    let point = ray.at(distance);
+                    let axial = dot(&(point - self.center), &axis);
+                    if axial.abs() > half_height {
+                        continue;
+                    }
+                    let radial = point - self.center - axis * axial;
+                    hits.push(Hit {
+                        distance,
+                        point,
+                        normal: normalize(&radial),
+                        uv: [0.5, 0.5 + axial / self.height],
+                        material: self.material.clone(),
+                    });
+                }
+            }
+        }
+
+        if ray_axis.abs() > 1e-8 {
+            for (axial, normal) in [(-half_height, -axis), (half_height, axis)] {
+                let distance = (axial - origin_axis) / ray_axis;
+                if distance <= 0.001 {
+                    continue;
+                }
+                let point = ray.at(distance);
+                let radial = point - self.center - axis * axial;
+                if dot(&radial, &radial) <= self.radius * self.radius {
+                    hits.push(Hit {
+                        distance,
+                        point,
+                        normal,
+                        uv: [0.5, 0.5],
+                        material: self.material.clone(),
+                    });
+                }
+            }
+        }
+
+        hits.into_iter()
+            .min_by(|left, right| left.distance.total_cmp(&right.distance))
+    }
 }
 
 impl Primitive for VerticalCylinder {
