@@ -3,7 +3,7 @@ use crate::app::Character;
 use crate::cube::Cube;
 use crate::cylinder::{Cylinder, OrientedCylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
-use crate::prism::{SlopedTriangularPrism, TriangularPrism};
+use crate::prism::{SlopedTriangularPrism, TriangularPrism, VerticalTriangularPrism};
 use crate::scene::{Block, Scene};
 use crate::sphere::{Ellipsoid, Sphere};
 use crate::star::Star;
@@ -1052,6 +1052,18 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
         ],
         thickness: 0.18,
         material: hull.clone(),
+    }));
+
+    // Ala dorsal grande, vertical y con espesor real sobre la parte trasera.
+    scene.add(Box::new(VerticalTriangularPrism {
+        points: [
+            Vec3::new(-0.42, 0.68, 0.0),
+            Vec3::new(0.0, 2.85, 0.0),
+            Vec3::new(0.42, 0.68, 0.0),
+        ],
+        center_z: -0.72,
+        half_depth: 0.18,
+        material: panel.clone(),
     }));
 
     // Paneles rojos sobre las alas y aleta posterior para darle identidad al

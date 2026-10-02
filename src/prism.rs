@@ -22,6 +22,14 @@ pub struct SlopedTriangularPrism {
     pub material: Material,
 }
 
+/// Triangular fin extruded along Z, used for a large dorsal wing.
+pub struct VerticalTriangularPrism {
+    pub points: [Vec3; 3],
+    pub center_z: f32,
+    pub half_depth: f32,
+    pub material: Material,
+}
+
 impl TriangularPrism {
     fn triangle_hit(ray: &Ray, a: Vec3, b: Vec3, c: Vec3, material: &Material) -> Option<Hit> {
         let edge_a = b - a;
@@ -148,6 +156,40 @@ impl Primitive for SlopedTriangularPrism {
                 self.top_points[0],
                 self.top_points[2],
             ),
+        ] {
+            if let Some(hit) = TriangularPrism::triangle_hit(ray, a, b, c, &self.material) {
+                hits.push(hit);
+            }
+            if let Some(hit) = TriangularPrism::triangle_hit(ray, a, c, d, &self.material) {
+                hits.push(hit);
+            }
+        }
+
+        hits.into_iter()
+            .min_by(|left, right| left.distance.total_cmp(&right.distance))
+    }
+}
+
+impl Primitive for VerticalTriangularPrism {
+    fn intersect(&self, ray: &Ray) -> Option<Hit> {
+        let back_z = self.center_z - self.half_depth;
+        let front_z = self.center_z + self.half_depth;
+        let front = self
+            .points
+            .map(|point| Vec3::new(point.x, point.y, front_z));
+        let back = self.points.map(|point| Vec3::new(point.x, point.y, back_z));
+        let mut hits = Vec::new();
+
+        for (a, b, c) in [(front[0], front[1], front[2]), (back[2], back[1], back[0])] {
+            if let Some(hit) = TriangularPrism::triangle_hit(ray, a, b, c, &self.material) {
+                hits.push(hit);
+            }
+        }
+
+        for (a, b, c, d) in [
+            (back[0], back[1], front[1], front[0]),
+            (back[1], back[2], front[2], front[1]),
+            (back[2], back[0], front[0], front[2]),
         ] {
             if let Some(hit) = TriangularPrism::triangle_hit(ray, a, b, c, &self.material) {
                 hits.push(hit);
