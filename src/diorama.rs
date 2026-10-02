@@ -3,6 +3,7 @@ use crate::app::Character;
 use crate::cube::Cube;
 use crate::cylinder::{Cylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
+use crate::prism::TriangularPrism;
 use crate::scene::{Block, Scene};
 use crate::sphere::{Ellipsoid, Sphere};
 use crate::star::Star;
@@ -987,6 +988,125 @@ fn build_kirby_stage(materials: &MaterialLibrary) -> Scene {
     scene
 }
 
+fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
+    let mut scene = Scene::with_background(0x04071A);
+    let hull = materials.fox_hull();
+    let panel = materials.fox_panel();
+    let cockpit = materials.fox_cockpit();
+    let engine = materials.fox_engine();
+    let accent = materials.fox_accent();
+
+    // Cuerpo central con volumen eliptico y una nariz separada para que la
+    // silueta se mantenga reconocible desde el frente y desde los costados.
+    scene.add(Box::new(Ellipsoid {
+        center: Vec3::new(0.0, 0.35, 0.0),
+        radii: Vec3::new(1.28, 0.46, 2.0),
+        material: hull.clone(),
+    }));
+    scene.add(Box::new(Ellipsoid {
+        center: Vec3::new(0.0, 0.34, 1.72),
+        radii: Vec3::new(0.78, 0.30, 0.78),
+        material: hull.clone(),
+    }));
+
+    // Nariz angular inferior y alas triangulares extruidas: no son simples
+    // quads, tienen caras laterales y espesor visible.
+    scene.add(Box::new(TriangularPrism {
+        points: [
+            Vec3::new(-1.15, 0.95, 0.65),
+            Vec3::new(0.0, 2.50, 0.65),
+            Vec3::new(1.15, 0.95, 0.65),
+        ],
+        center_y: 0.08,
+        half_height: 0.22,
+        material: panel.clone(),
+    }));
+    scene.add(Box::new(TriangularPrism {
+        points: [
+            Vec3::new(-0.58, 0.0, 0.95),
+            Vec3::new(-3.55, 0.0, -1.20),
+            Vec3::new(-0.95, 0.0, -1.48),
+        ],
+        center_y: 0.24,
+        half_height: 0.15,
+        material: hull.clone(),
+    }));
+    scene.add(Box::new(TriangularPrism {
+        points: [
+            Vec3::new(0.58, 0.0, 0.95),
+            Vec3::new(3.55, 0.0, -1.20),
+            Vec3::new(0.95, 0.0, -1.48),
+        ],
+        center_y: 0.24,
+        half_height: 0.15,
+        material: hull.clone(),
+    }));
+
+    // Paneles rojos sobre las alas y aleta posterior para darle identidad al
+    // Arwing sin depender de una textura externa.
+    scene.add(Box::new(TriangularPrism {
+        points: [
+            Vec3::new(-0.82, 0.0, 0.82),
+            Vec3::new(-2.55, 0.0, -0.72),
+            Vec3::new(-1.05, 0.0, -0.90),
+        ],
+        center_y: 0.42,
+        half_height: 0.018,
+        material: accent.clone(),
+    }));
+    scene.add(Box::new(TriangularPrism {
+        points: [
+            Vec3::new(0.82, 0.0, 0.82),
+            Vec3::new(2.55, 0.0, -0.72),
+            Vec3::new(1.05, 0.0, -0.90),
+        ],
+        center_y: 0.42,
+        half_height: 0.018,
+        material: accent.clone(),
+    }));
+
+    scene.add_custom_block(
+        Vec3::new(0.0, 0.82, -0.72),
+        Vec3::new(0.18, 0.92, 1.08),
+        panel.clone(),
+    );
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.28, -0.82),
+        Vec3::new(0.14, 0.14, 0.68),
+        accent.clone(),
+    );
+
+    // Cabina translucida y reflectiva, colocada arriba de la nariz.
+    scene.add(Box::new(Ellipsoid {
+        center: Vec3::new(0.0, 0.78, 0.88),
+        radii: Vec3::new(0.62, 0.20, 0.72),
+        material: cockpit,
+    }));
+
+    // Carcasas y anillos traseros de los dos motores.
+    for x in [-1.42, 1.42] {
+        scene.add(Box::new(Ellipsoid {
+            center: Vec3::new(x, 0.25, -1.22),
+            radii: Vec3::new(0.54, 0.48, 0.66),
+            material: panel.clone(),
+        }));
+        scene.add(Box::new(Cylinder {
+            center: Vec3::new(x, 0.25, -1.56),
+            radius: 0.36,
+            height: 0.28,
+            material: hull.clone(),
+        }));
+        scene.add(Box::new(Cylinder {
+            center: Vec3::new(x, 0.25, -1.72),
+            radius: 0.25,
+            height: 0.10,
+            material: engine.clone(),
+        }));
+    }
+
+    scene
+}
+
 fn update_kirby_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let star_y = 1.65 + (time * 1.15).sin() * 0.16;
     scene.navi_light_position = Some(Vec3::new(0.0, star_y, 0.0));
@@ -1174,6 +1294,21 @@ pub fn update_stage_animation(
         update_yoshi_animation(scene, materials, time);
     } else if character == Character::Kirby {
         update_kirby_animation(scene, materials, time);
+    } else if character == Character::Fox {
+        update_fox_animation(scene, materials, time);
+    }
+}
+
+fn update_fox_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
+    let pulse = 0.86 + 0.14 * (time * 6.0).sin();
+    for x in [-1.42, 1.42] {
+        let mut engine = materials.fox_engine();
+        engine.emission = [2.2 * pulse, 0.24 * pulse, 0.015];
+        scene.add_dynamic(Box::new(Ellipsoid {
+            center: Vec3::new(x, 0.25, -2.02),
+            radii: Vec3::new(0.28 * pulse, 0.28 * pulse, 0.52 * pulse),
+            material: engine,
+        }));
     }
 }
 
@@ -1194,7 +1329,8 @@ pub fn build_stage(character: Character, materials: &MaterialLibrary) -> Scene {
         Character::Samus => build_samus_stage(materials),
         Character::Yoshi => build_yoshi_stage(materials),
         Character::Kirby => build_kirby_stage(materials),
-        Character::Fox | Character::Pikachu => build_placeholder_stage(character, materials),
+        Character::Fox => build_fox_stage(materials),
+        Character::Pikachu => build_placeholder_stage(character, materials),
     }
 }
 

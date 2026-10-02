@@ -7,6 +7,7 @@ mod diorama;
 mod framebuffer;
 mod material;
 mod primitive;
+mod prism;
 mod ray;
 mod renderer;
 mod scene;
