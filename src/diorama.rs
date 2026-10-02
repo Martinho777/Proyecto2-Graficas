@@ -1054,16 +1054,17 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
         material: hull.clone(),
     }));
 
-    // Ala dorsal grande, vertical y con espesor real sobre la parte trasera.
+    // Ala dorsal grande, vertical y con el mismo material gris de las alas
+    // principales para que todo el conjunto tenga una textura consistente.
     scene.add(Box::new(VerticalTriangularPrism {
         points: [
-            Vec3::new(-0.42, 0.68, 0.0),
-            Vec3::new(0.0, 2.85, 0.0),
-            Vec3::new(0.42, 0.68, 0.0),
+            Vec3::new(-0.56, 0.68, 0.0),
+            Vec3::new(0.0, 2.72, 0.0),
+            Vec3::new(0.56, 0.68, 0.0),
         ],
         center_z: -0.72,
         half_depth: 0.18,
-        material: panel.clone(),
+        material: hull.clone(),
     }));
 
     // Paneles rojos sobre las alas y aleta posterior para darle identidad al
