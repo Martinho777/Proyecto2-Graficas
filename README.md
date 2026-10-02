@@ -12,6 +12,18 @@
 El video debe mostrar el flujo completo: pantalla de inicio, selección de personaje,
 entrada a un diorama, movimiento de cámara y los efectos dinámicos de las escenas.
 
+### Capturas destacadas
+
+Estas capturas muestran dos ejemplos del resultado del raytracer en tiempo real:
+
+#### Kirby — agua, cascadas, estrella emisiva y espacio procedural
+
+![Diorama de Kirby](assets/showcase/kirby-diorama.png)
+
+#### Link — árbol Deku, espada, roca, rupias y luna nocturna
+
+![Diorama de Link](assets/showcase/link-diorama.png)
+
 ## Descripción
 
 Aplicación interactiva en tiempo real inspirada en los ocho personajes iniciales de
