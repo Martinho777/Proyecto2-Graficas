@@ -995,13 +995,12 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     let engine = materials.fox_engine();
     let accent = materials.fox_accent();
 
-    // Cuerpo central en forma de caja, manteniendo el volumen de la version
-    // anterior pero con una silueta mas cercana al modelo N64.
-    scene.add_custom_block(
-        Vec3::new(0.0, 0.55, 0.0),
-        Vec3::new(2.96, 1.56, 4.20),
-        hull.clone(),
-    );
+    // Cuerpo central eliptico, con el volumen robusto aprobado anteriormente.
+    scene.add(Box::new(Ellipsoid {
+        center: Vec3::new(0.0, 0.55, 0.0),
+        radii: Vec3::new(1.48, 0.78, 2.10),
+        material: hull.clone(),
+    }));
 
     // Nariz angular inferior y alas triangulares extruidas: no son simples
     // quads, tienen caras laterales y espesor visible.
@@ -1098,11 +1097,11 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     }));
     // Cabina temporalmente hecha del mismo material del fuselaje; el cristal
     // se puede reincorporar despues cuando la silueta quede aprobada.
-    scene.add_custom_block(
-        Vec3::new(0.0, 1.67, 3.25),
-        Vec3::new(1.12, 0.60, 1.24),
-        hull.clone(),
-    );
+    scene.add(Box::new(Ellipsoid {
+        center: Vec3::new(0.0, 1.67, 3.25),
+        radii: Vec3::new(0.56, 0.30, 0.62),
+        material: hull.clone(),
+    }));
 
     // Carcasas y anillos traseros de los dos motores.
     for x in [-1.42, 1.42] {
