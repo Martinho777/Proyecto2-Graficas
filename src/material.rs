@@ -71,8 +71,6 @@ pub struct MaterialLibrary {
     stadium_metal: Material,
     stadium_light: Material,
     pika_electric: Material,
-    pika_fire: Material,
-    pika_rock: Material,
 }
 
 impl MaterialLibrary {
@@ -276,16 +274,6 @@ impl MaterialLibrary {
         pika_electric.specular = 96.0;
         pika_electric.emission = [2.2, 1.0, 0.02];
 
-        let mut pika_fire = Material::from_texture(Texture::solid([1.0, 0.20, 0.025]));
-        pika_fire.albedo = [1.0, 0.20, 0.025];
-        pika_fire.specular = 72.0;
-        pika_fire.emission = [1.8, 0.10, 0.01];
-
-        let mut pika_rock = Material::from_texture(Texture::procedural(TextureKind::Stone));
-        pika_rock.albedo = [0.24, 0.28, 0.34];
-        pika_rock.specular = 36.0;
-        pika_rock.reflectivity = 0.08;
-
         Ok(Self {
             materials: [stone, wood, leaves, plain_crystal.clone(), lava],
             coin,
@@ -322,8 +310,6 @@ impl MaterialLibrary {
             stadium_metal,
             stadium_light,
             pika_electric,
-            pika_fire,
-            pika_rock,
         })
     }
 
@@ -465,14 +451,6 @@ impl MaterialLibrary {
 
     pub fn pika_electric(&self) -> Material {
         self.pika_electric.clone()
-    }
-
-    pub fn pika_fire(&self) -> Material {
-        self.pika_fire.clone()
-    }
-
-    pub fn pika_rock(&self) -> Material {
-        self.pika_rock.clone()
     }
 }
 

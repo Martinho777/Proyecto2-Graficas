@@ -1459,49 +1459,35 @@ fn update_pikachu_animation(scene: &mut Scene, materials: &MaterialLibrary, time
         .enumerate()
     {
         for segment in 0..5 {
-            let offset_x = if segment % 2 == 0 { -0.11 } else { 0.11 };
-            scene.add_dynamic(Box::new(Cube::from_center_size(
-                Vec3::new(
-                    x + offset_x,
-                    -0.06 + segment as f32 * 0.27,
-                    z + bolt_index as f32 * 0.08,
-                ),
-                Vec3::new(0.13 * pulse, 0.32, 0.13),
-                electric.clone(),
-            )));
+            let offset_x = if segment % 2 == 0 { -0.14 } else { 0.14 };
+            let triangle_x = x + offset_x;
+            let triangle_z = z + bolt_index as f32 * 0.08;
+            scene.add_dynamic(Box::new(TriangularPrism {
+                points: [
+                    Vec3::new(triangle_x - 0.15 * pulse, 0.0, triangle_z + 0.14),
+                    Vec3::new(triangle_x + 0.15 * pulse, 0.0, triangle_z + 0.14),
+                    Vec3::new(triangle_x, 0.0, triangle_z - 0.22),
+                ],
+                center_y: -0.06 + segment as f32 * 0.27,
+                half_height: 0.06,
+                material: electric.clone(),
+            }));
         }
     }
 
-    // Llamas compactas en las esquinas de la plataforma.
+    // Llamas compactas en las esquinas, reutilizando el mismo material
+    // emisivo y la misma forma eliptica de los propulsores de Fox.
     for (index, (x, z)) in [(-2.75, 1.95), (2.70, 1.85), (-2.70, -1.95), (2.75, -1.85)]
         .into_iter()
         .enumerate()
     {
-        let fire = materials.pika_fire();
         let flame_scale = 0.88 + 0.12 * (time * 4.0 + index as f32).sin();
-        scene.add_dynamic(Box::new(VerticalCylinder {
-            center: Vec3::new(x, -0.08, z),
-            radius: 0.16 * flame_scale,
-            height: 0.52 * flame_scale,
-            material: fire.clone(),
-        }));
+        let mut fire = materials.fox_engine();
+        fire.emission = [2.2 * flame_scale, 0.24 * flame_scale, 0.015];
         scene.add_dynamic(Box::new(Ellipsoid {
-            center: Vec3::new(x, 0.25, z),
-            radii: Vec3::new(0.20 * flame_scale, 0.27 * flame_scale, 0.20 * flame_scale),
+            center: Vec3::new(x, 0.10, z),
+            radii: Vec3::new(0.22 * flame_scale, 0.46 * flame_scale, 0.22 * flame_scale),
             material: fire,
-        }));
-    }
-
-    // Rocas que flotan suavemente sobre los bordes del campo.
-    for (index, (x, z)) in [(-1.8, 1.75), (1.9, 1.55), (1.65, -1.65)]
-        .into_iter()
-        .enumerate()
-    {
-        let bob = (time * 1.5 + index as f32).sin() * 0.12;
-        scene.add_dynamic(Box::new(Ellipsoid {
-            center: Vec3::new(x, -0.05 + bob, z),
-            radii: Vec3::new(0.26, 0.18, 0.32),
-            material: materials.pika_rock(),
         }));
     }
 }
