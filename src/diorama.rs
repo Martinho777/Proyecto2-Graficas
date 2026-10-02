@@ -1179,14 +1179,14 @@ fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
         center: Vec3::new(0.0, -0.375, 0.0),
         radius: 0.86,
         height: 0.06,
-        upper_z_half: false,
+        upper_z_half: true,
         material: line.clone(),
     }));
     scene.add(Box::new(HalfCylinder {
         center: Vec3::new(0.0, -0.33, 0.0),
         radius: 0.86,
         height: 0.06,
-        upper_z_half: true,
+        upper_z_half: false,
         material: materials.fox_accent(),
     }));
     scene.add_custom_block(
@@ -1206,6 +1206,19 @@ fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
         height: 0.045,
         material: line,
     }));
+
+    // Cubos de piedra acumulados a un lado, como tierra removida por un
+    // Pokemon que estuvo excavando.
+    let excavated_rock = materials.get(MaterialId::Stone);
+    for (center, size) in [
+        (Vec3::new(2.25, -0.22, 0.62), Vec3::new(0.42, 0.34, 0.38)),
+        (Vec3::new(2.62, -0.14, 0.76), Vec3::new(0.32, 0.48, 0.30)),
+        (Vec3::new(2.35, -0.02, 1.04), Vec3::new(0.28, 0.34, 0.26)),
+        (Vec3::new(2.85, -0.26, 0.58), Vec3::new(0.24, 0.28, 0.30)),
+        (Vec3::new(1.92, -0.27, 0.70), Vec3::new(0.28, 0.24, 0.34)),
+    ] {
+        scene.add_custom_block(center, size, excavated_rock.clone());
+    }
 
     // Pantalla, torres y luminarias del fondo.
     scene.add_custom_block(
@@ -1454,10 +1467,7 @@ fn update_pikachu_animation(scene: &mut Scene, materials: &MaterialLibrary, time
     let electric = materials.pika_electric();
 
     // Rayos cortos en zigzag alrededor de la arena.
-    for (bolt_index, (x, z)) in [(-2.85, 1.55), (2.75, 0.15), (-2.55, -1.75)]
-        .into_iter()
-        .enumerate()
-    {
+    for (bolt_index, (x, z)) in [(-2.85, 1.55), (2.75, 0.15)].into_iter().enumerate() {
         for segment in 0..5 {
             let offset_x = if segment % 2 == 0 { -0.14 } else { 0.14 };
             let triangle_x = x + offset_x;
@@ -1477,10 +1487,7 @@ fn update_pikachu_animation(scene: &mut Scene, materials: &MaterialLibrary, time
 
     // Llamas compactas en las esquinas, reutilizando el mismo material
     // emisivo y la misma forma eliptica de los propulsores de Fox.
-    for (index, (x, z)) in [(-2.75, 1.95), (2.70, 1.85), (-2.70, -1.95), (2.75, -1.85)]
-        .into_iter()
-        .enumerate()
-    {
+    for (index, (x, z)) in [(-2.75, 1.95), (2.75, -1.85)].into_iter().enumerate() {
         let flame_scale = 0.88 + 0.12 * (time * 4.0 + index as f32).sin();
         let mut fire = materials.fox_engine();
         fire.emission = [2.2 * flame_scale, 0.24 * flame_scale, 0.015];
