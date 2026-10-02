@@ -17,7 +17,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let horizon = if space {
         Vec3::new(0.008, 0.012, 0.035)
     } else if stadium {
-        Vec3::new(0.002, 0.006, 0.022)
+        Vec3::new(0.006, 0.025, 0.085)
     } else if night {
         Vec3::new(0.035, 0.06, 0.16)
     } else if sunset {
@@ -32,7 +32,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let zenith = if space {
         Vec3::new(0.001, 0.002, 0.012)
     } else if stadium {
-        Vec3::new(0.025, 0.28, 0.62)
+        Vec3::new(0.045, 0.46, 0.92)
     } else if night {
         Vec3::new(0.008, 0.015, 0.06)
     } else if sunset {
@@ -48,13 +48,13 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
         // Luz ambiental del estadio: la parte inferior permanece oscura,
         // pero la mitad superior recibe una iluminacion cyan amplia, como
         // las luces del techo reflejadas en el aire del estadio.
-        let upper_glow = ((direction.y - 0.02) / 0.58).clamp(0.0, 1.0).powf(0.78);
-        sky += Vec3::new(0.018, 0.26, 0.58) * upper_glow;
+        let upper_glow = ((direction.y + 0.08) / 0.46).clamp(0.0, 1.0).powf(0.68);
+        sky += Vec3::new(0.025, 0.32, 0.68) * upper_glow;
 
-        let band = (1.0 - ((direction.y - 0.30) / 0.38).abs())
+        let band = (1.0 - ((direction.y - 0.24) / 0.42).abs())
             .clamp(0.0, 1.0)
             .powf(0.95);
-        sky += Vec3::new(0.012, 0.16, 0.34) * band;
+        sky += Vec3::new(0.018, 0.20, 0.42) * band;
     }
 
     let sun_direction = if space {
@@ -72,7 +72,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let sun_glow = sun_dot.powf(32.0) * 0.18;
     let sun_disc = sun_dot.powf(520.0) * 1.2;
     let sky_light = if stadium {
-        Vec3::new(0.28, 0.52, 0.92)
+        Vec3::new(0.35, 0.66, 1.0)
     } else if night {
         Vec3::new(0.45, 0.68, 1.0)
     } else {
@@ -164,7 +164,7 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
 
     let texture = hit.material.texture.sample(hit.uv[0], hit.uv[1]);
     let ambient = if scene.background & 0xFFFFFF == 0x060A18 {
-        0.19
+        0.23
     } else if scene.background & 0xFFFFFF == 0x111B46 {
         0.16
     } else if scene.background & 0xFFFFFF == 0xD66B45 {
@@ -175,7 +175,7 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
     let direct = diffuse
         * visible_lights
         * if scene.background & 0xFFFFFF == 0x060A18 {
-            0.78
+            0.84
         } else if scene.background & 0xFFFFFF == 0x111B46 {
             0.62
         } else {
