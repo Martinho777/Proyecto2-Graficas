@@ -13,8 +13,11 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let sunset = background & 0xFFFFFF == 0xD66B45;
     let night = background & 0xFFFFFF == 0x111B46;
     let space = background & 0xFFFFFF == 0x04071A;
+    let stadium = background & 0xFFFFFF == 0x060A18;
     let horizon = if space {
         Vec3::new(0.008, 0.012, 0.035)
+    } else if stadium {
+        Vec3::new(0.002, 0.004, 0.012)
     } else if night {
         Vec3::new(0.035, 0.06, 0.16)
     } else if sunset {
@@ -28,6 +31,8 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     };
     let zenith = if space {
         Vec3::new(0.001, 0.002, 0.012)
+    } else if stadium {
+        Vec3::new(0.0005, 0.001, 0.004)
     } else if night {
         Vec3::new(0.008, 0.015, 0.06)
     } else if sunset {
@@ -41,6 +46,8 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
 
     let sun_direction = if space {
         normalize(&Vec3::new(-0.3, 0.5, 0.15))
+    } else if stadium {
+        normalize(&Vec3::new(-0.42, 0.82, 0.32))
     } else if night {
         normalize(&Vec3::new(-0.35, 0.58, 0.2))
     } else if sunset {
@@ -51,7 +58,9 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let sun_dot = dot(&direction, &sun_direction).max(0.0);
     let sun_glow = sun_dot.powf(32.0) * 0.18;
     let sun_disc = sun_dot.powf(520.0) * 1.2;
-    let sky_light = if night {
+    let sky_light = if stadium {
+        Vec3::new(0.18, 0.3, 0.58)
+    } else if night {
         Vec3::new(0.45, 0.68, 1.0)
     } else {
         Vec3::new(1.0, 0.72, 0.35)
@@ -83,7 +92,7 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
         * (direction.x * 4.0 - direction.z * 9.0).cos();
     let cloud_band = (cloud_wave * 0.5 + 0.5) * (1.0 - (direction.y - 0.2).abs() * 2.8);
     let cloud_amount =
-        cloud_band.clamp(0.0, 1.0).powf(5.0) * if night || space { 0.0 } else { 0.16 };
+        cloud_band.clamp(0.0, 1.0).powf(5.0) * if night || space || stadium { 0.0 } else { 0.16 };
     sky * (1.0 - cloud_amount) + Vec3::new(0.62, 0.72, 0.92) * cloud_amount
 }
 
@@ -114,7 +123,9 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
         return background;
     };
 
-    let light_direction = if scene.background & 0xFFFFFF == 0x111B46 {
+    let light_direction = if scene.background & 0xFFFFFF == 0x060A18 {
+        normalize(&Vec3::new(-0.42, 0.82, 0.32))
+    } else if scene.background & 0xFFFFFF == 0x111B46 {
         normalize(&Vec3::new(-0.5, 0.82, 0.35))
     } else if scene.background & 0xFFFFFF == 0xD66B45 {
         normalize(&Vec3::new(-0.72, 0.58, 0.48))
@@ -139,7 +150,9 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
         * visible_lights;
 
     let texture = hit.material.texture.sample(hit.uv[0], hit.uv[1]);
-    let ambient = if scene.background & 0xFFFFFF == 0x111B46 {
+    let ambient = if scene.background & 0xFFFFFF == 0x060A18 {
+        0.13
+    } else if scene.background & 0xFFFFFF == 0x111B46 {
         0.16
     } else if scene.background & 0xFFFFFF == 0xD66B45 {
         0.2
@@ -148,7 +161,9 @@ fn trace_ray(ray: Ray, scene: &Scene, depth: u32) -> Vec3 {
     };
     let direct = diffuse
         * visible_lights
-        * if scene.background & 0xFFFFFF == 0x111B46 {
+        * if scene.background & 0xFFFFFF == 0x060A18 {
+            0.7
+        } else if scene.background & 0xFFFFFF == 0x111B46 {
             0.62
         } else {
             0.8

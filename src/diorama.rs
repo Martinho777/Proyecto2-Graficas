@@ -1147,11 +1147,12 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
 }
 
 fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
-    let mut scene = Scene::with_background(0x0B1F35);
+    let mut scene = Scene::with_background(0x060A18);
     let metal = materials.stadium_metal();
     let field = materials.stadium_field();
     let line = materials.stadium_line();
     let light = materials.stadium_light();
+    let dark_structure = materials.fox_panel();
 
     // Plataforma y arena principal inspiradas en Pokemon Stadium.
     scene.add_custom_block(
@@ -1231,6 +1232,22 @@ fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
         Vec3::new(2.9, 1.05, 0.06),
         light.clone(),
     );
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.35, -3.52),
+        Vec3::new(10.0, 3.8, 0.18),
+        dark_structure,
+    );
+    // Bancos de reflectores visibles alrededor del estadio.
+    for (center, size) in [
+        (Vec3::new(-3.2, 2.75, -3.48), Vec3::new(1.45, 0.22, 0.12)),
+        (Vec3::new(-1.6, 2.92, -3.48), Vec3::new(1.05, 0.18, 0.10)),
+        (Vec3::new(1.6, 2.92, -3.48), Vec3::new(1.05, 0.18, 0.10)),
+        (Vec3::new(3.2, 2.75, -3.48), Vec3::new(1.45, 0.22, 0.12)),
+        (Vec3::new(-4.25, 1.65, -1.25), Vec3::new(0.12, 0.70, 1.25)),
+        (Vec3::new(4.25, 1.65, -1.25), Vec3::new(0.12, 0.70, 1.25)),
+    ] {
+        scene.add_custom_block(center, size, light.clone());
+    }
     for x in [-3.25, 3.25] {
         scene.add(Box::new(VerticalCylinder {
             center: Vec3::new(x, 0.45, -2.45),
