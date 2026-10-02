@@ -125,31 +125,6 @@ fn draw_centered(framebuffer: &mut Framebuffer, text: &str, y: usize, scale: usi
     );
 }
 
-pub fn render_title(framebuffer: &mut Framebuffer) {
-    fill_rect(
-        framebuffer,
-        0,
-        0,
-        framebuffer.width,
-        framebuffer.height,
-        0x10152C,
-    );
-    fill_rect(framebuffer, 0, 0, framebuffer.width, 28, 0x20294B);
-    fill_rect(
-        framebuffer,
-        0,
-        framebuffer.height.saturating_sub(10),
-        framebuffer.width,
-        10,
-        0xD52C35,
-    );
-
-    draw_centered(framebuffer, "SUPER", 38, 4, 0xF2F2F2);
-    draw_centered(framebuffer, "SMASH BROS", 62, 3, 0xF2F2F2);
-    draw_centered(framebuffer, "RUST", 88, 4, 0xE4454C);
-    draw_centered(framebuffer, "PRESS SPACE", 145, 2, 0xFFFFFF);
-}
-
 pub fn render_character_select(framebuffer: &mut Framebuffer, selected: usize) {
     fill_rect(
         framebuffer,
@@ -302,10 +277,18 @@ pub fn render_state(
     framebuffer: &mut Framebuffer,
     state: AppState,
     selected: usize,
+    title_screen: &Texture,
     character_sheet: &Texture,
 ) {
     match state {
-        AppState::Title => render_title(framebuffer),
+        AppState::Title => draw_texture_nearest(
+            framebuffer,
+            title_screen,
+            0,
+            0,
+            framebuffer.width,
+            framebuffer.height,
+        ),
         AppState::CharacterSelect => {
             render_character_select_with_sheet(framebuffer, selected, character_sheet)
         }
