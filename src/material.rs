@@ -69,7 +69,6 @@ pub struct MaterialLibrary {
     stadium_field: Material,
     stadium_line: Material,
     stadium_metal: Material,
-    stadium_light: Material,
     pika_electric: Material,
 }
 
@@ -264,11 +263,6 @@ impl MaterialLibrary {
         stadium_metal.specular = 128.0;
         stadium_metal.reflectivity = 0.3;
 
-        let mut stadium_light = Material::from_texture(Texture::solid([0.04, 0.42, 0.95]));
-        stadium_light.albedo = [0.04, 0.42, 0.95];
-        stadium_light.specular = 128.0;
-        stadium_light.emission = [0.08, 0.45, 1.5];
-
         let mut pika_electric = Material::from_texture(Texture::solid([1.0, 0.84, 0.04]));
         pika_electric.albedo = [1.0, 0.84, 0.04];
         pika_electric.specular = 96.0;
@@ -308,7 +302,6 @@ impl MaterialLibrary {
             stadium_field,
             stadium_line,
             stadium_metal,
-            stadium_light,
             pika_electric,
         })
     }
@@ -443,10 +436,6 @@ impl MaterialLibrary {
 
     pub fn stadium_metal(&self) -> Material {
         self.stadium_metal.clone()
-    }
-
-    pub fn stadium_light(&self) -> Material {
-        self.stadium_light.clone()
     }
 
     pub fn pika_electric(&self) -> Material {

@@ -1151,7 +1151,6 @@ fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
     let metal = materials.stadium_metal();
     let field = materials.stadium_field();
     let line = materials.stadium_line();
-    let light = materials.stadium_light();
     let dark_structure = materials.fox_panel();
 
     // Plataforma y arena principal inspiradas en Pokemon Stadium.
@@ -1208,19 +1207,6 @@ fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
         material: line,
     }));
 
-    // Cubos de piedra acumulados a un lado, como tierra removida por un
-    // Pokemon que estuvo excavando.
-    let excavated_rock = materials.get(MaterialId::Stone);
-    for (center, size) in [
-        (Vec3::new(2.25, -0.22, 0.62), Vec3::new(0.42, 0.34, 0.38)),
-        (Vec3::new(2.62, -0.14, 0.76), Vec3::new(0.32, 0.48, 0.30)),
-        (Vec3::new(2.35, -0.02, 1.04), Vec3::new(0.28, 0.34, 0.26)),
-        (Vec3::new(2.85, -0.26, 0.58), Vec3::new(0.24, 0.28, 0.30)),
-        (Vec3::new(1.92, -0.27, 0.70), Vec3::new(0.28, 0.24, 0.34)),
-    ] {
-        scene.add_custom_block(center, size, excavated_rock.clone());
-    }
-
     // Pantalla, torres y luminarias del fondo.
     scene.add_custom_block(
         Vec3::new(0.0, 1.35, -3.20),
@@ -1230,24 +1216,13 @@ fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
     scene.add_custom_block(
         Vec3::new(0.0, 1.38, -3.06),
         Vec3::new(2.9, 1.05, 0.06),
-        light.clone(),
+        metal.clone(),
     );
     scene.add_custom_block(
         Vec3::new(0.0, 1.35, -3.52),
         Vec3::new(10.0, 3.8, 0.18),
         dark_structure,
     );
-    // Bancos de reflectores visibles alrededor del estadio.
-    for (center, size) in [
-        (Vec3::new(-3.2, 2.75, -3.48), Vec3::new(1.45, 0.22, 0.12)),
-        (Vec3::new(-1.6, 2.92, -3.48), Vec3::new(1.05, 0.18, 0.10)),
-        (Vec3::new(1.6, 2.92, -3.48), Vec3::new(1.05, 0.18, 0.10)),
-        (Vec3::new(3.2, 2.75, -3.48), Vec3::new(1.45, 0.22, 0.12)),
-        (Vec3::new(-4.25, 1.65, -1.25), Vec3::new(0.12, 0.70, 1.25)),
-        (Vec3::new(4.25, 1.65, -1.25), Vec3::new(0.12, 0.70, 1.25)),
-    ] {
-        scene.add_custom_block(center, size, light.clone());
-    }
     for x in [-3.25, 3.25] {
         scene.add(Box::new(VerticalCylinder {
             center: Vec3::new(x, 0.45, -2.45),
@@ -1258,14 +1233,14 @@ fn build_pikachu_stage(materials: &MaterialLibrary) -> Scene {
         scene.add_custom_block(
             Vec3::new(x, 1.37, -2.45),
             Vec3::new(0.62, 0.16, 0.42),
-            light.clone(),
+            metal.clone(),
         );
     }
     for x in [-2.45, -1.55, 1.55, 2.45] {
         scene.add_custom_block(
             Vec3::new(x, 0.12, -2.55),
             Vec3::new(0.56, 0.12, 0.18),
-            light.clone(),
+            metal.clone(),
         );
     }
 
@@ -1481,10 +1456,11 @@ fn update_fox_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f3
 
 fn update_pikachu_animation(scene: &mut Scene, materials: &MaterialLibrary, time: f32) {
     let pulse = 0.82 + 0.18 * (time * 5.0).sin().abs();
-    let electric = materials.pika_electric();
+    let mut electric = materials.pika_electric();
+    electric.emission = [3.2 * pulse, 1.8 * pulse, 0.08];
 
     // Rayos cortos en zigzag alrededor de la arena.
-    for (bolt_index, (x, z)) in [(-2.85, 1.55), (2.75, 0.15)].into_iter().enumerate() {
+    for (bolt_index, (x, z)) in [(-1.35, 1.15), (2.75, 0.15)].into_iter().enumerate() {
         for segment in 0..5 {
             let offset_x = if segment % 2 == 0 { -0.14 } else { 0.14 };
             let triangle_x = x + offset_x;
@@ -1507,12 +1483,34 @@ fn update_pikachu_animation(scene: &mut Scene, materials: &MaterialLibrary, time
     for (index, (x, z)) in [(-2.75, 1.95), (2.75, -1.85)].into_iter().enumerate() {
         let flame_scale = 0.88 + 0.12 * (time * 4.0 + index as f32).sin();
         let mut fire = materials.fox_engine();
-        fire.emission = [2.2 * flame_scale, 0.24 * flame_scale, 0.015];
+        fire.emission = [3.2 * flame_scale, 0.45 * flame_scale, 0.025];
         scene.add_dynamic(Box::new(Ellipsoid {
             center: Vec3::new(x, 0.10, z),
             radii: Vec3::new(0.22 * flame_scale, 0.46 * flame_scale, 0.22 * flame_scale),
             material: fire,
         }));
+    }
+
+    // Rocas del lado excavado: tiemblan en su sitio con desplazamientos
+    // pequenos para sugerir que la tierra aun se esta moviendo.
+    let excavated_rock = materials.get(MaterialId::Stone);
+    for (index, (center, size)) in [
+        (Vec3::new(2.25, -0.22, 0.62), Vec3::new(0.42, 0.34, 0.38)),
+        (Vec3::new(2.62, -0.14, 0.76), Vec3::new(0.32, 0.48, 0.30)),
+        (Vec3::new(2.35, -0.02, 1.04), Vec3::new(0.28, 0.34, 0.26)),
+        (Vec3::new(2.85, -0.26, 0.58), Vec3::new(0.24, 0.28, 0.30)),
+        (Vec3::new(1.92, -0.27, 0.70), Vec3::new(0.28, 0.24, 0.34)),
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let shake = (time * 9.0 + index as f32 * 1.7).sin() * 0.035;
+        let lift = (time * 12.0 + index as f32).sin().abs() * 0.018;
+        scene.add_dynamic(Box::new(Cube::from_center_size(
+            Vec3::new(center.x + shake, center.y + lift, center.z - shake * 0.5),
+            size,
+            excavated_rock.clone(),
+        )));
     }
 }
 

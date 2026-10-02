@@ -44,6 +44,17 @@ fn background_color(background: u32, direction: Vec3) -> Vec3 {
     let sky_factor = ((height + 0.15) / 1.15).powf(0.72);
     let mut sky = horizon * (1.0 - sky_factor) + zenith * sky_factor;
 
+    if stadium {
+        // Luz ambiental del estadio: el borde inferior permanece casi negro,
+        // mientras que una franja cyan aparece a media altura como reflectores
+        // lejanos, sin agregar geometria adicional al escenario.
+        let band = (1.0 - ((direction.y - 0.16) / 0.24).abs())
+            .clamp(0.0, 1.0)
+            .powf(1.35);
+        let lower_fade = ((direction.y + 0.14) / 0.30).clamp(0.0, 1.0);
+        sky += Vec3::new(0.015, 0.34, 0.82) * band * lower_fade;
+    }
+
     let sun_direction = if space {
         normalize(&Vec3::new(-0.3, 0.5, 0.15))
     } else if stadium {
