@@ -22,11 +22,12 @@ pub struct SlopedTriangularPrism {
     pub material: Material,
 }
 
-/// Triangular fin extruded along Z, used for a large dorsal wing.
-pub struct VerticalTriangularPrism {
+/// Triangular fin extruded along X, aligned with the ship's front-to-back
+/// axis like a shark fin.
+pub struct LongitudinalTriangularPrism {
     pub points: [Vec3; 3],
-    pub center_z: f32,
-    pub half_depth: f32,
+    pub center_x: f32,
+    pub half_width: f32,
     pub material: Material,
 }
 
@@ -170,26 +171,26 @@ impl Primitive for SlopedTriangularPrism {
     }
 }
 
-impl Primitive for VerticalTriangularPrism {
+impl Primitive for LongitudinalTriangularPrism {
     fn intersect(&self, ray: &Ray) -> Option<Hit> {
-        let back_z = self.center_z - self.half_depth;
-        let front_z = self.center_z + self.half_depth;
-        let front = self
+        let left_x = self.center_x - self.half_width;
+        let right_x = self.center_x + self.half_width;
+        let right = self
             .points
-            .map(|point| Vec3::new(point.x, point.y, front_z));
-        let back = self.points.map(|point| Vec3::new(point.x, point.y, back_z));
+            .map(|point| Vec3::new(right_x, point.y, point.z));
+        let left = self.points.map(|point| Vec3::new(left_x, point.y, point.z));
         let mut hits = Vec::new();
 
-        for (a, b, c) in [(front[0], front[1], front[2]), (back[2], back[1], back[0])] {
+        for (a, b, c) in [(right[0], right[1], right[2]), (left[2], left[1], left[0])] {
             if let Some(hit) = TriangularPrism::triangle_hit(ray, a, b, c, &self.material) {
                 hits.push(hit);
             }
         }
 
         for (a, b, c, d) in [
-            (back[0], back[1], front[1], front[0]),
-            (back[1], back[2], front[2], front[1]),
-            (back[2], back[0], front[0], front[2]),
+            (left[0], left[1], right[1], right[0]),
+            (left[1], left[2], right[2], right[1]),
+            (left[2], left[0], right[0], right[2]),
         ] {
             if let Some(hit) = TriangularPrism::triangle_hit(ray, a, b, c, &self.material) {
                 hits.push(hit);

@@ -3,7 +3,7 @@ use crate::app::Character;
 use crate::cube::Cube;
 use crate::cylinder::{Cylinder, OrientedCylinder, VerticalCylinder};
 use crate::material::{MaterialId, MaterialLibrary};
-use crate::prism::{SlopedTriangularPrism, TriangularPrism, VerticalTriangularPrism};
+use crate::prism::{LongitudinalTriangularPrism, SlopedTriangularPrism, TriangularPrism};
 use crate::scene::{Block, Scene};
 use crate::sphere::{Ellipsoid, Sphere};
 use crate::star::Star;
@@ -1054,16 +1054,16 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
         material: hull.clone(),
     }));
 
-    // Ala dorsal grande, vertical y con el mismo material gris de las alas
-    // principales para que todo el conjunto tenga una textura consistente.
-    scene.add(Box::new(VerticalTriangularPrism {
+    // Ala dorsal rotada 90 grados sobre X: queda alineada con el fuselaje,
+    // como una aleta de tiburon, y conserva el mismo material de las alas.
+    scene.add(Box::new(LongitudinalTriangularPrism {
         points: [
-            Vec3::new(-0.56, 0.68, 0.0),
-            Vec3::new(0.0, 2.72, 0.0),
-            Vec3::new(0.56, 0.68, 0.0),
+            Vec3::new(0.0, 0.72, -1.58),
+            Vec3::new(0.0, 2.72, -0.48),
+            Vec3::new(0.0, 0.72, 0.18),
         ],
-        center_z: -0.72,
-        half_depth: 0.18,
+        center_x: 0.0,
+        half_width: 0.18,
         material: hull.clone(),
     }));
 
