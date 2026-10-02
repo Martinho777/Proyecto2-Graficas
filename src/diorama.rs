@@ -1102,6 +1102,12 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
         radii: Vec3::new(0.56, 0.30, 0.62),
         material: hull.clone(),
     }));
+    // Ventana frontal pequena en la cabeza de la nave.
+    scene.add_custom_block(
+        Vec3::new(0.0, 1.67, 3.875),
+        Vec3::new(0.62, 0.18, 0.06),
+        materials.plain_crystal(),
+    );
 
     // Carcasas y anillos traseros de los dos motores.
     for x in [-1.42, 1.42] {
