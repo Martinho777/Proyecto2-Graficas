@@ -7,11 +7,7 @@
 
 ## Demostración
 
-> **Pendiente:** insertar aquí el video final de demostración del proyecto.
-
-<!-- Reemplazar el enlace cuando el video esté subido a GitHub, Drive o YouTube. -->
-
-[Ver video de demostración](PEGAR_AQUI_EL_ENLACE_DEL_VIDEO)
+[Ver video de demostración](https://uvggt-my.sharepoint.com/:f:/g/personal/vil24033_uvg_edu_gt/IgAc2NUkKy3xRpYjkB9DJW1WAQ1e5EowVZzumCBxMP0ujTI?e=PTGTCS)
 
 El video debe mostrar el flujo completo: pantalla de inicio, selección de personaje,
 entrada a un diorama, movimiento de cámara y los efectos dinámicos de las escenas.
