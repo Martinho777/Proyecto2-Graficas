@@ -1017,43 +1017,62 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     }));
     scene.add(Box::new(SlopedTriangularPrism {
         top_points: [
-            Vec3::new(-0.58, 0.38, 0.95),
-            Vec3::new(-4.25, -0.20, -1.35),
-            Vec3::new(-1.00, 0.12, -1.58),
+            Vec3::new(-0.58, 0.48, 0.95),
+            Vec3::new(-4.25, -0.58, -1.35),
+            Vec3::new(-1.00, 0.05, -1.58),
         ],
         thickness: 0.22,
         material: hull.clone(),
     }));
     scene.add(Box::new(SlopedTriangularPrism {
         top_points: [
-            Vec3::new(0.58, 0.38, 0.95),
-            Vec3::new(4.25, -0.20, -1.35),
-            Vec3::new(1.00, 0.12, -1.58),
+            Vec3::new(0.58, 0.48, 0.95),
+            Vec3::new(4.25, -0.58, -1.35),
+            Vec3::new(1.00, 0.05, -1.58),
         ],
         thickness: 0.22,
         material: hull.clone(),
     }));
 
+    // Mini alas superiores, ligeramente mas grandes y levantadas hacia las
+    // puntas para darle al Arwing su segundo nivel de silueta.
+    scene.add(Box::new(SlopedTriangularPrism {
+        top_points: [
+            Vec3::new(-0.54, 0.88, 0.62),
+            Vec3::new(-2.15, 1.45, -0.28),
+            Vec3::new(-0.88, 1.08, -0.78),
+        ],
+        thickness: 0.18,
+        material: hull.clone(),
+    }));
+    scene.add(Box::new(SlopedTriangularPrism {
+        top_points: [
+            Vec3::new(0.54, 0.88, 0.62),
+            Vec3::new(2.15, 1.45, -0.28),
+            Vec3::new(0.88, 1.08, -0.78),
+        ],
+        thickness: 0.18,
+        material: hull.clone(),
+    }));
+
     // Paneles rojos sobre las alas y aleta posterior para darle identidad al
     // Arwing sin depender de una textura externa.
-    scene.add(Box::new(TriangularPrism {
-        points: [
-            Vec3::new(-0.82, 0.0, 0.82),
-            Vec3::new(-2.55, 0.0, -0.72),
-            Vec3::new(-1.05, 0.0, -0.90),
+    scene.add(Box::new(SlopedTriangularPrism {
+        top_points: [
+            Vec3::new(-0.82, 0.52, 0.82),
+            Vec3::new(-2.55, -0.35, -0.72),
+            Vec3::new(-1.05, 0.12, -0.90),
         ],
-        center_y: 0.42,
-        half_height: 0.018,
+        thickness: 0.018,
         material: accent.clone(),
     }));
-    scene.add(Box::new(TriangularPrism {
-        points: [
-            Vec3::new(0.82, 0.0, 0.82),
-            Vec3::new(2.55, 0.0, -0.72),
-            Vec3::new(1.05, 0.0, -0.90),
+    scene.add(Box::new(SlopedTriangularPrism {
+        top_points: [
+            Vec3::new(0.82, 0.52, 0.82),
+            Vec3::new(2.55, -0.35, -0.72),
+            Vec3::new(1.05, 0.12, -0.90),
         ],
-        center_y: 0.42,
-        half_height: 0.018,
+        thickness: 0.018,
         material: accent.clone(),
     }));
 
