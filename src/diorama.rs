@@ -998,8 +998,8 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     // Cuerpo central con volumen eliptico para que la nave mantenga una
     // silueta robusta desde el frente y desde los costados.
     scene.add(Box::new(Ellipsoid {
-        center: Vec3::new(0.0, 0.35, 0.0),
-        radii: Vec3::new(1.48, 0.58, 2.10),
+        center: Vec3::new(0.0, 0.55, 0.0),
+        radii: Vec3::new(1.48, 0.78, 2.10),
         material: hull.clone(),
     }));
 
@@ -1073,10 +1073,10 @@ fn build_fox_stage(materials: &MaterialLibrary) -> Scene {
     // Cuello diagonal que nace en la parte frontal del fuselaje y avanza
     // hacia adelante antes de sostener la cabina.
     scene.add(Box::new(OrientedCylinder {
-        center: Vec3::new(0.0, 1.10, 2.50),
+        center: Vec3::new(0.0, 1.00, 2.35),
         axis: Vec3::new(0.0, 0.50, 0.866),
         radius: 0.34,
-        height: 1.50,
+        height: 1.85,
         material: hull.clone(),
     }));
     // Cabina temporalmente hecha del mismo material del fuselaje; el cristal
